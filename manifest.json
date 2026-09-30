@@ -43,6 +43,13 @@
   ],
   "shortcuts": [
     {
+      "name": "Daily Routine",
+      "short_name": "Routine",
+      "description": "Daily 6:30 AM study timetable and live timeline",
+      "url": "./index.html#routine",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
       "name": "Today's Schedule",
       "short_name": "Schedule",
       "description": "Open your 50-day schedule",

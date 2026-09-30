@@ -138,7 +138,7 @@ body::before {
   display: none;
   position: fixed;
   bottom: 0; left: 0; right: 0;
-  height: calc(60px + env(safe-area-inset-bottom, 0px));
+  height: calc(58px + env(safe-area-inset-bottom, 0px));
   padding-bottom: env(safe-area-inset-bottom, 0px);
   background: rgba(6, 8, 18, 0.94);
   backdrop-filter: blur(24px);
@@ -155,7 +155,7 @@ body::before {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 2px;
   background: none;
   border: none;
   color: var(--text-secondary);
@@ -164,16 +164,16 @@ body::before {
   position: relative;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   -webkit-tap-highlight-color: transparent;
-  padding: 6px 0;
+  padding: 4px 0;
 }
 .bottom-nav-item:active {
-  transform: scale(0.94);
+  transform: scale(0.93);
 }
 .bottom-nav-item.active {
   color: #fff;
 }
 .bottom-nav-icon {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   line-height: 1;
   transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -181,9 +181,9 @@ body::before {
   transform: translateY(-2px) scale(1.12);
 }
 .bottom-nav-label {
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.01em;
   color: var(--text-secondary);
 }
 .bottom-nav-item.active .bottom-nav-label {
@@ -192,7 +192,7 @@ body::before {
 .bottom-nav-indicator {
   position: absolute;
   top: 0;
-  width: 24px;
+  width: 18px;
   height: 2.5px;
   border-radius: 0 0 3px 3px;
   background: linear-gradient(90deg, var(--accent), #a855f7);
@@ -201,7 +201,7 @@ body::before {
 }
 .bottom-nav-item.active .bottom-nav-indicator {
   opacity: 1;
-  width: 32px;
+  width: 24px;
 }
 
 @media (max-width: 768px) {
@@ -543,6 +543,115 @@ body::before {
 .milestone-done { background: var(--success-bg); color: var(--success); }
 .milestone-pending { background: rgba(255,255,255,0.04); color: var(--text-muted); }
 
+/* ========== ROUTINE TIMELINE & WIDGET ========== */
+.routine-tabs {
+  display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto;
+  padding-bottom: 4px; scrollbar-width: none;
+}
+.routine-tabs::-webkit-scrollbar { display: none; }
+.routine-tab-btn {
+  padding: 8px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  background: var(--bg-card); color: var(--text-secondary); font-size: 0.82rem;
+  font-weight: 600; cursor: pointer; white-space: nowrap; transition: all var(--transition);
+  font-family: inherit; display: inline-flex; align-items: center; gap: 6px;
+}
+.routine-tab-btn:hover { border-color: var(--border-hover); color: var(--text-primary); }
+.routine-tab-btn.active {
+  background: var(--accent-bg); border-color: var(--border-accent); color: var(--accent-light);
+}
+
+.routine-live-card {
+  background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.3);
+  border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  flex-wrap: wrap;
+}
+.routine-live-left { display: flex; align-items: center; gap: 10px; }
+.live-pulse-dot {
+  width: 10px; height: 10px; border-radius: 50%; background: #ef4444;
+  box-shadow: 0 0 10px #ef4444; animation: live-blink 1.5s infinite;
+}
+@keyframes live-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.routine-live-title { font-size: 0.78rem; font-weight: 700; color: #f87171; text-transform: uppercase; letter-spacing: 0.05em; }
+.routine-live-desc { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-top: 1px; }
+
+.timeline-list { display: flex; flex-direction: column; gap: 10px; position: relative; }
+.timeline-item {
+  position: relative; display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px 16px; border-radius: var(--radius-md); background: var(--bg-card);
+  border: 1px solid var(--border); transition: all var(--transition);
+}
+.timeline-item:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+
+.timeline-item.now {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(168,85,247,0.08));
+  box-shadow: 0 0 20px rgba(99,102,241,0.22);
+}
+.timeline-item.past { opacity: 0.65; }
+
+.timeline-time-col { min-width: 95px; flex-shrink: 0; }
+.timeline-time { font-size: 0.82rem; font-weight: 700; color: var(--text-primary); }
+.timeline-dur { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
+
+.timeline-body { flex: 1; min-width: 0; }
+.timeline-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+.timeline-title { font-size: 0.92rem; font-weight: 700; }
+.timeline-tag {
+  font-size: 0.66rem; font-weight: 700; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 100px; letter-spacing: 0.03em;
+}
+.timeline-tag-class { background: rgba(99,102,241,0.15); color: var(--accent-light); }
+.timeline-tag-break { background: rgba(16,185,129,0.15); color: var(--maths); }
+.timeline-tag-study { background: rgba(245,158,11,0.15); color: var(--inorganic); }
+.timeline-tag-rev { background: rgba(168,85,247,0.15); color: var(--organic); }
+.timeline-tag-prep { background: rgba(59,130,246,0.15); color: var(--physics); }
+.timeline-tag-sleep { background: rgba(255,255,255,0.08); color: var(--text-secondary); }
+
+.timeline-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45; }
+
+.timeline-lec-pill {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 8px;
+  padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03); width: 100%;
+}
+.timeline-lec-pill.done { border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.05); }
+
+.timeline-now-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--accent); color: #fff; font-size: 0.65rem; font-weight: 800;
+  padding: 2px 7px; border-radius: 100px; letter-spacing: 0.04em;
+  animation: pulse-badge 1.8s infinite;
+}
+
+/* Dashboard Routine Widget */
+.routine-widget {
+  background: linear-gradient(135deg, rgba(99,102,241,0.06), rgba(168,85,247,0.04));
+  border: 1px solid var(--border-accent); border-radius: var(--radius);
+  padding: 18px 20px; margin-bottom: 28px;
+}
+.routine-widget-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.routine-widget-title { font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+.routine-widget-link { font-size: 0.8rem; color: var(--accent-light); font-weight: 600; cursor: pointer; border: none; background: none; font-family: inherit; }
+.routine-widget-link:hover { text-decoration: underline; }
+
+.routine-slots-summary {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px;
+}
+@media (max-width: 650px) {
+  .routine-slots-summary { grid-template-columns: repeat(2, 1fr); }
+}
+.routine-slot-mini {
+  padding: 8px 10px; border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  font-size: 0.78rem;
+}
+.routine-slot-mini.active-slot {
+  border-color: var(--accent); background: rgba(99,102,241,0.12);
+}
+.routine-slot-mini-time { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; }
+.routine-slot-mini-name { font-weight: 700; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
 /* ========== FOOTER ========== */
 .footer {
   text-align: center; padding: 32px 0 16px;
@@ -790,7 +899,7 @@ const START=new Date(2026,9,1);
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 // ==================== STATE ====================
-let completed={}, activeWeek=0, activePage='dashboard', chapterFilter='all', expandedChapters={};
+let completed={}, activeWeek=0, activePage='dashboard', chapterFilter='all', expandedChapters={}, routineTab='today';
 
 function lid(k,n){ return k+'-'+n; }
 function save(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(completed));}catch(e){} }
@@ -812,6 +921,19 @@ function studyTime(lecs){
   const h=Math.floor(m/60),r=m%60; return r?h+'h '+r+'m':h+'h';
 }
 function weekDays(w){ return schedule.slice(w*7, w*7+7); }
+
+function curTimeMin(){
+  const d=new Date();
+  return d.getHours()*60 + d.getMinutes();
+}
+function formatTime12(min){
+  const h=Math.floor(min/60)%24;
+  const m=min%60;
+  const ampm=h>=12?'PM':'AM';
+  const h12=h%12||12;
+  const mStr=m<10?'0'+m:m;
+  return `${h12}:${mStr} ${ampm}`;
+}
 
 function subjProg(subj){
   let t=0,d=0;
@@ -844,11 +966,69 @@ function hoursDone(){
   return (m/60).toFixed(1);
 }
 
+// ==================== ROUTINE MASTER TEMPLATES ====================
+const routineMaster = {
+  fourLec: [
+    { start: 360, end: 390, time: '06:00 - 06:30 AM', dur: '30m', tag: 'prep', title: '🌅 Wake Up & Hydrate', desc: 'Drink 500ml water, wash face, light stretch. Prepare desk & notes for Class 1.' },
+    { start: 390, end: 480, time: '06:30 - 08:00 AM', dur: '90m', tag: 'class', slot: 1, title: '⚡ Class 1 (Prime Focus Slot)', desc: 'First lecture of the day! Highest alertness block — tackle tough theory and derivations.' },
+    { start: 480, end: 525, time: '08:00 - 08:45 AM', dur: '45m', tag: 'break', title: '🍳 Breakfast & Eye Rest', desc: 'Healthy, protein-rich breakfast. Rest your eyes from screens, take a light walk.' },
+    { start: 525, end: 600, time: '08:45 - 10:00 AM', dur: '75m', tag: 'class', slot: 2, title: '📐 Class 2', desc: 'Second lecture of the day. Active note-taking and immediate example solving.' },
+    { start: 600, end: 630, time: '10:00 - 10:30 AM', dur: '30m', tag: 'study', title: '📝 Morning Notes Consolidation', desc: 'Consolidate formulas from Class 1 & 2 while fresh in working memory.' },
+    { start: 630, end: 705, time: '10:30 - 11:45 AM', dur: '75m', tag: 'class', slot: 3, title: '🧪 Class 3', desc: 'Third lecture of the day. Complete inorganic/organic mechanisms and concepts.' },
+    { start: 705, end: 795, time: '11:45 AM - 01:15 PM', dur: '90m', tag: 'study', title: '🎯 Morning Problem Practice (15-20 Qs)', desc: 'Direct DPP & PYQ practice based on morning lectures.' },
+    { start: 795, end: 870, time: '01:15 - 02:30 PM', dur: '75m', tag: 'break', title: '🍱 Lunch & Power Nap', desc: 'Wholesome lunch + 20-30 min power nap to recharge cognitive stamina for afternoon.' },
+    { start: 870, end: 945, time: '02:30 - 03:45 PM', dur: '75m', tag: 'class', slot: 4, title: '🔬 Class 4 (Final Lecture!)', desc: 'Fourth and final lecture! Once done, all video lecture goals for the day are complete.' },
+    { start: 945, end: 975, time: '03:45 - 04:15 PM', dur: '30m', tag: 'break', title: '☕ Tea / Refreshment Break', desc: 'Short tea break, fresh air, stretch out before deep problem-solving.' },
+    { start: 975, end: 1125, time: '04:15 - 06:45 PM', dur: '2h 30m', tag: 'study', title: '📚 High-Volume PYQ Solving Session', desc: 'Timed 2.5-hour problem solving block. Solve 30-40 past JEE Main PYQs.' },
+    { start: 1125, end: 1185, time: '06:45 - 07:45 PM', dur: '60m', tag: 'break', title: '🏃 Physical Exercise / Walk / Relax', desc: 'Step outdoors, jog, workout, or talk to family to de-stress completely.' },
+    { start: 1185, end: 1245, time: '07:45 - 08:45 PM', dur: '60m', tag: 'break', title: '🍽️ Dinner & Wind Down', desc: 'Relaxed dinner. Keep phone on silent.' },
+    { start: 1245, end: 1335, time: '08:45 - 10:15 PM', dur: '90m', tag: 'rev', title: '📖 Active Recall & Formula Book Revision', desc: 'Revise all 4 lectures. Test recall of key formulas without looking at notes.' },
+    { start: 1335, end: 1365, time: '10:15 - 10:45 PM', dur: '30m', tag: 'prep', title: '🌙 Desk Prep & Tomorrow Planning', desc: 'Check off day’s tasks, review tomorrow’s classes in planner, lights out by 10:45 PM.' },
+    { start: 1365, end: 1440, time: '10:45 PM - 06:00 AM', dur: '7h 15m', tag: 'sleep', title: '😴 Deep Restful Sleep', desc: 'Essential 7+ hours sleep for brain memory consolidation.' }
+  ],
+  threeLec: [
+    { start: 360, end: 390, time: '06:00 - 06:30 AM', dur: '30m', tag: 'prep', title: '🌅 Wake Up & Prep', desc: 'Hydrate, freshen up, stretch. Ready notebooks for Class 1.' },
+    { start: 390, end: 480, time: '06:30 - 08:00 AM', dur: '90m', tag: 'class', slot: 1, title: '⚡ Class 1 (Prime Morning Slot)', desc: 'First class of the day. Highest focus on understanding theory and mechanisms.' },
+    { start: 480, end: 525, time: '08:00 - 08:45 AM', dur: '45m', tag: 'break', title: '🍳 Breakfast & Refresh', desc: 'Nutritious breakfast and relaxing breather.' },
+    { start: 525, end: 600, time: '08:45 - 10:00 AM', dur: '75m', tag: 'class', slot: 2, title: '📐 Class 2', desc: 'Second class of the day. Focus on formula derivation and problem solving.' },
+    { start: 600, end: 630, time: '10:00 - 10:30 AM', dur: '30m', tag: 'break', title: '☕ Short Break & Tea', desc: 'Rest eyes, drink water, take a quick walk.' },
+    { start: 630, end: 750, time: '10:30 AM - 12:30 PM', dur: '2h', tag: 'study', title: '🎯 Intensive Practice (Class 1 & 2)', desc: 'Solve 20-25 questions from the two morning classes immediately.' },
+    { start: 750, end: 825, time: '12:30 - 01:45 PM', dur: '75m', tag: 'class', slot: 3, title: '🧪 Class 3 (Final Lecture!)', desc: 'Third and final class! Syllabus lecture goal for the day is complete.' },
+    { start: 825, end: 900, time: '01:45 - 03:00 PM', dur: '75m', tag: 'break', title: '🍱 Lunch & Power Nap', desc: 'Good lunch + 25-minute power nap to reset brain.' },
+    { start: 900, end: 1080, time: '03:00 - 06:00 PM', dur: '3h', tag: 'study', title: '📚 High-Volume PYQ Practice Block', desc: '3 full hours of focused question practice across completed chapters.' },
+    { start: 1080, end: 1140, time: '06:00 - 07:00 PM', dur: '60m', tag: 'break', title: '🏃 Walk & Outdoor Exercise', desc: 'Clear mental fatigue with fresh air and physical movement.' },
+    { start: 1140, end: 1230, time: '07:00 - 08:30 PM', dur: '90m', tag: 'rev', title: '🔍 Weak Topic Revision & Doubts', desc: 'Analyze errors from practice session. Re-attempt missed problems.' },
+    { start: 1230, end: 1290, time: '08:30 - 09:30 PM', dur: '60m', tag: 'break', title: '🍽️ Dinner', desc: 'Peaceful dinner with family.' },
+    { start: 1290, end: 1350, time: '09:30 - 10:30 PM', dur: '60m', tag: 'rev', title: '📖 Formula Book & Memory Recap', desc: 'Review short notes, reaction summary, recap the day’s work.' },
+    { start: 1350, end: 1440, time: '10:30 PM - 06:00 AM', dur: '7h 30m', tag: 'sleep', title: '😴 7.5 Hours Deep Sleep', desc: 'Recharge for tomorrow.' }
+  ],
+  rest: [
+    { start: 390, end: 450, time: '06:30 - 07:30 AM', dur: '60m', tag: 'prep', title: '🌅 Gentle Morning Walk & Stretch', desc: 'Wake up at 6:30 AM, hydrate, light walk or meditation to begin revision day.' },
+    { start: 450, end: 510, time: '07:30 - 08:30 AM', dur: '60m', tag: 'break', title: '🍳 Breakfast & Mock Test Setup', desc: 'Hearty breakfast. Set up test desk with rough sheets and water.' },
+    { start: 510, end: 690, time: '08:30 - 11:30 AM', dur: '3h', tag: 'study', title: '📝 3-Hour Timed Mock / PYQ Test', desc: 'Simulate full exam conditions. 75 questions from all completed chapters.' },
+    { start: 690, end: 780, time: '11:30 AM - 01:00 PM', dur: '90m', tag: 'rev', title: '🔍 Test Analysis & Mistake Logbook', desc: 'Categorize errors into silly mistakes, formula gaps, and conceptual gaps.' },
+    { start: 780, end: 870, time: '01:00 - 02:30 PM', dur: '90m', tag: 'break', title: '🍱 Lunch & Power Nap', desc: 'Nutritious lunch and restful nap.' },
+    { start: 870, end: 1050, time: '02:30 - 05:30 PM', dur: '3h', tag: 'rev', title: '📖 Master Formula Book Revision', desc: 'Revise complete Physics formula sheet, Math identities, and Inorganic tables.' },
+    { start: 1050, end: 1140, time: '05:30 - 07:00 PM', dur: '90m', tag: 'break', title: '🏃 Leisure & Outdoor Activity', desc: 'Take a break, go outside, recharge without study guilt.' },
+    { start: 1140, end: 1230, time: '07:00 - 08:30 PM', dur: '90m', tag: 'study', title: '🎯 Re-solve Test Mistakes', desc: 'Solve every question you got wrong until you can do it with eyes closed.' },
+    { start: 1230, end: 1290, time: '08:30 - 09:30 PM', dur: '60m', tag: 'break', title: '🍽️ Dinner', desc: 'Dinner with family.' },
+    { start: 1290, end: 1350, time: '09:30 - 10:30 PM', dur: '60m', tag: 'prep', title: '🚀 Weekly Goal Setting', desc: 'Review completed chapters in the tracker and set intentions for the next week.' },
+    { start: 1350, end: 1440, time: '10:30 PM - 06:00 AM', dur: '7h 30m', tag: 'sleep', title: '😴 Deep Restful Sleep', desc: 'Ready to tackle next week with 100% battery.' }
+  ]
+};
+
+function setRoutineTab(t){
+  routineTab = t;
+  const m = document.getElementById('main');
+  if(m && activePage === 'routine') m.innerHTML = renderRoutine();
+}
+
 // ==================== NAVBAR & BOTTOM NAV ====================
 function renderNav(){
   const done=totalDone(), pct=Math.round(done/TOTAL*100);
   const pages=[
     {id:'dashboard',icon:'🏠',label:'Dashboard'},
+    {id:'routine',icon:'⏰',label:'Routine'},
     {id:'schedule',icon:'📅',label:'Schedule'},
     {id:'chapters',icon:'📚',label:'Chapters'},
     {id:'analytics',icon:'📊',label:'Analytics'},
@@ -892,6 +1072,7 @@ function renderPage(){
   const m=document.getElementById('main');
   switch(activePage){
     case 'dashboard': m.innerHTML=renderDashboard(); break;
+    case 'routine': m.innerHTML=renderRoutine(); break;
     case 'schedule': m.innerHTML=renderSchedule(); break;
     case 'chapters': m.innerHTML=renderChapters(); break;
     case 'analytics': m.innerHTML=renderAnalytics(); break;
@@ -923,8 +1104,10 @@ function renderDashboard(){
   </div>`;
 
   // Today card
+  let td = null;
   if(dn>=1 && dn<=50){
-    const td=schedule[dn-1], dp=dayProg(td);
+    td=schedule[dn-1];
+    const dp=dayProg(td);
     h+=`<div class="today-card">
       <div class="today-icon">${td.rest?'😴':dp.complete?'✅':'🎯'}</div>
       <div class="today-content">
@@ -933,7 +1116,58 @@ function renderDashboard(){
       </div>
       <button class="today-btn" onclick="go('schedule');setTimeout(()=>scrollToDay(${dn}),100)">View in Schedule →</button>
     </div>`;
+  } else {
+    td = schedule[0];
   }
+
+  // Today's Routine Widget (Starts 6:30 AM)
+  const is4Lec = td && td.lectures && td.lectures.length === 4;
+  const isRestDay = td && td.rest;
+  const nowMin = curTimeMin();
+  let curBlock = 'First Class starts at 6:30 AM';
+  if(nowMin >= 390 && nowMin < 480) curBlock = 'Class 1 (06:30 - 08:00 AM)';
+  else if(nowMin >= 480 && nowMin < 525) curBlock = 'Breakfast & Eye Rest (08:00 - 08:45 AM)';
+  else if(nowMin >= 525 && nowMin < 600) curBlock = 'Class 2 (08:45 - 10:00 AM)';
+  else if(nowMin >= 600 && nowMin < 630) curBlock = 'Formula Notes Consolidation (10:00 - 10:30 AM)';
+  else if(nowMin >= 630 && nowMin < 705) curBlock = is4Lec ? 'Class 3 (10:30 - 11:45 AM)' : 'Deep Practice Session';
+  else if(nowMin >= 705 && nowMin < 795) curBlock = 'Problem Solving Session (11:45 AM - 01:15 PM)';
+  else if(nowMin >= 795 && nowMin < 870) curBlock = 'Lunch & 25-min Power Nap (01:15 - 02:30 PM)';
+  else if(nowMin >= 870 && nowMin < 945) curBlock = is4Lec ? 'Class 4 (02:30 - 03:45 PM)' : 'High-Volume PYQ Practice';
+  else if(nowMin >= 945 && nowMin < 1125) curBlock = 'Deep PYQ Practice Session (04:15 - 06:45 PM)';
+  else if(nowMin >= 1125 && nowMin < 1185) curBlock = 'Exercise / Walk / Decompress (06:45 - 07:45 PM)';
+  else if(nowMin >= 1185 && nowMin < 1245) curBlock = 'Dinner & Relaxation (07:45 - 08:45 PM)';
+  else if(nowMin >= 1245 && nowMin < 1335) curBlock = 'Active Recall & Formula Revision (08:45 - 10:15 PM)';
+  else if(nowMin >= 1335 && nowMin < 1365) curBlock = 'Night Wind-Down & Desk Prep (10:15 - 10:45 PM)';
+  else if(nowMin >= 1365 || nowMin < 360) curBlock = 'Night Sleep & Brain Recovery (10:45 PM - 06:00 AM)';
+
+  h+=`<div class="card routine-widget">
+    <div class="routine-widget-top">
+      <div class="routine-widget-title"><span>⏰</span> Daily Routine (Starts 6:30 AM)</div>
+      <button class="routine-widget-link" onclick="go('routine')">View Timeline →</button>
+    </div>
+    <div style="font-size:0.84rem; display:flex; align-items:center; gap:8px; color:var(--text-secondary); margin-bottom:12px;">
+      <span class="live-pulse-dot" style="flex-shrink:0;"></span>
+      <span><strong>Now (${formatTime12(nowMin)}):</strong> ${curBlock}</span>
+    </div>
+    <div class="routine-slots-summary">
+      <div class="routine-slot-mini ${nowMin>=390&&nowMin<480?'active-slot':''}">
+        <div class="routine-slot-mini-time">06:30 - 08:00 AM</div>
+        <div class="routine-slot-mini-name">⚡ Class 1</div>
+      </div>
+      <div class="routine-slot-mini ${nowMin>=525&&nowMin<600?'active-slot':''}">
+        <div class="routine-slot-mini-time">08:45 - 10:00 AM</div>
+        <div class="routine-slot-mini-name">📐 Class 2</div>
+      </div>
+      <div class="routine-slot-mini ${(is4Lec?nowMin>=630&&nowMin<705:nowMin>=750&&nowMin<825)?'active-slot':''}">
+        <div class="routine-slot-mini-time">${is4Lec?'10:30 - 11:45 AM':'12:30 - 01:45 PM'}</div>
+        <div class="routine-slot-mini-name">${isRestDay?'📝 Mock Test':'🧪 Class 3'}</div>
+      </div>
+      <div class="routine-slot-mini ${(is4Lec?nowMin>=870&&nowMin<945:nowMin>=900&&nowMin<1080)?'active-slot':''}">
+        <div class="routine-slot-mini-time">${is4Lec?'02:30 - 03:45 PM':'03:00 - 06:00 PM'}</div>
+        <div class="routine-slot-mini-name">${is4Lec?'🔬 Class 4':isRestDay?'📖 Formulas':'📚 3h PYQs'}</div>
+      </div>
+    </div>
+  </div>`;
 
   // Stats (compact 2-column by 2-row layout)
   h+=`<div class="section"><div class="section-label">📊 Quick Stats</div><div class="stats-grid-2x2">
@@ -973,6 +1207,135 @@ function renderDashboard(){
 
   h+=renderFooter();
   h+=`</div>`;
+  return h;
+}
+
+// ==================== ROUTINE PAGE ====================
+function renderRoutine(){
+  const dn = dayNum();
+  const validDay = dn >= 1 && dn <= 50 ? schedule[dn - 1] : schedule[0];
+  const isRest = validDay.rest;
+  const numLecs = validDay.lectures ? validDay.lectures.length : 0;
+  
+  let currentList = [];
+  if (routineTab === 'today') {
+    if (isRest) {
+      currentList = routineMaster.rest;
+    } else if (numLecs === 4) {
+      currentList = routineMaster.fourLec;
+    } else {
+      currentList = routineMaster.threeLec;
+    }
+  } else if (routineTab === '4lec') {
+    currentList = routineMaster.fourLec;
+  } else if (routineTab === '3lec') {
+    currentList = routineMaster.threeLec;
+  } else {
+    currentList = routineMaster.rest;
+  }
+
+  const nowMin = curTimeMin();
+  let activeSlot = null, nextSlot = null;
+  currentList.forEach((slot, idx) => {
+    if (nowMin >= slot.start && nowMin < slot.end) {
+      activeSlot = slot;
+      nextSlot = currentList[idx + 1] || null;
+    }
+  });
+
+  let h = `<div class="page">
+    <div class="page-header">
+      <h1>⏰ Daily Routine</h1>
+      <p>Engineered for full-time JEE prep starting with Class 1 at 6:30 AM</p>
+    </div>`;
+
+  // Live Now Card
+  h += `<div class="routine-live-card">
+    <div class="routine-live-left">
+      <div class="live-pulse-dot"></div>
+      <div>
+        <div class="routine-live-title">Happening Now (${formatTime12(nowMin)})</div>
+        <div class="routine-live-desc">${activeSlot ? activeSlot.title : 'Night Rest / Deep Sleep'}</div>
+      </div>
+    </div>
+    ${nextSlot ? `<div style="font-size:0.78rem; color:var(--text-secondary); text-align:right;"><strong>Next:</strong> ${nextSlot.time} • ${nextSlot.title}</div>` : ''}
+  </div>`;
+
+  // Routine Tabs
+  h += `<div class="routine-tabs">
+    <button class="routine-tab-btn ${routineTab==='today'?'active':''}" onclick="setRoutineTab('today')">📌 Today (${dn>=1&&dn<=50?'Day '+dn: 'Preview'})</button>
+    <button class="routine-tab-btn ${routineTab==='4lec'?'active':''}" onclick="setRoutineTab('4lec')">⚡ 4-Class Day Routine</button>
+    <button class="routine-tab-btn ${routineTab==='3lec'?'active':''}" onclick="setRoutineTab('3lec')">📐 3-Class Day Routine</button>
+    <button class="routine-tab-btn ${routineTab==='rest'?'active':''}" onclick="setRoutineTab('rest')">🧘 Rest & Revision Routine</button>
+  </div>`;
+
+  // Timeline List
+  h += `<div class="section"><div class="timeline-list">`;
+  currentList.forEach(slot => {
+    const isNow = nowMin >= slot.start && nowMin < slot.end;
+    const isPast = nowMin >= slot.end;
+    const tagClass = 'timeline-tag-' + (slot.tag || 'study');
+    
+    h += `<div class="timeline-item ${isNow ? 'now' : ''} ${isPast ? 'past' : ''}">
+      <div class="timeline-time-col">
+        <div class="timeline-time">${slot.time.split(' - ')[0]}</div>
+        <div class="timeline-dur">${slot.dur}</div>
+      </div>
+      <div class="timeline-body">
+        <div class="timeline-header">
+          <span class="timeline-title">${slot.title}</span>
+          <span class="timeline-tag ${tagClass}">${slot.tag}</span>
+          ${isNow ? `<span class="timeline-now-badge">🔴 NOW</span>` : ''}
+        </div>
+        <div class="timeline-desc">${slot.desc}</div>`;
+
+    // If viewing 'today' and this is a class slot, show real lecture
+    if (routineTab === 'today' && slot.slot && validDay.lectures && validDay.lectures[slot.slot - 1]) {
+      const lec = validDay.lectures[slot.slot - 1];
+      const s = lec[0], k = lec[1], n = lec[2];
+      const ch = chapters[k], m = SM[s], id = lid(k, n);
+      const isChecked = !!completed[id];
+      h += `<div class="timeline-lec-pill ${isChecked ? 'done' : ''}">
+        <label class="lec-item" style="margin:0; width:100%; border:none; background:transparent; padding:0; cursor:pointer;">
+          <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggle('${id}', this.checked); renderPage();" />
+          <span class="lec-check"></span>
+          <span class="lec-dot" style="background:${m.color}"></span>
+          <span class="lec-info">
+            <span class="lec-chapter-name" style="font-weight:700;">${m.icon} ${ch.name}</span>
+            <span class="lec-num">${s.toUpperCase()} • Lecture ${n}/${ch.total} (${s==='physics'?'1h 30m':'1h 15m'})</span>
+          </span>
+        </label>
+      </div>`;
+    }
+
+    h += `</div></div>`;
+  });
+  h += `</div></div>`;
+
+  // Golden Rules Card
+  h += `<div class="section"><div class="section-label">💡 Routine Golden Rules</div><div class="card" style="line-height:1.6; font-size:0.88rem;">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px;">
+      <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;">
+        <div style="font-weight:700; color:var(--accent-light); margin-bottom:4px;">🌅 The 6:30 AM Kickoff</div>
+        <div style="color:var(--text-secondary); font-size:0.82rem;">Starting Class 1 at 6:30 AM finishes your hardest lecture before 8:00 AM. Brain cortisol and alertness are at peak morning levels.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;">
+        <div style="font-weight:700; color:var(--maths); margin-bottom:4px;">🍱 20-30m Afternoon Power Nap</div>
+        <div style="color:var(--text-secondary); font-size:0.82rem;">Never skip the power nap after lunch (1:15–2:30 PM). It clears adenosine build-up and gives you a fresh brain for Class 4 & PYQs.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;">
+        <div style="font-weight:700; color:var(--inorganic); margin-bottom:4px;">🎯 2:1 Practice Rule</div>
+        <div style="color:var(--text-secondary); font-size:0.82rem;">Watching lectures without solving questions yields 0 retention. The 4:15–6:45 PM block is your primary score generator.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;">
+        <div style="font-weight:700; color:var(--organic); margin-bottom:4px;">🌙 Strict 10:45 PM Bedtime</div>
+        <div style="color:var(--text-secondary); font-size:0.82rem;">7+ hours of quality sleep is non-negotiable. It allows the brain to transfer formulas from temporary memory into long-term retention.</div>
+      </div>
+    </div>
+  </div></div>`;
+
+  h += renderFooter();
+  h += `</div>`;
   return h;
 }
 
@@ -1368,12 +1731,12 @@ if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || wi
 load();
 activeWeek=curWeek();
 const hash=window.location.hash.slice(1);
-if(['dashboard','schedule','chapters','analytics'].includes(hash)) activePage=hash;
+if(['dashboard','routine','schedule','chapters','analytics'].includes(hash)) activePage=hash;
 renderNav();
 renderPage();
 window.addEventListener('hashchange',()=>{
   const r=window.location.hash.slice(1);
-  if(['dashboard','schedule','chapters','analytics'].includes(r)&&r!==activePage){activePage=r;renderNav();renderPage();}
+  if(['dashboard','routine','schedule','chapters','analytics'].includes(r)&&r!==activePage){activePage=r;renderNav();renderPage();}
 });
 </script>
 </body>
