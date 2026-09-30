@@ -578,6 +578,88 @@ body::before {
 .routine-live-title { font-size: 0.76rem; font-weight: 700; color: #f87171; text-transform: uppercase; letter-spacing: 0.05em; }
 .routine-live-desc { font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin-top: 1px; }
 
+/* Day Picker Navigation Bar */
+.routine-day-picker {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.routine-day-picker-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 3px;
+  min-width: 0;
+}
+.routine-day-badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.routine-day-badge {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+.routine-today-pill {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 100px;
+  background: var(--accent-bg);
+  border: 1px solid var(--border-accent);
+  color: var(--accent-light);
+}
+.routine-day-date {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.routine-day-nav-btn {
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.routine-day-nav-btn:hover:not(:disabled) {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.06);
+}
+.routine-day-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.routine-day-reset-btn {
+  font-size: 0.72rem;
+  color: var(--accent-light);
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-decoration: underline;
+  margin-top: 2px;
+  font-family: inherit;
+}
+
 .timeline-list { display: flex; flex-direction: column; gap: 10px; }
 .timeline-item {
   display: flex; gap: 14px; align-items: flex-start;
@@ -938,7 +1020,7 @@ const START=new Date(2026,9,1);
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 // ==================== STATE ====================
-let completed={}, activeWeek=0, activePage='dashboard', chapterFilter='all', expandedChapters={}, routineTab='today';
+let completed={}, activeWeek=0, activePage='dashboard', chapterFilter='all', expandedChapters={}, routineTab='today', routineSelectedDay=null;
 
 function lid(k,n){ return k+'-'+n; }
 function save(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(completed));}catch(e){} }
@@ -1058,6 +1140,16 @@ const routineMaster = {
 
 function setRoutineTab(t){
   routineTab = t;
+  const m = document.getElementById('main');
+  if(m && activePage === 'routine') m.innerHTML = renderRoutine();
+}
+
+function setRoutineDay(d){
+  if(d === null){
+    routineSelectedDay = null;
+  } else {
+    routineSelectedDay = Math.max(1, Math.min(50, d));
+  }
   const m = document.getElementById('main');
   if(m && activePage === 'routine') m.innerHTML = renderRoutine();
 }
@@ -1201,28 +1293,35 @@ function renderDashboard(){
   const slot3Active = hasStarted && (is4Lec ? nowMin>=630&&nowMin<705 : nowMin>=750&&nowMin<825);
   const slot4Active = hasStarted && (is4Lec ? nowMin>=870&&nowMin<945 : nowMin>=900&&nowMin<1080);
 
+  const previewDay = (hasStarted ? schedule[dn - 1] : schedule[0]) || schedule[0];
+  const pLecs = previewDay.lectures || [];
+  const l1Name = isRestDay ? '🌅 Morning Prep' : (pLecs[0] ? `${SM[pLecs[0][0]].icon} ${SM[pLecs[0][0]].label} (L${pLecs[0][2]})` : '⚡ Class 1');
+  const l2Name = isRestDay ? '🍳 Setup & Mock' : (pLecs[1] ? `${SM[pLecs[1][0]].icon} ${SM[pLecs[1][0]].label} (L${pLecs[1][2]})` : '📐 Class 2');
+  const l3Name = isRestDay ? '📝 Mock Test' : (pLecs[2] ? `${SM[pLecs[2][0]].icon} ${SM[pLecs[2][0]].label} (L${pLecs[2][2]})` : (is4Lec ? '🧪 Class 3' : '🎯 Practice'));
+  const l4Name = is4Lec ? (pLecs[3] ? `${SM[pLecs[3][0]].icon} ${SM[pLecs[3][0]].label} (L${pLecs[3][2]})` : '🔬 Class 4') : (isRestDay ? '📖 Formulas' : '📚 3h PYQs');
+
   h+=`<div class="card routine-widget">
     <div class="routine-widget-top">
-      <div class="routine-widget-title"><span>⏰</span> Daily Routine (Starts 6:30 AM)</div>
+      <div class="routine-widget-title"><span>⏰</span> Daily Routine • ${hasStarted ? 'Today (Day ' + dn + ')' : 'Day 1 Preview (Starts Oct 1)'}</div>
       <button class="routine-widget-link" onclick="go('routine')">View Timeline →</button>
     </div>
     ${routineBadgeHtml}
     <div class="routine-slots-summary">
       <div class="routine-slot-mini ${slot1Active?'active-slot':''}">
         <div class="routine-slot-mini-time">06:30 - 08:00 AM</div>
-        <div class="routine-slot-mini-name">⚡ Class 1</div>
+        <div class="routine-slot-mini-name">${l1Name}</div>
       </div>
       <div class="routine-slot-mini ${slot2Active?'active-slot':''}">
         <div class="routine-slot-mini-time">08:45 - 10:00 AM</div>
-        <div class="routine-slot-mini-name">📐 Class 2</div>
+        <div class="routine-slot-mini-name">${l2Name}</div>
       </div>
       <div class="routine-slot-mini ${slot3Active?'active-slot':''}">
         <div class="routine-slot-mini-time">${is4Lec?'10:30 - 11:45 AM':'12:30 - 01:45 PM'}</div>
-        <div class="routine-slot-mini-name">${isRestDay?'📝 Mock Test':'🧪 Class 3'}</div>
+        <div class="routine-slot-mini-name">${l3Name}</div>
       </div>
       <div class="routine-slot-mini ${slot4Active?'active-slot':''}">
         <div class="routine-slot-mini-time">${is4Lec?'02:30 - 03:45 PM':'03:00 - 06:00 PM'}</div>
-        <div class="routine-slot-mini-name">${is4Lec?'🔬 Class 4':isRestDay?'📖 Formulas':'📚 3h PYQs'}</div>
+        <div class="routine-slot-mini-name">${l4Name}</div>
       </div>
     </div>
   </div>`;
@@ -1272,10 +1371,21 @@ function renderDashboard(){
 function renderRoutine(){
   const dn = dayNum();
   const hasStarted = dn >= 1 && dn <= 50;
-  const validDay = hasStarted ? schedule[dn - 1] : schedule[0];
+  
+  let targetDay = 1;
+  if (routineSelectedDay !== null) {
+    targetDay = routineSelectedDay;
+  } else if (hasStarted) {
+    targetDay = dn;
+  } else {
+    targetDay = 1; // preview Day 1 before Oct 1
+  }
+
+  const validDay = schedule[targetDay - 1];
   const isRest = validDay.rest;
   const numLecs = validDay.lectures ? validDay.lectures.length : 0;
-  
+  const isViewingToday = (targetDay === dn && hasStarted);
+
   let currentList = [];
   if (routineTab === 'today') {
     if (isRest) {
@@ -1295,7 +1405,7 @@ function renderRoutine(){
 
   const nowMin = curTimeMin();
   let activeSlot = null, nextSlot = null;
-  if (hasStarted && routineTab === 'today') {
+  if (isViewingToday && routineTab === 'today') {
     currentList.forEach((slot, idx) => {
       if (nowMin >= slot.start && nowMin < slot.end) {
         activeSlot = slot;
@@ -1311,13 +1421,24 @@ function renderRoutine(){
     </div>`;
 
   // Status / Live Card
-  if (!hasStarted) {
+  if (isViewingToday) {
+    h += `<div class="routine-live-card">
+      <div class="routine-live-left">
+        <div class="live-pulse-dot"></div>
+        <div>
+          <div class="routine-live-title">Happening Now (${formatTime12(nowMin)})</div>
+          <div class="routine-live-desc">${activeSlot ? activeSlot.title : 'Night Rest / Deep Sleep'}</div>
+        </div>
+      </div>
+      ${nextSlot ? `<div style="font-size:0.78rem; color:var(--text-secondary); text-align:right;"><strong>Next:</strong> ${nextSlot.time.split(' - ')[0]} • ${nextSlot.title}</div>` : ''}
+    </div>`;
+  } else if (!hasStarted && targetDay === 1) {
     h += `<div class="routine-live-card info-card">
       <div class="routine-live-left">
         <div style="font-size:1.5rem;">🚀</div>
         <div>
           <div class="routine-live-title" style="color:var(--accent-light);">50-Day Routine Starts Tomorrow, Oct 1</div>
-          <div class="routine-live-desc">Class 1 begins at 6:30 AM sharp. Get desk & notes ready for Day 1!</div>
+          <div class="routine-live-desc">Day 1 begins at 6:30 AM sharp with Class 1. Ready your notes & desk!</div>
         </div>
       </div>
       <div style="font-size:0.78rem; color:var(--text-secondary); background:rgba(255,255,255,0.04); padding:6px 14px; border-radius:100px;">
@@ -1335,32 +1456,48 @@ function renderRoutine(){
       </div>
     </div>`;
   } else {
-    h += `<div class="routine-live-card">
+    h += `<div class="routine-live-card info-card">
       <div class="routine-live-left">
-        <div class="live-pulse-dot"></div>
+        <div style="font-size:1.5rem;">📅</div>
         <div>
-          <div class="routine-live-title">Happening Now (${formatTime12(nowMin)})</div>
-          <div class="routine-live-desc">${activeSlot ? activeSlot.title : 'Night Rest / Sleep'}</div>
+          <div class="routine-live-title" style="color:var(--accent-light);">Day ${targetDay} Scheduled Routine</div>
+          <div class="routine-live-desc">${validDay.dow}, ${fmtDate(validDay.date)} • ${validDay.rest ? 'Revision & Mock Test' : numLecs + ' Lectures Planned'}</div>
         </div>
       </div>
-      ${nextSlot ? `<div style="font-size:0.78rem; color:var(--text-secondary); text-align:right;"><strong>Next:</strong> ${nextSlot.time.split(' - ')[0]} • ${nextSlot.title}</div>` : ''}
+      ${routineSelectedDay !== null ? `<button class="routine-day-nav-btn" style="padding:5px 12px;" onclick="setRoutineDay(null)">Jump to ${hasStarted ? 'Today (Day ' + dn + ')' : 'Tomorrow (Day 1)'}</button>` : ''}
     </div>`;
   }
 
   // Routine Tabs
-  const todayTabLabel = hasStarted ? `📌 Today (Day ${dn})` : `📌 Tomorrow (Day 1)`;
+  const todayTabLabel = isViewingToday ? `📌 Today (Day ${dn})` : (hasStarted ? `📌 Day ${targetDay}` : `📌 Tomorrow (Day 1)`);
   h += `<div class="routine-tabs">
     <button class="routine-tab-btn ${routineTab==='today'?'active':''}" onclick="setRoutineTab('today')">${todayTabLabel}</button>
-    <button class="routine-tab-btn ${routineTab==='4lec'?'active':''}" onclick="setRoutineTab('4lec')">⚡ 4-Class Day Routine</button>
-    <button class="routine-tab-btn ${routineTab==='3lec'?'active':''}" onclick="setRoutineTab('3lec')">📐 3-Class Day Routine</button>
-    <button class="routine-tab-btn ${routineTab==='rest'?'active':''}" onclick="setRoutineTab('rest')">🧘 Rest & Revision Routine</button>
+    <button class="routine-tab-btn ${routineTab==='4lec'?'active':''}" onclick="setRoutineTab('4lec')">⚡ Standard 4-Class Day</button>
+    <button class="routine-tab-btn ${routineTab==='3lec'?'active':''}" onclick="setRoutineTab('3lec')">📐 Standard 3-Class Day</button>
+    <button class="routine-tab-btn ${routineTab==='rest'?'active':''}" onclick="setRoutineTab('rest')">🧘 Rest & Revision Day</button>
   </div>`;
+
+  // Day Picker Navigation (when viewing the dynamic day routine)
+  if (routineTab === 'today') {
+    h += `<div class="routine-day-picker">
+      <button class="routine-day-nav-btn" onclick="setRoutineDay(${targetDay - 1})" ${targetDay <= 1 ? 'disabled' : ''}>◀ Day ${targetDay - 1}</button>
+      <div class="routine-day-picker-info">
+        <div class="routine-day-badge-wrap">
+          <span class="routine-day-badge">Day ${targetDay} of 50</span>
+          ${isViewingToday ? '<span class="routine-today-pill">TODAY</span>' : (!hasStarted && targetDay === 1) ? '<span class="routine-today-pill">STARTS TOMORROW</span>' : ''}
+        </div>
+        <div class="routine-day-date">${validDay.dow}, ${fmtDate(validDay.date)} • ${validDay.rest ? '🧘 Full Rest & Mock Test Day' : '⚡ ' + numLecs + ' Lectures Scheduled'}</div>
+        ${routineSelectedDay !== null && routineSelectedDay !== (hasStarted ? dn : 1) ? `<button class="routine-day-reset-btn" onclick="setRoutineDay(null)">↩ Return to ${hasStarted ? 'Today (Day ' + dn + ')' : 'Tomorrow (Day 1)'}</button>` : ''}
+      </div>
+      <button class="routine-day-nav-btn" onclick="setRoutineDay(${targetDay + 1})" ${targetDay >= 50 ? 'disabled' : ''}>Day ${targetDay + 1} ▶</button>
+    </div>`;
+  }
 
   // Timeline List
   h += `<div class="section"><div class="timeline-list">`;
   currentList.forEach(slot => {
-    const isNow = hasStarted && routineTab === 'today' && nowMin >= slot.start && nowMin < slot.end;
-    const isPast = hasStarted && routineTab === 'today' && nowMin >= slot.end;
+    const isNow = isViewingToday && routineTab === 'today' && nowMin >= slot.start && nowMin < slot.end;
+    const isPast = isViewingToday && routineTab === 'today' && nowMin >= slot.end;
     const tagClass = 'timeline-tag-' + (slot.tag || 'study');
     
     h += `<div class="timeline-item ${isNow ? 'now' : ''} ${isPast ? 'past' : ''}">
@@ -1378,7 +1515,7 @@ function renderRoutine(){
         </div>
         <div class="timeline-desc">${slot.desc}</div>`;
 
-    // If viewing 'today' and this is a class slot, show real lecture with clean check button
+    // If viewing 'today' (or selected day) and this is a class slot, show real lecture with clean check button
     if (routineTab === 'today' && slot.slot && validDay.lectures && validDay.lectures[slot.slot - 1]) {
       const lec = validDay.lectures[slot.slot - 1];
       const s = lec[0], k = lec[1], n = lec[2];
