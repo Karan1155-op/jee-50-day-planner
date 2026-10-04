@@ -6,6 +6,7 @@
 <title>JEE 50-Day Study Planner</title>
 <meta name="description" content="Interactive 50-day JEE syllabus completion routine and lecture tracker" />
 <meta name="theme-color" content="#05060e" />
+<meta name="color-scheme" content="dark" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -22,6 +23,7 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
+  color-scheme: dark;
   --bg-primary: #05060e;
   --bg-secondary: #0a0c1a;
   --bg-card: rgba(255,255,255,0.028);
@@ -2153,7 +2155,7 @@ body::before {
       <div class="quick-chips-label">Quick Durations</div>
       <div class="quick-chips-wrap">
         <button type="button" class="quick-chip" onclick="setQuickDuration(0, 15)">15m</button>
-        <button type="button" class="quick-chip" onclick="setQuickDuration(0, 25)">25m</button>
+        <button type="button" class="quick-chip" onclick="setQuickDuration(0, 30)">30m</button>
         <button type="button" class="quick-chip" onclick="setQuickDuration(0, 45)">45m</button>
         <button type="button" class="quick-chip" onclick="setQuickDuration(1, 0)">1 hour</button>
         <button type="button" class="quick-chip" onclick="setQuickDuration(1, 30)">1.5 hours</button>
@@ -3021,9 +3023,7 @@ const TIMER_PRESETS = {
   class75: { label: 'Class (75m)', name: 'Class (75m)', sec: 75 * 60 },
   class90: { label: 'Physics (90m)', name: 'Physics Class (90m)', sec: 90 * 60 },
   pyq45:   { label: 'Practice (45m)', name: 'Question Practice (45m)', sec: 45 * 60 },
-  mock180: { label: 'Mock Test (3h)', name: 'Full Mock Test (3h)', sec: 180 * 60 },
-  pomo25:  { label: 'Interval (25m)', name: 'Study Interval (25m)', sec: 25 * 60 },
-  pomo50:  { label: 'Interval (50m)', name: 'Study Interval (50m)', sec: 50 * 60 }
+  mock180: { label: 'Mock Test (3h)', name: 'Full Mock Test (3h)', sec: 180 * 60 }
 };
 
 let clockStopwatch = {
@@ -3034,6 +3034,110 @@ let clockStopwatch = {
   intervalId: null,
   problems: []
 };
+
+const TIMER_STORAGE_KEY = 'jee50d-timer-v2';
+const STOPWATCH_STORAGE_KEY = 'jee50d-sw-v2';
+
+function saveTimerState() {
+  try {
+    const data = {
+      mode: clockTimer.mode,
+      totalSec: clockTimer.totalSec,
+      remainSec: clockTimer.remainSec,
+      endTimestamp: clockTimer.endTimestamp,
+      running: clockTimer.running,
+      sound: clockTimer.sound,
+      name: clockTimer.name
+    };
+    localStorage.setItem(TIMER_STORAGE_KEY, JSON.stringify(data));
+  } catch(e) {}
+}
+
+function loadTimerState() {
+  try {
+    const raw = localStorage.getItem(TIMER_STORAGE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    if (!saved) return;
+
+    if (typeof saved.sound === 'boolean') clockTimer.sound = saved.sound;
+
+    let mode = saved.mode || 'class75';
+    // Clean migration if previously saved with removed interval presets
+    if (mode === 'pomo25' || mode === 'pomo50') {
+      mode = 'class75';
+      clockTimer.mode = 'class75';
+      clockTimer.totalSec = 75 * 60;
+      clockTimer.name = 'Class (75m)';
+      clockTimer.remainSec = 75 * 60;
+      clockTimer.running = false;
+      clockTimer.endTimestamp = null;
+      saveTimerState();
+      return;
+    }
+
+    clockTimer.mode = mode;
+    clockTimer.totalSec = (typeof saved.totalSec === 'number' && saved.totalSec > 0) ? saved.totalSec : 75 * 60;
+    clockTimer.name = saved.name || (TIMER_PRESETS[mode] ? TIMER_PRESETS[mode].name : 'Study Timer');
+
+    if (saved.running && saved.endTimestamp) {
+      const now = Date.now();
+      const diffSec = Math.ceil((saved.endTimestamp - now) / 1000);
+      if (diffSec > 0) {
+        clockTimer.remainSec = diffSec;
+        clockTimer.running = true;
+        clockTimer.endTimestamp = saved.endTimestamp;
+      } else {
+        clockTimer.remainSec = 0;
+        clockTimer.running = false;
+        clockTimer.endTimestamp = null;
+        const minsDone = Math.round(clockTimer.totalSec / 60);
+        logCompletedFocusSession(clockTimer.name, minsDone);
+      }
+    } else {
+      clockTimer.running = false;
+      clockTimer.endTimestamp = null;
+      clockTimer.remainSec = (typeof saved.remainSec === 'number' && saved.remainSec >= 0) ? saved.remainSec : clockTimer.totalSec;
+    }
+  } catch(e) {}
+}
+
+function saveStopwatchState() {
+  try {
+    const data = {
+      running: clockStopwatch.running,
+      startTimestamp: clockStopwatch.startTimestamp,
+      accumMs: clockStopwatch.accumMs,
+      problems: clockStopwatch.problems
+    };
+    localStorage.setItem(STOPWATCH_STORAGE_KEY, JSON.stringify(data));
+  } catch(e) {}
+}
+
+function loadStopwatchState() {
+  try {
+    const raw = localStorage.getItem(STOPWATCH_STORAGE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    if (!saved) return;
+    clockStopwatch.problems = Array.isArray(saved.problems) ? saved.problems : [];
+    if (saved.running && saved.startTimestamp) {
+      clockStopwatch.running = true;
+      clockStopwatch.startTimestamp = saved.startTimestamp;
+      clockStopwatch.accumMs = Date.now() - saved.startTimestamp;
+      if (!clockStopwatch.intervalId) {
+        clockStopwatch.intervalId = setInterval(() => {
+          clockStopwatch.accumMs = Date.now() - clockStopwatch.startTimestamp;
+          updateStopwatchUI();
+        }, 50);
+      }
+    } else {
+      clockStopwatch.running = false;
+      clockStopwatch.startTimestamp = null;
+      clockStopwatch.accumMs = typeof saved.accumMs === 'number' ? saved.accumMs : 0;
+    }
+  } catch(e) {}
+}
 
 let lastRenderedMinute = curTimeMin();
 let lastRenderedDay = dayNum();
@@ -3619,6 +3723,7 @@ function setTimerPreset(key) {
   clockTimer.name = p.name;
   clockTimer.running = false;
   clockTimer.endTimestamp = null;
+  saveTimerState();
   const m = document.getElementById('main');
   if (m && activePage === 'clock') m.innerHTML = renderClock();
 }
@@ -3634,6 +3739,7 @@ function toggleTimerStartPause() {
     clockTimer.running = true;
     clockTimer.endTimestamp = Date.now() + clockTimer.remainSec * 1000;
   }
+  saveTimerState();
   updateTimerUI();
 }
 
@@ -3641,6 +3747,7 @@ function resetFocusTimer() {
   clockTimer.running = false;
   clockTimer.endTimestamp = null;
   clockTimer.remainSec = clockTimer.totalSec;
+  saveTimerState();
   updateTimerUI();
 }
 
@@ -3651,11 +3758,13 @@ function addTimerMinutes(mins) {
   if (clockTimer.running) {
     clockTimer.endTimestamp = Date.now() + clockTimer.remainSec * 1000;
   }
+  saveTimerState();
   updateTimerUI();
 }
 
 function toggleTimerSound() {
   clockTimer.sound = !clockTimer.sound;
+  saveTimerState();
   const btn = document.getElementById('clock-sound-btn');
   if (btn) {
     btn.innerHTML = `<span>${clockTimer.sound ? '🔔' : '🔕'}</span> <span>Sound: ${clockTimer.sound ? 'ON' : 'OFF'}</span>`;
@@ -3681,6 +3790,7 @@ function startStopwatch() {
     clockStopwatch.accumMs = Date.now() - clockStopwatch.startTimestamp;
     updateStopwatchUI();
   }, 50);
+  saveStopwatchState();
   const btn = document.getElementById('btn-sw-toggle');
   if (btn) btn.innerHTML = '<span>⏸ Pause</span>';
 }
@@ -3695,6 +3805,7 @@ function pauseStopwatch() {
     clearInterval(clockStopwatch.intervalId);
     clockStopwatch.intervalId = null;
   }
+  saveStopwatchState();
   const btn = document.getElementById('btn-sw-toggle');
   if (btn) btn.innerHTML = '<span>▶ Start</span>';
 }
@@ -3704,6 +3815,7 @@ function resetStopwatch() {
   clockStopwatch.accumMs = 0;
   clockStopwatch.startTimestamp = null;
   clockStopwatch.problems = [];
+  saveStopwatchState();
   const m = document.getElementById('main');
   if (m && activePage === 'clock' && clockActiveTab === 'stopwatch') {
     m.innerHTML = renderClock();
@@ -3747,6 +3859,7 @@ function lapStopwatchQuestion() {
   });
 
   playLapChime();
+  saveStopwatchState();
 
   const m = document.getElementById('main');
   if (m && activePage === 'clock' && clockActiveTab === 'stopwatch') {
@@ -3898,6 +4011,7 @@ function tickFocusTimer() {
     clockTimer.remainSec = 0;
     clockTimer.running = false;
     clockTimer.endTimestamp = null;
+    saveTimerState();
     playTimerChime();
     const minsDone = Math.round(clockTimer.totalSec / 60);
     logCompletedFocusSession(clockTimer.name, minsDone);
@@ -4217,6 +4331,7 @@ function applyCustomTimer() {
   clockTimer.remainSec = clockTimer.totalSec;
   clockTimer.running = false;
   clockTimer.name = sessionName;
+  saveTimerState();
 
   closeCustomTimerModal();
 
@@ -4335,7 +4450,18 @@ function initClockTicker() {
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
       handleAppResume();
+    } else {
+      saveTimerState();
+      saveStopwatchState();
     }
+  });
+  window.addEventListener('beforeunload', () => {
+    saveTimerState();
+    saveStopwatchState();
+  });
+  window.addEventListener('pagehide', () => {
+    saveTimerState();
+    saveStopwatchState();
   });
   window.addEventListener('focus', handleAppResume);
   window.addEventListener('pageshow', handleAppResume);
@@ -4753,6 +4879,8 @@ if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || wi
 
 // ==================== INIT ====================
 load();
+loadTimerState();
+loadStopwatchState();
 activeWeek=curWeek();
 const hash=window.location.hash.slice(1);
 if(['dashboard','routine','clock','schedule','chapters','analytics'].includes(hash)) activePage=hash;
