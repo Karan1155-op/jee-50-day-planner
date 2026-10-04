@@ -181,10 +181,11 @@ body::before {
   transform: translateY(-2px) scale(1.12);
 }
 .bottom-nav-label {
-  font-size: 0.62rem;
+  font-size: 0.60rem;
   font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 .bottom-nav-item.active .bottom-nav-label {
   color: var(--accent-light);
@@ -211,6 +212,12 @@ body::before {
   .nav-progress-badge { margin-left: 6px; padding: 4px 10px; font-size: 0.72rem; }
   .nav-install-btn { padding: 5px 10px; font-size: 0.75rem; }
   .main { padding-bottom: calc(85px + env(safe-area-inset-bottom, 0px)); }
+}
+
+@media (max-width: 420px) {
+  .bottom-nav-label { font-size: 0.52rem; }
+  .bottom-nav-icon { font-size: 1.05rem; }
+  .bottom-nav-item { padding: 2px 0; }
 }
 
 @media (max-width: 600px) {
@@ -773,6 +780,748 @@ body::before {
 .routine-slot-mini-time { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; }
 .routine-slot-mini-name { font-weight: 700; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+/* ========== CLOCK & FOCUS STUDIO ========== */
+.clock-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+@media (max-width: 860px) {
+  .clock-grid { grid-template-columns: 1fr; }
+}
+
+/* Master Clock Card */
+.clock-hero-card {
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.04));
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.clock-hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.clock-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  background: var(--accent-bg);
+  border: 1px solid var(--border-accent);
+  color: var(--accent-light);
+}
+.clock-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.clock-action-btn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.clock-action-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border-color: var(--border-hover);
+}
+.clock-action-btn.active {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--accent-light);
+}
+
+.clock-main-display {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin: 10px 0 16px;
+}
+@media (max-width: 580px) {
+  .clock-main-display {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+}
+
+/* Analog Clock Dial */
+.analog-clock-wrap {
+  flex-shrink: 0;
+  width: 170px;
+  height: 170px;
+  position: relative;
+}
+.analog-clock {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #161938 0%, #070918 75%, #05060e 100%);
+  border: 2px solid rgba(255,255,255,0.1);
+  box-shadow:
+    0 8px 30px rgba(0,0,0,0.6),
+    inset 0 2px 8px rgba(255,255,255,0.1),
+    inset 0 -4px 12px rgba(0,0,0,0.8),
+    0 0 24px rgba(99,102,241,0.2);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.clock-dial-ticks {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+.clock-tick {
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  width: 2px;
+  height: 6px;
+  background: rgba(255,255,255,0.22);
+  transform-origin: 50% 77px;
+  margin-left: -1px;
+}
+.clock-tick.major {
+  height: 10px;
+  width: 2.5px;
+  background: #a5b4fc;
+}
+.clock-center-dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fff, var(--accent-light));
+  z-index: 10;
+  box-shadow: 0 0 8px rgba(99,102,241,0.8);
+}
+.clock-hand {
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  transform-origin: 50% 100%;
+  border-radius: 4px;
+}
+.clock-hand.hour {
+  width: 4px;
+  height: 44px;
+  margin-left: -2px;
+  background: linear-gradient(to top, #6366f1, #c7d2fe);
+  z-index: 7;
+  box-shadow: 0 0 6px rgba(99,102,241,0.4);
+}
+.clock-hand.minute {
+  width: 2.5px;
+  height: 62px;
+  margin-left: -1.25px;
+  background: linear-gradient(to top, #a855f7, #f3e8ff);
+  z-index: 8;
+  box-shadow: 0 0 8px rgba(168,85,247,0.4);
+}
+.clock-hand.second {
+  width: 1.5px;
+  height: 74px;
+  margin-left: -0.75px;
+  background: #38bdf8;
+  z-index: 9;
+  box-shadow: 0 0 8px #38bdf8;
+}
+.clock-hand.second::after {
+  content: '';
+  position: absolute;
+  bottom: -14px;
+  left: -1.5px;
+  width: 4.5px;
+  height: 14px;
+  background: #38bdf8;
+  border-radius: 2px;
+}
+
+/* Digital Time */
+.digital-clock-content {
+  flex: 1;
+}
+.digital-time-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+@media (max-width: 580px) {
+  .digital-time-row { justify-content: center; }
+}
+.digital-digits {
+  font-size: 2.8rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  background: linear-gradient(135deg, #ffffff 40%, #c7d2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 30px rgba(99,102,241,0.3);
+}
+@media (max-width: 440px) {
+  .digital-digits { font-size: 2.2rem; }
+}
+.digital-ampm {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent-light);
+  background: var(--accent-bg);
+  border: 1px solid var(--border-accent);
+  padding: 3px 8px;
+  border-radius: var(--radius-xs);
+  letter-spacing: 0.05em;
+}
+.digital-date-str {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-top: 6px;
+}
+.digital-sub-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  background: rgba(255,255,255,0.03);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+/* Live Routine Status Card */
+.clock-routine-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.clock-routine-card.active-slot-glow {
+  border-color: rgba(99,102,241,0.35);
+  box-shadow: 0 0 24px rgba(99,102,241,0.08);
+}
+.clock-routine-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.routine-pulse-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: rgba(239,68,68,0.15);
+  border: 1px solid rgba(239,68,68,0.3);
+  color: #f87171;
+}
+.routine-pulse-pill.green {
+  background: rgba(34,197,94,0.15);
+  border-color: rgba(34,197,94,0.3);
+  color: #4ade80;
+}
+.clock-routine-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+.clock-routine-time {
+  font-size: 0.85rem;
+  color: var(--accent-light);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.clock-routine-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+/* Slot Progress Bar */
+.slot-progress-wrap {
+  margin-bottom: 14px;
+}
+.slot-progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+.slot-progress-track {
+  height: 8px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 100px;
+  overflow: hidden;
+  position: relative;
+}
+.slot-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #38bdf8);
+  border-radius: 100px;
+  transition: width 0.5s ease;
+}
+
+/* Next up mini block */
+.clock-next-slot {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.clock-next-slot-left {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+.clock-next-slot-left strong {
+  color: var(--text-primary);
+}
+.clock-next-slot-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent-light);
+  background: var(--accent-bg);
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* ========== FOCUS TIMER & STOPWATCH TABS ========== */
+.tool-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+  overflow-x: auto;
+}
+.tool-tab-btn {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  padding: 8px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.tool-tab-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.04);
+}
+.tool-tab-btn.active {
+  background: var(--accent-bg);
+  border-color: var(--border-accent);
+  color: var(--accent-light);
+}
+
+/* Preset chips */
+.timer-presets {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+.timer-preset-chip {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 7px 14px;
+  border-radius: 100px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--transition);
+}
+.timer-preset-chip:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+.timer-preset-chip.active {
+  background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(168,85,247,0.15));
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 14px rgba(99,102,241,0.25);
+}
+
+/* Big Ring Timer */
+.timer-ring-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 6px 0 22px;
+}
+.timer-svg-wrap {
+  width: 210px;
+  height: 210px;
+  position: relative;
+}
+.timer-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.timer-ring-bg {
+  fill: none;
+  stroke: rgba(255,255,255,0.06);
+  stroke-width: 9;
+}
+.timer-ring-progress {
+  fill: none;
+  stroke: url(#timerGrad);
+  stroke-width: 9;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s ease;
+}
+.timer-center-info {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.timer-digits {
+  font-size: 2.7rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: #fff;
+}
+.timer-sub-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 6px;
+}
+
+/* Timer Control Buttons */
+.timer-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.btn-timer-primary {
+  background: linear-gradient(135deg, var(--accent), #7c3aed);
+  border: none;
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 18px rgba(99,102,241,0.4);
+}
+.btn-timer-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(99,102,241,0.55);
+}
+.btn-timer-primary:active {
+  transform: scale(0.97);
+}
+.btn-timer-primary.running {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 4px 18px rgba(245,158,11,0.4);
+}
+.btn-timer-sub {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 11px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--transition);
+}
+.btn-timer-sub:hover {
+  background: rgba(255,255,255,0.09);
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+}
+
+/* ========== STOPWATCH (QUESTION SPEED DRILL) ========== */
+.stopwatch-box {
+  text-align: center;
+  padding: 14px 0 16px;
+}
+.stopwatch-digits-large {
+  font-size: 3.4rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 0 24px rgba(56,189,248,0.25);
+  margin-bottom: 20px;
+}
+@media (max-width: 480px) {
+  .stopwatch-digits-large { font-size: 2.6rem; }
+}
+.stopwatch-digits-ms {
+  font-size: 1.8rem;
+  color: #38bdf8;
+  font-weight: 700;
+}
+.stopwatch-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 20px 0;
+}
+@media (max-width: 650px) {
+  .stopwatch-stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.stopwatch-stat-cell {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  text-align: center;
+}
+.stopwatch-stat-val {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+.stopwatch-stat-lbl {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+/* Laps List */
+.laps-container {
+  max-height: 240px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: rgba(0,0,0,0.2);
+  margin-top: 18px;
+}
+.lap-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 0.85rem;
+}
+.lap-item:last-child { border-bottom: none; }
+.lap-item-num { font-weight: 700; color: var(--accent-light); }
+.lap-item-time { font-family: monospace; font-size: 0.95rem; font-weight: 700; }
+.lap-item-badge {
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+.lap-badge-fast { background: rgba(34,197,94,0.15); color: #4ade80; }
+.lap-badge-good { background: rgba(99,102,241,0.15); color: var(--accent-light); }
+.lap-badge-tough { background: rgba(245,158,11,0.15); color: #fbbf24; }
+
+/* Focus History Log */
+.focus-today-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.focus-today-card {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+}
+.focus-session-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+}
+.focus-session-time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Milestone Cards */
+.milestone-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.milestone-card {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+}
+.milestone-val {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin: 6px 0;
+}
+.milestone-lbl {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--accent-light);
+}
+.milestone-meta {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* ========== ZEN DESK MODE OVERLAY ========== */
+.zen-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #04050b;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px;
+  animation: page-in 0.3s ease;
+}
+.zen-overlay-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.zen-center-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 18px;
+  flex: 1;
+}
+.zen-clock-digits {
+  font-size: 6rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 0 50px rgba(99,102,241,0.4), 0 0 100px rgba(168,85,247,0.2);
+}
+@media (max-width: 600px) {
+  .zen-clock-digits { font-size: 3.8rem; }
+}
+.zen-activity-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 8px 20px;
+  border-radius: 100px;
+  font-size: 1rem;
+  color: #e2e8f0;
+}
+.zen-timer-mini {
+  background: rgba(99,102,241,0.15);
+  border: 1px solid var(--accent);
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.zen-btn-close {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--border);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--transition);
+}
+.zen-btn-close:hover {
+  background: rgba(255,255,255,0.15);
+}
+
 /* ========== FOOTER ========== */
 .footer {
   text-align: center; padding: 32px 0 16px;
@@ -892,6 +1641,10 @@ body::before {
       <stop offset="0%" stop-color="#6366f1" />
       <stop offset="100%" stop-color="#a855f7" />
     </linearGradient>
+    <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#38bdf8" />
+    </linearGradient>
   </defs>
 </svg>
 
@@ -921,6 +1674,36 @@ body::before {
       <button class="modal-btn modal-btn-outline btn-close-modal" onclick="closeInstallModal()">Close</button>
       <button id="modal-install-btn" class="modal-btn modal-btn-primary" onclick="triggerPwaInstall()">Install Now</button>
     </div>
+  </div>
+</div>
+
+<!-- ZEN DESK CLOCK MODAL -->
+<div id="zen-clock-overlay" class="zen-overlay" style="display:none;">
+  <div class="zen-overlay-top">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:1.4rem;">📖</span>
+      <span style="font-weight:800;font-size:1.05rem;background:linear-gradient(135deg,#fff,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">JEE Planner • Zen Desk Clock</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span id="zen-wake-pill" style="font-size:0.75rem;padding:4px 10px;border-radius:100px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);color:#4ade80;">🔋 Screen Awake</span>
+      <button class="zen-btn-close" onclick="closeZenMode()">✕ Exit Zen (Esc)</button>
+    </div>
+  </div>
+  <div class="zen-center-wrap">
+    <div id="zen-digital-time" class="zen-clock-digits">11:42:08</div>
+    <div id="zen-date-str" style="font-size:1.1rem;color:var(--text-secondary);font-weight:500;">Sunday, Oct 4, 2026</div>
+    <div id="zen-routine-banner" class="zen-activity-pill">
+      <span class="live-pulse-dot"></span>
+      <span id="zen-routine-text">Current Slot: Class 1 • 45m remaining</span>
+    </div>
+    <div id="zen-timer-wrap" style="display:none;" class="zen-timer-mini">
+      <span id="zen-timer-label">⏳ Class Focus:</span>
+      <span id="zen-timer-digits">74:35</span>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;color:var(--text-muted);font-size:0.8rem;flex-wrap:wrap;gap:8px;">
+    <div>Day <span id="zen-day-num">4</span> of 50 • Syllabus Completion Target</div>
+    <div>Press Esc to return • Keep phone propped on desk</div>
   </div>
 </div>
 
@@ -1163,6 +1946,7 @@ function renderNav(){
   const pages=[
     {id:'dashboard',icon:'🏠',label:'Dashboard'},
     {id:'routine',icon:'⏰',label:'Routine'},
+    {id:'clock',icon:'⏱️',label:'Clock'},
     {id:'schedule',icon:'📅',label:'Schedule'},
     {id:'chapters',icon:'📚',label:'Chapters'},
     {id:'analytics',icon:'📊',label:'Analytics'},
@@ -1207,6 +1991,7 @@ function renderPage(){
   switch(activePage){
     case 'dashboard': m.innerHTML=renderDashboard(); break;
     case 'routine': m.innerHTML=renderRoutine(); break;
+    case 'clock': m.innerHTML=renderClock(); break;
     case 'schedule': m.innerHTML=renderSchedule(); break;
     case 'chapters': m.innerHTML=renderChapters(); break;
     case 'analytics': m.innerHTML=renderAnalytics(); break;
@@ -1308,7 +2093,10 @@ function renderDashboard(){
   h+=`<div class="card routine-widget">
     <div class="routine-widget-top">
       <div class="routine-widget-title"><span>⏰</span> Daily Routine • ${hasStarted ? 'Today (Day ' + dn + ')' : 'Day 1 Preview (Starts Oct 1)'}</div>
-      <button class="routine-widget-link" onclick="go('routine')">View Timeline →</button>
+      <div style="display:flex; gap:12px; align-items:center;">
+        <button class="routine-widget-link" onclick="go('clock')">Focus Clock ⏱️</button>
+        <button class="routine-widget-link" onclick="go('routine')">Timeline →</button>
+      </div>
     </div>
     ${routineBadgeHtml}
     <div class="routine-slots-summary">
@@ -1435,7 +2223,10 @@ function renderRoutine(){
           <div class="routine-live-desc">${activeSlot ? activeSlot.title : 'Night Rest / Deep Sleep'}</div>
         </div>
       </div>
-      ${nextSlot ? `<div style="font-size:0.78rem; color:var(--text-secondary); text-align:right;"><strong>Next:</strong> ${nextSlot.time.split(' - ')[0]} • ${nextSlot.title}</div>` : ''}
+      <div style="display:flex; align-items:center; gap:10px;">
+        ${nextSlot ? `<div style="font-size:0.78rem; color:var(--text-secondary); text-align:right;"><strong>Next:</strong> ${nextSlot.time.split(' - ')[0]} • ${nextSlot.title}</div>` : ''}
+        <button class="routine-day-nav-btn" style="padding:4px 10px; font-size:0.75rem;" onclick="go('clock')">Focus ⏱️</button>
+      </div>
     </div>`;
   } else if (!hasStarted && targetDay === 1) {
     h += `<div class="routine-live-card info-card">
@@ -1569,6 +2360,929 @@ function renderRoutine(){
   h += renderFooter();
   h += `</div>`;
   return h;
+}
+
+// ==================== CLOCK & FOCUS STUDIO ====================
+let clockActiveTab = 'timer'; // 'timer', 'stopwatch', 'log'
+let clockTimer = {
+  mode: 'class75',
+  totalSec: 75 * 60,
+  remainSec: 75 * 60,
+  running: false,
+  sound: true,
+  name: '⚡ Class Focus (75m)'
+};
+
+const TIMER_PRESETS = {
+  class75: { label: '⚡ Class (75m)', name: 'Class Focus Lecture', sec: 75 * 60 },
+  class90: { label: '⚡ Physics (90m)', name: 'Physics Prime Class', sec: 90 * 60 },
+  pyq45:   { label: '🎯 PYQ Sprint (45m)', name: 'PYQ Speed Sprint', sec: 45 * 60 },
+  mock180: { label: '📝 Full Mock (180m)', name: 'JEE Main Full Mock', sec: 180 * 60 },
+  pomo25:  { label: '🍅 Pomodoro (25m)', name: 'Focused Sprint', sec: 25 * 60 },
+  pomo50:  { label: '🍅 Deep Pomo (50m)', name: 'Deep Work Block', sec: 50 * 60 }
+};
+
+let clockStopwatch = {
+  running: false,
+  startTime: 0,
+  accumMs: 0,
+  intervalId: null,
+  problems: []
+};
+
+let zenWakeLock = null;
+let masterClockTicker = null;
+
+function playTimerChime() {
+  if (!clockTimer.sound) return;
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const notes = [523.25, 659.25, 783.99, 1046.50]; // Bright chime chord
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.12);
+      gain.gain.setValueAtTime(0.001, ctx.currentTime + idx * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.22, ctx.currentTime + idx * 0.12 + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.12 + 0.8);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + idx * 0.12);
+      osc.stop(ctx.currentTime + idx * 0.12 + 0.85);
+    });
+  } catch(e) {}
+}
+
+function playLapChime() {
+  if (!clockTimer.sound) return;
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    gain.gain.setValueAtTime(0.07, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.1);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.1);
+  } catch(e) {}
+}
+
+function getTodayFocusLog() {
+  const todayKey = new Date().toISOString().slice(0, 10);
+  try {
+    const raw = localStorage.getItem('jee50d-focus-v2');
+    const all = raw ? JSON.parse(raw) : {};
+    return all[todayKey] || { totalMins: 0, sessions: [] };
+  } catch(e) {
+    return { totalMins: 0, sessions: [] };
+  }
+}
+
+function logCompletedFocusSession(title, mins) {
+  if (mins <= 0) return;
+  const todayKey = new Date().toISOString().slice(0, 10);
+  try {
+    const raw = localStorage.getItem('jee50d-focus-v2');
+    const all = raw ? JSON.parse(raw) : {};
+    if (!all[todayKey]) all[todayKey] = { totalMins: 0, sessions: [] };
+    all[todayKey].totalMins += mins;
+    all[todayKey].sessions.unshift({
+      title,
+      mins,
+      time: formatTime12(curTimeMin())
+    });
+    localStorage.setItem('jee50d-focus-v2', JSON.stringify(all));
+  } catch(e) {}
+  updateFocusLogUI();
+}
+
+function clearTodayFocusLog() {
+  const todayKey = new Date().toISOString().slice(0, 10);
+  try {
+    const raw = localStorage.getItem('jee50d-focus-v2');
+    const all = raw ? JSON.parse(raw) : {};
+    delete all[todayKey];
+    localStorage.setItem('jee50d-focus-v2', JSON.stringify(all));
+    showToast('Today\'s focus log reset', 'info');
+  } catch(e) {}
+  if (activePage === 'clock' && clockActiveTab === 'log') {
+    const m = document.getElementById('main');
+    if (m) m.innerHTML = renderClock();
+  }
+}
+
+function getTodayRoutineSlots() {
+  const dn = dayNum();
+  const hasStarted = dn >= 1 && dn <= 50;
+  const targetDay = hasStarted ? dn : 1;
+  const validDay = schedule[targetDay - 1] || schedule[0];
+  const isRest = validDay.rest;
+  const numLecs = validDay.lectures ? validDay.lectures.length : 0;
+  if (isRest) return routineMaster.rest;
+  if (numLecs === 4) return routineMaster.fourLec;
+  return routineMaster.threeLec;
+}
+
+function getCurrentRoutineSlotInfo() {
+  const slots = getTodayRoutineSlots();
+  const nowMin = curTimeMin();
+  const dn = dayNum();
+  const hasStarted = dn >= 1 && dn <= 50;
+
+  let activeSlot = null;
+  let nextSlot = null;
+
+  for (let i = 0; i < slots.length; i++) {
+    if (nowMin >= slots[i].start && nowMin < slots[i].end) {
+      activeSlot = slots[i];
+      nextSlot = slots[i + 1] || null;
+      break;
+    }
+  }
+
+  if (!activeSlot) {
+    if (nowMin < slots[0].start) {
+      const minsUntil = slots[0].start - nowMin;
+      return {
+        hasStarted,
+        active: null,
+        next: slots[0],
+        title: '🌙 Night Sleep & Brain Recovery',
+        desc: `Wake up scheduled at ${slots[0].time.split(' - ')[0]} (${minsUntil}m remaining before kickoff)`,
+        timeRange: `Until ${slots[0].time.split(' - ')[0]}`,
+        totalMins: 420,
+        elapsedMins: 420 - minsUntil,
+        remainingMins: minsUntil,
+        progressPct: Math.round(((420 - minsUntil) / 420) * 100),
+        isSleep: true
+      };
+    } else {
+      return {
+        hasStarted,
+        active: null,
+        next: slots[0],
+        title: '😴 Deep Sleep & Memory Consolidation',
+        desc: 'All slots completed for today. Rest your eyes and recharge for tomorrow at 06:00 AM.',
+        timeRange: '10:45 PM - 06:00 AM',
+        totalMins: 435,
+        elapsedMins: Math.max(0, nowMin - 1365),
+        remainingMins: Math.max(0, (1440 - nowMin) + 360),
+        progressPct: 100,
+        isSleep: true
+      };
+    }
+  }
+
+  const totalMins = activeSlot.end - activeSlot.start;
+  const elapsedMins = Math.max(0, nowMin - activeSlot.start);
+  const remainingMins = Math.max(0, activeSlot.end - nowMin);
+  const progressPct = Math.min(100, Math.round((elapsedMins / totalMins) * 100));
+
+  return {
+    hasStarted,
+    active: activeSlot,
+    next: nextSlot,
+    title: activeSlot.title,
+    desc: activeSlot.desc,
+    timeRange: activeSlot.time,
+    totalMins,
+    elapsedMins,
+    remainingMins,
+    progressPct,
+    isSleep: activeSlot.tag === 'sleep'
+  };
+}
+
+function renderClock(){
+  const dn = dayNum();
+  const dl = daysLeft();
+  const hasStarted = dn >= 1 && dn <= 50;
+  const slotInfo = getCurrentRoutineSlotInfo();
+  const now = new Date();
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const dateStr = `${days[now.getDay()]}, ${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+
+  const hPad = (now.getHours() % 12 || 12).toString().padStart(2, '0');
+  const mPad = now.getMinutes().toString().padStart(2, '0');
+  const sPad = now.getSeconds().toString().padStart(2, '0');
+  const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+
+  // Target Class Count today
+  const targetDay = hasStarted ? dn : 1;
+  const vDay = schedule[targetDay - 1] || schedule[0];
+  const lecsToday = vDay.lectures ? vDay.lectures.length : 0;
+  const studyHrsToday = vDay.rest ? 'Revision & Test' : `${(lecsToday * 1.5).toFixed(1)}h Lectures`;
+
+  let h = `<div class="page">
+    <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px;">
+      <div>
+        <h1>⏱️ Master Clock & Focus Studio</h1>
+        <p>Precision timekeeping, real-time routine sync, JEE study timer & speed problem drill</p>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <button class="clock-action-btn" onclick="openZenMode()" title="Full-screen ambient clock mode for desk stand">
+          <span>🖥️</span> <span>Zen Desk Mode</span>
+        </button>
+        <button class="clock-action-btn ${clockTimer.sound ? 'active' : ''}" onclick="toggleTimerSound()" id="clock-sound-btn" title="Toggle audio chime">
+          <span>${clockTimer.sound ? '🔔' : '🔕'}</span> <span>Sound: ${clockTimer.sound ? 'ON' : 'OFF'}</span>
+        </button>
+      </div>
+    </div>`;
+
+  // Grid: Master Clock + Routine Sync
+  h += `<div class="clock-grid">
+    <!-- Card 1: Master Analog + Digital Clock -->
+    <div class="card clock-hero-card">
+      <div class="clock-hero-top">
+        <div class="clock-hero-badge">
+          <span>🇮🇳</span> <span>IST (UTC +5:30)</span>
+        </div>
+        <div style="font-size:0.78rem; font-weight:700; color:var(--accent-light);">
+          ${hasStarted ? `Day ${dn} of 50 • ${dl} Days Left` : 'Day 1 Starts Oct 1'}
+        </div>
+      </div>
+
+      <div class="clock-main-display">
+        <!-- Analog Clock Dial -->
+        <div class="analog-clock-wrap">
+          <div class="analog-clock">
+            <div class="clock-dial-ticks">
+              ${[...Array(12)].map((_, i) => `<div class="clock-tick ${i%3===0?'major':''}" style="transform: rotate(${i * 30}deg);"></div>`).join('')}
+            </div>
+            <div class="clock-center-dot"></div>
+            <div id="clock-hour-hand" class="clock-hand hour"></div>
+            <div id="clock-minute-hand" class="clock-hand minute"></div>
+            <div id="clock-second-hand" class="clock-hand second"></div>
+          </div>
+        </div>
+
+        <!-- Digital Clock Display -->
+        <div class="digital-clock-content">
+          <div class="digital-time-row">
+            <div id="clock-digital-time" class="digital-digits">${hPad}:${mPad}:${sPad}</div>
+            <div id="clock-digital-ampm" class="digital-ampm">${ampm}</div>
+          </div>
+          <div id="clock-digital-date" class="digital-date-str">${dateStr}</div>
+          <div class="digital-sub-pill">
+            <span>🎯</span> <span>Target Today: ${vDay.rest ? 'Mock Test & Formula Review' : `${lecsToday} Classes (${studyHrsToday})`}</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:14px; margin-top:10px; font-size:0.78rem; color:var(--text-secondary);">
+        <span>⚡ 100% Offline Real-Time Sync</span>
+        <span style="color:var(--accent-light); cursor:pointer;" onclick="openZenMode()">Open Fullscreen Stand →</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Live Routine Sync -->
+    <div class="card clock-routine-card active-slot-glow">
+      <div>
+        <div class="clock-routine-header">
+          <div class="routine-pulse-pill green">
+            <span class="live-pulse-dot" style="width:6px; height:6px;"></span>
+            <span>HAPPENING NOW</span>
+          </div>
+          <button class="routine-widget-link" onclick="go('routine')">Full Routine →</button>
+        </div>
+
+        <div id="clock-routine-title" class="clock-routine-title">${slotInfo.title}</div>
+        <div id="clock-routine-time" class="clock-routine-time">⏰ ${slotInfo.timeRange}</div>
+        <div id="clock-routine-desc" class="clock-routine-desc">${slotInfo.desc}</div>
+
+        <div class="slot-progress-wrap">
+          <div id="clock-routine-progress-meta" class="slot-progress-meta">
+            <span>Progress in this block</span>
+            <span><strong>${slotInfo.remainingMins}m</strong> remaining</span>
+          </div>
+          <div class="slot-progress-track">
+            <div id="clock-routine-progress-fill" class="slot-progress-fill" style="width: ${slotInfo.progressPct}%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Next slot preview -->
+      ${slotInfo.next ? `
+        <div class="clock-next-slot">
+          <div class="clock-next-slot-left">
+            <span style="font-size:0.75rem; color:var(--text-muted); display:block;">COMING UP NEXT</span>
+            <strong>${slotInfo.next.time.split(' - ')[0]}:</strong> ${slotInfo.next.title}
+          </div>
+          <span class="clock-next-slot-tag">${slotInfo.next.dur || 'Next Block'}</span>
+        </div>
+      ` : ''}
+    </div>
+  </div>`;
+
+  // Tools Section: Timer / Stopwatch / Log Tabs
+  h += `<div class="section">
+    <div class="tool-tabs">
+      <button class="tool-tab-btn ${clockActiveTab==='timer'?'active':''}" onclick="setClockTab('timer')">
+        <span>⏳</span> <span>JEE Focus Timer</span>
+      </button>
+      <button class="tool-tab-btn ${clockActiveTab==='stopwatch'?'active':''}" onclick="setClockTab('stopwatch')">
+        <span>⚡</span> <span>Question Speed Stopwatch</span>
+      </button>
+      <button class="tool-tab-btn ${clockActiveTab==='log'?'active':''}" onclick="setClockTab('log')">
+        <span>📊</span> <span>Today's Study Log</span>
+      </button>
+    </div>`;
+
+  if (clockActiveTab === 'timer') {
+    // Focus Timer Tool View
+    const m = Math.floor(clockTimer.remainSec / 60);
+    const s = clockTimer.remainSec % 60;
+    const timeStr = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    const circ = 2 * Math.PI * 85;
+    const off = circ * (1 - clockTimer.remainSec / clockTimer.totalSec);
+
+    h += `<div class="card" style="padding:28px 20px;">
+      <div class="timer-presets">
+        ${Object.entries(TIMER_PRESETS).map(([k, p]) => `
+          <button class="timer-preset-chip ${clockTimer.mode===k?'active':''}" onclick="setTimerPreset('${k}')">
+            ${p.label}
+          </button>
+        `).join('')}
+      </div>
+
+      <div class="timer-ring-box">
+        <div class="timer-svg-wrap">
+          <svg class="timer-svg" viewBox="0 0 200 200">
+            <circle class="timer-ring-bg" cx="100" cy="100" r="85"/>
+            <circle id="timer-progress-ring" class="timer-ring-progress" cx="100" cy="100" r="85"
+              stroke-dasharray="${circ}" stroke-dashoffset="${off}"/>
+          </svg>
+          <div class="timer-center-info">
+            <div id="timer-digits" class="timer-digits">${timeStr}</div>
+            <div id="timer-status-label" class="timer-sub-label">${clockTimer.running ? 'Focusing...' : 'Ready to Start'}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timer-controls">
+        <button id="btn-timer-toggle" class="btn-timer-primary ${clockTimer.running ? 'running' : ''}" onclick="toggleTimerStartPause()">
+          <span>${clockTimer.running ? '⏸' : '▶'}</span>
+          <span>${clockTimer.running ? 'Pause Focus' : 'Start Focus Session'}</span>
+        </button>
+        <button class="btn-timer-sub" onclick="resetFocusTimer()" title="Reset Timer">
+          <span>🔄 Reset</span>
+        </button>
+        <button class="btn-timer-sub" onclick="addTimerMinutes(5)" title="Add 5 Minutes">
+          <span>+5m</span>
+        </button>
+        <button class="btn-timer-sub" onclick="addTimerMinutes(10)" title="Add 10 Minutes">
+          <span>+10m</span>
+        </button>
+      </div>
+
+      <div style="text-align:center; margin-top:20px; font-size:0.8rem; color:var(--text-muted);">
+        💡 Complete sessions are automatically credited to your <strong>Today's Focus Log</strong>.
+      </div>
+    </div>`;
+  } else if (clockActiveTab === 'stopwatch') {
+    // Problem Speed Stopwatch View
+    const totalMs = clockStopwatch.accumMs;
+    const min = Math.floor(totalMs / 60000);
+    const sec = Math.floor((totalMs % 60000) / 1000);
+    const ms = Math.floor((totalMs % 1000) / 10);
+    const mainStr = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+    const msStr = `.${ms.toString().padStart(2, '0')}`;
+
+    const numSolved = clockStopwatch.problems.length;
+    let avgFormatted = '--';
+    let fastestFormatted = '--';
+    if (numSolved > 0) {
+      const sumMs = clockStopwatch.problems.reduce((a, b) => a + b.durationMs, 0);
+      const avgSec = Math.round((sumMs / numSolved) / 1000);
+      const aM = Math.floor(avgSec / 60);
+      const aS = avgSec % 60;
+      avgFormatted = `${aM}m ${aS.toString().padStart(2, '0')}s`;
+
+      const fastestMs = Math.min(...clockStopwatch.problems.map(p => p.durationMs));
+      const fSec = Math.round(fastestMs / 1000);
+      const fM = Math.floor(fSec / 60);
+      const fS = fSec % 60;
+      fastestFormatted = `${fM}m ${fS.toString().padStart(2, '0')}s`;
+    }
+
+    h += `<div class="card" style="padding:26px 20px;">
+      <div class="stopwatch-box">
+        <div class="stopwatch-digits-large">
+          <span id="stopwatch-main-time">${mainStr}</span><span id="stopwatch-ms-time" class="stopwatch-digits-ms">${msStr}</span>
+        </div>
+
+        <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:20px;">
+          <button class="btn-timer-primary" onclick="lapStopwatchQuestion()" style="background:linear-gradient(135deg,#059669,#10b981); box-shadow:0 4px 18px rgba(16,185,129,0.35);">
+            <span>⏱️ Next Question (Lap)</span>
+          </button>
+          <button id="btn-sw-toggle" class="btn-timer-sub" onclick="toggleStopwatchStartPause()">
+            <span>${clockStopwatch.running ? '⏸ Pause' : '▶ Start'}</span>
+          </button>
+          <button class="btn-timer-sub" onclick="resetStopwatch()">
+            <span>🔄 Reset</span>
+          </button>
+          ${clockStopwatch.accumMs > 60000 ? `
+            <button class="btn-timer-sub" onclick="saveStopwatchToFocusLog()" style="border-color:var(--accent); color:var(--accent-light);" title="Save to Study Hours">
+              <span>💾 Log to Focus</span>
+            </button>
+          ` : ''}
+        </div>
+
+        <!-- Problem Speed Stats Tiles -->
+        <div class="stopwatch-stats-grid">
+          <div class="stopwatch-stat-cell">
+            <div id="sw-stat-count" class="stopwatch-stat-val">${numSolved}</div>
+            <div class="stopwatch-stat-lbl">Questions Solved</div>
+          </div>
+          <div class="stopwatch-stat-cell">
+            <div id="sw-stat-avg" class="stopwatch-stat-val" style="color:#38bdf8;">${avgFormatted}</div>
+            <div class="stopwatch-stat-lbl">Avg Time / Question</div>
+          </div>
+          <div class="stopwatch-stat-cell">
+            <div id="sw-stat-fastest" class="stopwatch-stat-val" style="color:var(--success);">${fastestFormatted}</div>
+            <div class="stopwatch-stat-lbl">Fastest Question</div>
+          </div>
+          <div class="stopwatch-stat-cell">
+            <div class="stopwatch-stat-val" style="color:#f59e0b;">≤ 2m 15s</div>
+            <div class="stopwatch-stat-lbl">JEE Main Benchmark</div>
+          </div>
+        </div>
+
+        <!-- Laps list -->
+        ${numSolved > 0 ? `
+          <div class="laps-container" id="sw-laps-list">
+            ${clockStopwatch.problems.map(p => `
+              <div class="lap-item">
+                <span class="lap-item-num">Question #${p.qNum}</span>
+                <span class="lap-item-time">${p.timeFormatted}</span>
+                <span class="lap-item-badge ${p.badgeClass}">${p.tag}</span>
+              </div>
+            `).join('')}
+          </div>
+        ` : `
+          <div style="background:rgba(255,255,255,0.02); border:1px dashed var(--border); border-radius:var(--radius-sm); padding:20px; font-size:0.85rem; color:var(--text-secondary); text-align:center;">
+            📝 Hit <strong>"Next Question (Lap)"</strong> each time you solve a JEE question to benchmark your speed!
+          </div>
+        `}
+      </div>
+    </div>`;
+  } else {
+    // Today's Study Log View
+    const log = getTodayFocusLog();
+    const logHours = (log.totalMins / 60).toFixed(1);
+    const targetHours = 8.0;
+    const logPct = Math.min(100, Math.round((log.totalMins / (targetHours * 60)) * 100));
+
+    h += `<div class="card" style="padding:24px;">
+      <div class="focus-today-summary">
+        <div class="focus-today-card">
+          <div style="font-size:0.75rem; font-weight:700; color:var(--accent-light); text-transform:uppercase;">Today's Deep Work</div>
+          <div style="font-size:2rem; font-weight:900; color:#fff; margin:4px 0;">${logHours} hrs</div>
+          <div style="font-size:0.78rem; color:var(--text-secondary);">${log.totalMins} minutes focused study</div>
+        </div>
+        <div class="focus-today-card">
+          <div style="font-size:0.75rem; font-weight:700; color:var(--success); text-transform:uppercase;">Daily Goal (${targetHours}h)</div>
+          <div style="font-size:2rem; font-weight:900; color:var(--success); margin:4px 0;">${logPct}%</div>
+          <div style="font-size:0.78rem; color:var(--text-secondary);">${Math.max(0, targetHours * 60 - log.totalMins)}m remaining to target</div>
+        </div>
+        <div class="focus-today-card">
+          <div style="font-size:0.75rem; font-weight:700; color:var(--organic); text-transform:uppercase;">Sessions Completed</div>
+          <div style="font-size:2rem; font-weight:900; color:#fff; margin:4px 0;">${log.sessions.length}</div>
+          <div style="font-size:0.78rem; color:var(--text-secondary);">Logged focus blocks</div>
+        </div>
+      </div>
+
+      <div style="margin:20px 0 24px;">
+        <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:8px;">
+          <span>Daily Goal Progress</span>
+          <span><strong>${logHours} / ${targetHours} Hours</strong></span>
+        </div>
+        <div class="slot-progress-track" style="height:12px;">
+          <div class="slot-progress-fill" style="width:${logPct}%; background:linear-gradient(90deg,var(--accent),#22c55e);"></div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <div style="font-weight:700; font-size:0.9rem;">📋 Today's Session History</div>
+        ${log.sessions.length > 0 ? `
+          <button class="clock-action-btn" onclick="clearTodayFocusLog()" style="font-size:0.75rem; padding:4px 10px; color:var(--danger); border-color:rgba(239,68,68,0.2);">Clear Today's Log</button>
+        ` : ''}
+      </div>
+
+      ${log.sessions.length > 0 ? `
+        <div>
+          ${log.sessions.map(s => `
+            <div class="focus-session-row">
+              <div>
+                <strong style="color:var(--text-primary);">${s.title}</strong>
+                <div class="focus-session-time">Completed at ${s.time}</div>
+              </div>
+              <span style="font-weight:700; color:var(--accent-light); font-size:0.9rem;">+${s.mins} min</span>
+            </div>
+          `).join('')}
+        </div>
+      ` : `
+        <div style="text-align:center; padding:28px 14px; background:rgba(255,255,255,0.02); border:1px dashed var(--border); border-radius:var(--radius-sm); color:var(--text-secondary); font-size:0.85rem;">
+          No sessions recorded yet today. Start a <strong>Focus Timer</strong> or <strong>Question Stopwatch</strong> to automatically log your study hours!
+        </div>
+      `}
+    </div>`;
+  }
+
+  h += `</div>`; // end section
+
+  // Milestone Countdowns
+  h += `<div class="section">
+    <div class="section-label">🚀 Countdown Milestones</div>
+    <div class="milestone-grid">
+      <div class="milestone-card">
+        <div class="milestone-lbl">🏁 50-Day Syllabus Completion</div>
+        <div id="milestone-syl-val" class="milestone-val">--d --h --m</div>
+        <div class="milestone-meta">Thursday, 19 Nov 2026 • Target: All 146 Lectures Finished</div>
+      </div>
+      <div class="milestone-card">
+        <div class="milestone-lbl">🎯 JEE Main 2027 Session 1</div>
+        <div id="milestone-jee-val" class="milestone-val">--d --h</div>
+        <div class="milestone-meta">Target Exam Date: ~22 January 2027 • Final Revision Phase</div>
+      </div>
+    </div>
+  </div>`;
+
+  h += renderFooter();
+  h += `</div>`;
+  return h;
+}
+
+function setClockTab(tab) {
+  clockActiveTab = tab;
+  const m = document.getElementById('main');
+  if (m && activePage === 'clock') m.innerHTML = renderClock();
+}
+
+function setTimerPreset(key) {
+  const p = TIMER_PRESETS[key];
+  if (!p) return;
+  clockTimer.mode = key;
+  clockTimer.totalSec = p.sec;
+  clockTimer.remainSec = p.sec;
+  clockTimer.name = p.name;
+  if (clockTimer.running) {
+    clockTimer.running = false;
+  }
+  const m = document.getElementById('main');
+  if (m && activePage === 'clock') m.innerHTML = renderClock();
+}
+
+function toggleTimerStartPause() {
+  clockTimer.running = !clockTimer.running;
+  if (clockTimer.running && clockTimer.remainSec <= 0) {
+    clockTimer.remainSec = clockTimer.totalSec;
+  }
+  updateTimerUI();
+}
+
+function resetFocusTimer() {
+  clockTimer.running = false;
+  clockTimer.remainSec = clockTimer.totalSec;
+  updateTimerUI();
+}
+
+function addTimerMinutes(mins) {
+  const addSec = mins * 60;
+  clockTimer.totalSec += addSec;
+  clockTimer.remainSec += addSec;
+  updateTimerUI();
+}
+
+function toggleTimerSound() {
+  clockTimer.sound = !clockTimer.sound;
+  const btn = document.getElementById('clock-sound-btn');
+  if (btn) {
+    btn.innerHTML = `<span>${clockTimer.sound ? '🔔' : '🔕'}</span> <span>Sound: ${clockTimer.sound ? 'ON' : 'OFF'}</span>`;
+    btn.classList.toggle('active', clockTimer.sound);
+  }
+  showToast(clockTimer.sound ? 'Audio chimes enabled 🔔' : 'Audio chimes muted 🔕', 'info');
+}
+
+function toggleStopwatchStartPause() {
+  if (clockStopwatch.running) {
+    pauseStopwatch();
+  } else {
+    startStopwatch();
+  }
+}
+
+function startStopwatch() {
+  if (clockStopwatch.running) return;
+  clockStopwatch.running = true;
+  clockStopwatch.startTime = performance.now() - clockStopwatch.accumMs;
+  clockStopwatch.intervalId = setInterval(() => {
+    clockStopwatch.accumMs = performance.now() - clockStopwatch.startTime;
+    updateStopwatchUI();
+  }, 50);
+  const btn = document.getElementById('btn-sw-toggle');
+  if (btn) btn.innerHTML = '<span>⏸ Pause</span>';
+}
+
+function pauseStopwatch() {
+  clockStopwatch.running = false;
+  if (clockStopwatch.intervalId) {
+    clearInterval(clockStopwatch.intervalId);
+    clockStopwatch.intervalId = null;
+  }
+  const btn = document.getElementById('btn-sw-toggle');
+  if (btn) btn.innerHTML = '<span>▶ Start</span>';
+}
+
+function resetStopwatch() {
+  pauseStopwatch();
+  clockStopwatch.accumMs = 0;
+  clockStopwatch.problems = [];
+  const m = document.getElementById('main');
+  if (m && activePage === 'clock' && clockActiveTab === 'stopwatch') {
+    m.innerHTML = renderClock();
+  }
+}
+
+function lapStopwatchQuestion() {
+  if (!clockStopwatch.running && clockStopwatch.accumMs === 0) {
+    startStopwatch();
+    return;
+  }
+
+  const currentTotalMs = clockStopwatch.accumMs;
+  const prevSumMs = clockStopwatch.problems.reduce((a, b) => a + b.durationMs, 0);
+  const pMs = Math.max(1000, currentTotalMs - prevSumMs);
+
+  const qNum = clockStopwatch.problems.length + 1;
+  const pSec = Math.floor(pMs / 1000);
+  const pM = Math.floor(pSec / 60);
+  const pS = pSec % 60;
+  const timeFormatted = `${pM}m ${pS.toString().padStart(2, '0')}s`;
+
+  let tag = 'Fast', badgeClass = 'lap-badge-fast';
+  if (pSec <= 135) {
+    tag = '⚡ Fast (< 2m 15s)';
+    badgeClass = 'lap-badge-fast';
+  } else if (pSec <= 210) {
+    tag = '✅ Good Pace';
+    badgeClass = 'lap-badge-good';
+  } else {
+    tag = '⚠️ Tough Problem';
+    badgeClass = 'lap-badge-tough';
+  }
+
+  clockStopwatch.problems.unshift({
+    qNum,
+    durationMs: pMs,
+    timeFormatted,
+    tag,
+    badgeClass
+  });
+
+  playLapChime();
+
+  const m = document.getElementById('main');
+  if (m && activePage === 'clock' && clockActiveTab === 'stopwatch') {
+    m.innerHTML = renderClock();
+  }
+}
+
+function saveStopwatchToFocusLog() {
+  const mins = Math.round(clockStopwatch.accumMs / 60000);
+  if (mins < 1) {
+    showToast('Practice session too short to log (< 1 min)', 'info');
+    return;
+  }
+  const qCount = clockStopwatch.problems.length;
+  const title = `Question Practice (${qCount} Qs solved)`;
+  logCompletedFocusSession(title, mins);
+  showToast(`🎉 Logged ${mins}m problem solving to today's study hours!`, 'success');
+  confetti();
+}
+
+async function openZenMode() {
+  const overlay = document.getElementById('zen-clock-overlay');
+  if (overlay) overlay.style.display = 'flex';
+  const dn = dayNum();
+  const daySpan = document.getElementById('zen-day-num');
+  if (daySpan) daySpan.textContent = dn >= 1 && dn <= 50 ? dn : 1;
+
+  if ('wakeLock' in navigator) {
+    try {
+      zenWakeLock = await navigator.wakeLock.request('screen');
+      const pill = document.getElementById('zen-wake-pill');
+      if (pill) pill.style.display = 'inline-flex';
+    } catch(e) {}
+  }
+}
+
+function closeZenMode() {
+  const overlay = document.getElementById('zen-clock-overlay');
+  if (overlay) overlay.style.display = 'none';
+  if (zenWakeLock) {
+    try { zenWakeLock.release(); } catch(e) {}
+    zenWakeLock = null;
+  }
+}
+
+function updateMasterClockUI() {
+  const now = new Date();
+  const h = now.getHours();
+  const m = now.getMinutes();
+  const s = now.getSeconds();
+
+  const hDeg = (h % 12) * 30 + m * 0.5;
+  const mDeg = m * 6 + s * 0.1;
+  const sDeg = s * 6;
+
+  const hHand = document.getElementById('clock-hour-hand');
+  const mHand = document.getElementById('clock-minute-hand');
+  const sHand = document.getElementById('clock-second-hand');
+  if (hHand) hHand.style.transform = `rotate(${hDeg}deg)`;
+  if (mHand) mHand.style.transform = `rotate(${mDeg}deg)`;
+  if (sHand) sHand.style.transform = `rotate(${sDeg}deg)`;
+
+  const h12 = h % 12 || 12;
+  const hPad = h12.toString().padStart(2, '0');
+  const mPad = m.toString().padStart(2, '0');
+  const sPad = s.toString().padStart(2, '0');
+  const ampm = h >= 12 ? 'PM' : 'AM';
+
+  const digiTime = document.getElementById('clock-digital-time');
+  const digiAmpm = document.getElementById('clock-digital-ampm');
+  const digiDate = document.getElementById('clock-digital-date');
+  if (digiTime) digiTime.textContent = `${hPad}:${mPad}:${sPad}`;
+  if (digiAmpm) digiAmpm.textContent = ampm;
+  if (digiDate) {
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    digiDate.textContent = `${days[now.getDay()]}, ${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+  }
+
+  // Zen Mode Clock
+  const zenTime = document.getElementById('zen-digital-time');
+  if (zenTime) zenTime.textContent = `${hPad}:${mPad}:${sPad} ${ampm}`;
+  const zenDate = document.getElementById('zen-date-str');
+  if (zenDate) {
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    zenDate.textContent = `${days[now.getDay()]}, ${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+  }
+
+  updateRoutineSyncUI();
+  updateMilestoneCountdowns();
+}
+
+function updateRoutineSyncUI() {
+  const slot = getCurrentRoutineSlotInfo();
+  const title = document.getElementById('clock-routine-title');
+  const time = document.getElementById('clock-routine-time');
+  const desc = document.getElementById('clock-routine-desc');
+  const meta = document.getElementById('clock-routine-progress-meta');
+  const fill = document.getElementById('clock-routine-progress-fill');
+
+  if (title) title.textContent = slot.title;
+  if (time) time.textContent = `⏰ ${slot.timeRange}`;
+  if (desc) desc.textContent = slot.desc;
+  if (meta) meta.innerHTML = `<span>Progress in this block</span><span><strong>${slot.remainingMins}m</strong> remaining</span>`;
+  if (fill) fill.style.width = `${slot.progressPct}%`;
+
+  const zenRoutine = document.getElementById('zen-routine-text');
+  if (zenRoutine) zenRoutine.textContent = `${slot.title} • ${slot.remainingMins}m remaining`;
+}
+
+function tickFocusTimer() {
+  if (!clockTimer.running) return;
+  clockTimer.remainSec--;
+  if (clockTimer.remainSec <= 0) {
+    clockTimer.remainSec = 0;
+    clockTimer.running = false;
+    playTimerChime();
+    const minsDone = Math.round(clockTimer.totalSec / 60);
+    logCompletedFocusSession(clockTimer.name, minsDone);
+    showToast(`🎉 Focus Session Finished: ${clockTimer.name}! Logged ${minsDone}m to study hours!`, 'success');
+    confetti();
+  }
+  updateTimerUI();
+}
+
+function updateTimerUI() {
+  const m = Math.floor(clockTimer.remainSec / 60);
+  const s = clockTimer.remainSec % 60;
+  const timeStr = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+
+  const digits = document.getElementById('timer-digits');
+  if (digits) digits.textContent = timeStr;
+
+  const ring = document.getElementById('timer-progress-ring');
+  if (ring) {
+    const circ = 2 * Math.PI * 85;
+    const off = circ * (1 - clockTimer.remainSec / clockTimer.totalSec);
+    ring.style.strokeDashoffset = off;
+  }
+
+  const btn = document.getElementById('btn-timer-toggle');
+  if (btn) {
+    btn.innerHTML = `<span>${clockTimer.running ? '⏸' : '▶'}</span> <span>${clockTimer.running ? 'Pause Focus' : 'Start Focus Session'}</span>`;
+    btn.classList.toggle('running', clockTimer.running);
+  }
+
+  const lbl = document.getElementById('timer-status-label');
+  if (lbl) {
+    lbl.textContent = clockTimer.running ? 'Focusing...' : (clockTimer.remainSec === 0 ? 'Session Complete!' : 'Ready to Start');
+  }
+
+  // Update Zen Mode Timer Widget
+  const zenTimerWrap = document.getElementById('zen-timer-wrap');
+  const zenTimerDigits = document.getElementById('zen-timer-digits');
+  const zenTimerLabel = document.getElementById('zen-timer-label');
+  if (zenTimerWrap && zenTimerDigits && zenTimerLabel) {
+    if (clockTimer.running || clockTimer.remainSec < clockTimer.totalSec) {
+      zenTimerWrap.style.display = 'inline-flex';
+      zenTimerLabel.textContent = `⏳ ${clockTimer.name}:`;
+      zenTimerDigits.textContent = timeStr;
+    } else {
+      zenTimerWrap.style.display = 'none';
+    }
+  }
+}
+
+function updateStopwatchUI() {
+  const totalMs = clockStopwatch.accumMs;
+  const min = Math.floor(totalMs / 60000);
+  const sec = Math.floor((totalMs % 60000) / 1000);
+  const ms = Math.floor((totalMs % 1000) / 10);
+  const mainStr = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+  const msStr = `.${ms.toString().padStart(2, '0')}`;
+
+  const elMain = document.getElementById('stopwatch-main-time');
+  const elMs = document.getElementById('stopwatch-ms-time');
+  if (elMain) elMain.textContent = mainStr;
+  if (elMs) elMs.textContent = msStr;
+}
+
+function updateFocusLogUI() {
+  if (activePage === 'clock' && clockActiveTab === 'log') {
+    const m = document.getElementById('main');
+    if (m) m.innerHTML = renderClock();
+  }
+}
+
+function updateMilestoneCountdowns() {
+  const now = new Date();
+
+  // Syllabus Finish: 19 Nov 2026, 23:59:59
+  const sylEnd = new Date(2026, 10, 19, 23, 59, 59);
+  const diffSyl = sylEnd - now;
+  const sylVal = document.getElementById('milestone-syl-val');
+  if (sylVal) {
+    if (diffSyl > 0) {
+      const d = Math.floor(diffSyl / 864e5);
+      const h = Math.floor((diffSyl % 864e5) / 36e5);
+      const m = Math.floor((diffSyl % 36e5) / 6e4);
+      sylVal.textContent = `${d}d ${h}h ${m}m`;
+    } else {
+      sylVal.textContent = '🏆 50-Day Goal Achieved!';
+      sylVal.style.color = 'var(--success)';
+    }
+  }
+
+  // JEE Main 2027 Session 1: ~22 Jan 2027
+  const jeeDate = new Date(2027, 0, 22, 9, 0, 0);
+  const diffJee = jeeDate - now;
+  const jeeVal = document.getElementById('milestone-jee-val');
+  if (jeeVal) {
+    if (diffJee > 0) {
+      const d = Math.floor(diffJee / 864e5);
+      const h = Math.floor((diffJee % 864e5) / 36e5);
+      jeeVal.textContent = `${d}d ${h}h remaining`;
+    } else {
+      jeeVal.textContent = '🚀 Exam Season!';
+    }
+  }
+}
+
+function initClockTicker() {
+  if (masterClockTicker) return;
+  masterClockTicker = setInterval(() => {
+    updateMasterClockUI();
+    if (clockTimer.running) {
+      tickFocusTimer();
+    }
+  }, 1000);
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeZenMode();
+    }
+  });
 }
 
 // ==================== SCHEDULE ====================
@@ -1963,13 +3677,14 @@ if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || wi
 load();
 activeWeek=curWeek();
 const hash=window.location.hash.slice(1);
-if(['dashboard','routine','schedule','chapters','analytics'].includes(hash)) activePage=hash;
+if(['dashboard','routine','clock','schedule','chapters','analytics'].includes(hash)) activePage=hash;
 renderNav();
 renderPage();
 window.addEventListener('hashchange',()=>{
   const r=window.location.hash.slice(1);
-  if(['dashboard','routine','schedule','chapters','analytics'].includes(r)&&r!==activePage){activePage=r;renderNav();renderPage();}
+  if(['dashboard','routine','clock','schedule','chapters','analytics'].includes(r)&&r!==activePage){activePage=r;renderNav();renderPage();}
 });
+initClockTicker();
 </script>
 </body>
 </html>
