@@ -780,7 +780,7 @@ body::before {
 .routine-slot-mini-time { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; }
 .routine-slot-mini-name { font-weight: 700; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* ========== CLOCK & FOCUS STUDIO ========== */
+/* ========== CLOCK & STUDY TIMER ========== */
 .clock-grid {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
@@ -791,7 +791,7 @@ body::before {
   .clock-grid { grid-template-columns: 1fr; }
 }
 
-/* Master Clock Card */
+/* Clock Card */
 .clock-hero-card {
   background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.04));
   border: 1px solid var(--border-accent);
@@ -1445,7 +1445,7 @@ body::before {
   color: var(--text-secondary);
 }
 
-/* ========== ZEN DESK MODE OVERLAY ========== */
+/* ========== FULLSCREEN CLOCK OVERLAY ========== */
 .zen-overlay {
   position: fixed;
   inset: 0;
@@ -1677,16 +1677,16 @@ body::before {
   </div>
 </div>
 
-<!-- ZEN DESK CLOCK MODAL -->
+<!-- FULLSCREEN CLOCK MODAL -->
 <div id="zen-clock-overlay" class="zen-overlay" style="display:none;">
   <div class="zen-overlay-top">
     <div style="display:flex;align-items:center;gap:10px;">
       <span style="font-size:1.4rem;">📖</span>
-      <span style="font-weight:800;font-size:1.05rem;background:linear-gradient(135deg,#fff,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">JEE Planner • Zen Desk Clock</span>
+      <span style="font-weight:800;font-size:1.05rem;background:linear-gradient(135deg,#fff,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">JEE Planner • Fullscreen Clock</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
       <span id="zen-wake-pill" style="font-size:0.75rem;padding:4px 10px;border-radius:100px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);color:#4ade80;">🔋 Screen Awake</span>
-      <button class="zen-btn-close" onclick="closeZenMode()">✕ Exit Zen (Esc)</button>
+      <button class="zen-btn-close" onclick="closeZenMode()">✕ Exit Fullscreen (Esc)</button>
     </div>
   </div>
   <div class="zen-center-wrap">
@@ -1697,13 +1697,13 @@ body::before {
       <span id="zen-routine-text">Current Slot: Class 1 • 45m remaining</span>
     </div>
     <div id="zen-timer-wrap" style="display:none;" class="zen-timer-mini">
-      <span id="zen-timer-label">⏳ Class Focus:</span>
+      <span id="zen-timer-label">⏳ Timer:</span>
       <span id="zen-timer-digits">74:35</span>
     </div>
   </div>
   <div style="display:flex;justify-content:space-between;align-items:center;color:var(--text-muted);font-size:0.8rem;flex-wrap:wrap;gap:8px;">
-    <div>Day <span id="zen-day-num">4</span> of 50 • Syllabus Completion Target</div>
-    <div>Press Esc to return • Keep phone propped on desk</div>
+    <div>Day <span id="zen-day-num">4</span> of 50 • Syllabus Target</div>
+    <div>Press Esc to return • Keep phone on desk</div>
   </div>
 </div>
 
@@ -1874,7 +1874,7 @@ function hoursDone(){
 const routineMaster = {
   fourLec: [
     { start: 360, end: 390, time: '06:00 - 06:30 AM', dur: '30m', tag: 'prep', title: '🌅 Wake Up & Hydrate', desc: 'Drink 500ml water, freshen up, stretch. Ready notebooks for Class 1.' },
-    { start: 390, end: 480, time: '06:30 - 08:00 AM', dur: '90m', tag: 'class', slot: 1, title: '⚡ Class 1 (Prime Focus)', desc: 'Prime alertness block. Complete theory, key derivations and examples.' },
+    { start: 390, end: 480, time: '06:30 - 08:00 AM', dur: '90m', tag: 'class', slot: 1, title: '⚡ Class 1', desc: 'First lecture of the day. Complete theory, key derivations and examples.' },
     { start: 480, end: 510, time: '08:00 - 08:30 AM', dur: '30m', tag: 'prep', title: '☕ Morning Stretch & Class 1 Recap', desc: 'Short stretch, drink water, review key derivations from Class 1 before Class 2.' },
     { start: 510, end: 585, time: '08:30 - 09:45 AM', dur: '75m', tag: 'class', slot: 2, title: '📐 Class 2', desc: 'Second lecture of the day. Active note-taking and immediate example solving.' },
     { start: 585, end: 600, time: '09:45 - 10:00 AM', dur: '15m', tag: 'study', title: '📝 Quick Formula Consolidation', desc: 'Write down key formulas from Class 1 & 2 before breakfast.' },
@@ -1893,7 +1893,7 @@ const routineMaster = {
   ],
   threeLec: [
     { start: 360, end: 390, time: '06:00 - 06:30 AM', dur: '30m', tag: 'prep', title: '🌅 Wake Up & Prep', desc: 'Hydrate, freshen up, stretch. Ready notebooks for Class 1.' },
-    { start: 390, end: 480, time: '06:30 - 08:00 AM', dur: '90m', tag: 'class', slot: 1, title: '⚡ Class 1 (Prime Focus)', desc: 'First class. Highest focus on understanding theory and mechanisms.' },
+    { start: 390, end: 480, time: '06:30 - 08:00 AM', dur: '90m', tag: 'class', slot: 1, title: '⚡ Class 1', desc: 'First class. Understanding theory, derivation and mechanisms.' },
     { start: 480, end: 510, time: '08:00 - 08:30 AM', dur: '30m', tag: 'prep', title: '☕ Morning Stretch & Class 1 Recap', desc: 'Rest eyes, drink water, review key formulas from Class 1.' },
     { start: 510, end: 585, time: '08:30 - 09:45 AM', dur: '75m', tag: 'class', slot: 2, title: '📐 Class 2', desc: 'Second class. Focus on formula derivation and problem solving.' },
     { start: 585, end: 600, time: '09:45 - 10:00 AM', dur: '15m', tag: 'study', title: '📝 Quick Formula Notes', desc: 'Consolidate formulas from Class 1 & 2 while fresh.' },
@@ -1911,7 +1911,7 @@ const routineMaster = {
   rest: [
     { start: 390, end: 450, time: '06:30 - 07:30 AM', dur: '60m', tag: 'prep', title: '🌅 Gentle Morning Walk & Stretch', desc: 'Wake up at 6:30 AM, hydrate, light walk or meditation to begin revision day.' },
     { start: 450, end: 510, time: '07:30 - 08:30 AM', dur: '60m', tag: 'break', title: '☕ Refresh & Formula Warm-up', desc: 'Review high-yield formulas and setup rough sheets for mock test.' },
-    { start: 510, end: 600, time: '08:30 - 10:00 AM', dur: '90m', tag: 'study', title: '📖 Master Formula Book Revision', desc: 'Revise complete Physics formula sheet, Math identities, and Inorganic tables.' },
+    { start: 510, end: 600, time: '08:30 - 10:00 AM', dur: '90m', tag: 'study', title: '📖 Formula Book Revision', desc: 'Revise complete Physics formula sheet, Math identities, and Inorganic tables.' },
     { start: 600, end: 660, time: '10:00 - 11:00 AM', dur: '60m', tag: 'break', title: '🍳 Hearty Sunday Breakfast', desc: 'Relaxed breakfast at 10:00 AM with family.' },
     { start: 660, end: 840, time: '11:00 AM - 02:00 PM', dur: '3h', tag: 'study', title: '📝 3-Hour Timed Mock / PYQ Test', desc: 'Simulate full exam conditions. 75 questions from all completed chapters.' },
     { start: 840, end: 930, time: '02:00 - 03:30 PM', dur: '90m', tag: 'break', title: '🍱 Lunch & Power Nap', desc: 'Nutritious lunch and restful nap.' },
@@ -2094,7 +2094,7 @@ function renderDashboard(){
     <div class="routine-widget-top">
       <div class="routine-widget-title"><span>⏰</span> Daily Routine • ${hasStarted ? 'Today (Day ' + dn + ')' : 'Day 1 Preview (Starts Oct 1)'}</div>
       <div style="display:flex; gap:12px; align-items:center;">
-        <button class="routine-widget-link" onclick="go('clock')">Focus Clock ⏱️</button>
+        <button class="routine-widget-link" onclick="go('clock')">Clock ⏱️</button>
         <button class="routine-widget-link" onclick="go('routine')">Timeline →</button>
       </div>
     </div>
@@ -2225,7 +2225,7 @@ function renderRoutine(){
       </div>
       <div style="display:flex; align-items:center; gap:10px;">
         ${nextSlot ? `<div style="font-size:0.78rem; color:var(--text-secondary); text-align:right;"><strong>Next:</strong> ${nextSlot.time.split(' - ')[0]} • ${nextSlot.title}</div>` : ''}
-        <button class="routine-day-nav-btn" style="padding:4px 10px; font-size:0.75rem;" onclick="go('clock')">Focus ⏱️</button>
+        <button class="routine-day-nav-btn" style="padding:4px 10px; font-size:0.75rem;" onclick="go('clock')">Clock ⏱️</button>
       </div>
     </div>`;
   } else if (!hasStarted && targetDay === 1) {
@@ -2362,7 +2362,7 @@ function renderRoutine(){
   return h;
 }
 
-// ==================== CLOCK & FOCUS STUDIO ====================
+// ==================== CLOCK & STUDY TIMER ====================
 let clockActiveTab = 'timer'; // 'timer', 'stopwatch', 'log'
 let clockTimer = {
   mode: 'class75',
@@ -2370,16 +2370,16 @@ let clockTimer = {
   remainSec: 75 * 60,
   running: false,
   sound: true,
-  name: '⚡ Class Focus (75m)'
+  name: 'Class (75m)'
 };
 
 const TIMER_PRESETS = {
-  class75: { label: '⚡ Class (75m)', name: 'Class Focus Lecture', sec: 75 * 60 },
-  class90: { label: '⚡ Physics (90m)', name: 'Physics Prime Class', sec: 90 * 60 },
-  pyq45:   { label: '🎯 PYQ Sprint (45m)', name: 'PYQ Speed Sprint', sec: 45 * 60 },
-  mock180: { label: '📝 Full Mock (180m)', name: 'JEE Main Full Mock', sec: 180 * 60 },
-  pomo25:  { label: '🍅 Pomodoro (25m)', name: 'Focused Sprint', sec: 25 * 60 },
-  pomo50:  { label: '🍅 Deep Pomo (50m)', name: 'Deep Work Block', sec: 50 * 60 }
+  class75: { label: 'Class (75m)', name: 'Class (75m)', sec: 75 * 60 },
+  class90: { label: 'Physics (90m)', name: 'Physics Class (90m)', sec: 90 * 60 },
+  pyq45:   { label: 'Practice (45m)', name: 'Question Practice (45m)', sec: 45 * 60 },
+  mock180: { label: 'Mock Test (3h)', name: 'Full Mock Test (3h)', sec: 180 * 60 },
+  pomo25:  { label: 'Interval (25m)', name: 'Study Interval (25m)', sec: 25 * 60 },
+  pomo50:  { label: 'Interval (50m)', name: 'Study Interval (50m)', sec: 50 * 60 }
 };
 
 let clockStopwatch = {
@@ -2399,7 +2399,7 @@ function playTimerChime() {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     if (!AudioCtx) return;
     const ctx = new AudioCtx();
-    const notes = [523.25, 659.25, 783.99, 1046.50]; // Bright chime chord
+    const notes = [523.25, 659.25, 783.99, 1046.50];
     notes.forEach((freq, idx) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -2471,7 +2471,7 @@ function clearTodayFocusLog() {
     const all = raw ? JSON.parse(raw) : {};
     delete all[todayKey];
     localStorage.setItem('jee50d-focus-v2', JSON.stringify(all));
-    showToast('Today\'s focus log reset', 'info');
+    showToast('Today\'s study log reset', 'info');
   } catch(e) {}
   if (activePage === 'clock' && clockActiveTab === 'log') {
     const m = document.getElementById('main');
@@ -2515,8 +2515,8 @@ function getCurrentRoutineSlotInfo() {
         hasStarted,
         active: null,
         next: slots[0],
-        title: '🌙 Night Sleep & Brain Recovery',
-        desc: `Wake up scheduled at ${slots[0].time.split(' - ')[0]} (${minsUntil}m remaining before kickoff)`,
+        title: '🌙 Night Rest & Recovery',
+        desc: `Next slot starts at ${slots[0].time.split(' - ')[0]} (${minsUntil}m remaining)`,
         timeRange: `Until ${slots[0].time.split(' - ')[0]}`,
         totalMins: 420,
         elapsedMins: 420 - minsUntil,
@@ -2529,8 +2529,8 @@ function getCurrentRoutineSlotInfo() {
         hasStarted,
         active: null,
         next: slots[0],
-        title: '😴 Deep Sleep & Memory Consolidation',
-        desc: 'All slots completed for today. Rest your eyes and recharge for tomorrow at 06:00 AM.',
+        title: '😴 Sleep & Rest',
+        desc: 'All scheduled slots finished for today. Rest for tomorrow at 06:00 AM.',
         timeRange: '10:45 PM - 06:00 AM',
         totalMins: 435,
         elapsedMins: Math.max(0, nowMin - 1365),
@@ -2575,7 +2575,6 @@ function renderClock(){
   const sPad = now.getSeconds().toString().padStart(2, '0');
   const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
 
-  // Target Class Count today
   const targetDay = hasStarted ? dn : 1;
   const vDay = schedule[targetDay - 1] || schedule[0];
   const lecsToday = vDay.lectures ? vDay.lectures.length : 0;
@@ -2584,12 +2583,12 @@ function renderClock(){
   let h = `<div class="page">
     <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px;">
       <div>
-        <h1>⏱️ Master Clock & Focus Studio</h1>
-        <p>Precision timekeeping, real-time routine sync, JEE study timer & speed problem drill</p>
+        <h1>⏱️ Clock & Timer</h1>
+        <p>Current time, routine schedule, study timer, and question stopwatch</p>
       </div>
       <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-        <button class="clock-action-btn" onclick="openZenMode()" title="Full-screen ambient clock mode for desk stand">
-          <span>🖥️</span> <span>Zen Desk Mode</span>
+        <button class="clock-action-btn" onclick="openZenMode()" title="Full-screen clock mode">
+          <span>🖥️</span> <span>Fullscreen</span>
         </button>
         <button class="clock-action-btn ${clockTimer.sound ? 'active' : ''}" onclick="toggleTimerSound()" id="clock-sound-btn" title="Toggle audio chime">
           <span>${clockTimer.sound ? '🔔' : '🔕'}</span> <span>Sound: ${clockTimer.sound ? 'ON' : 'OFF'}</span>
@@ -2597,9 +2596,9 @@ function renderClock(){
       </div>
     </div>`;
 
-  // Grid: Master Clock + Routine Sync
+  // Grid: Clock + Routine Sync
   h += `<div class="clock-grid">
-    <!-- Card 1: Master Analog + Digital Clock -->
+    <!-- Card 1: Clock -->
     <div class="card clock-hero-card">
       <div class="clock-hero-top">
         <div class="clock-hero-badge">
@@ -2632,24 +2631,24 @@ function renderClock(){
           </div>
           <div id="clock-digital-date" class="digital-date-str">${dateStr}</div>
           <div class="digital-sub-pill">
-            <span>🎯</span> <span>Target Today: ${vDay.rest ? 'Mock Test & Formula Review' : `${lecsToday} Classes (${studyHrsToday})`}</span>
+            <span>🎯</span> <span>Target Today: ${vDay.rest ? 'Revision & Formula Review' : `${lecsToday} Classes (${studyHrsToday})`}</span>
           </div>
         </div>
       </div>
 
       <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:14px; margin-top:10px; font-size:0.78rem; color:var(--text-secondary);">
-        <span>⚡ 100% Offline Real-Time Sync</span>
-        <span style="color:var(--accent-light); cursor:pointer;" onclick="openZenMode()">Open Fullscreen Stand →</span>
+        <span>Real-Time Clock</span>
+        <span style="color:var(--accent-light); cursor:pointer;" onclick="openZenMode()">Fullscreen View →</span>
       </div>
     </div>
 
-    <!-- Card 2: Live Routine Sync -->
+    <!-- Card 2: Routine Sync -->
     <div class="card clock-routine-card active-slot-glow">
       <div>
         <div class="clock-routine-header">
           <div class="routine-pulse-pill green">
             <span class="live-pulse-dot" style="width:6px; height:6px;"></span>
-            <span>HAPPENING NOW</span>
+            <span>CURRENT SLOT</span>
           </div>
           <button class="routine-widget-link" onclick="go('routine')">Full Routine →</button>
         </div>
@@ -2673,7 +2672,7 @@ function renderClock(){
       ${slotInfo.next ? `
         <div class="clock-next-slot">
           <div class="clock-next-slot-left">
-            <span style="font-size:0.75rem; color:var(--text-muted); display:block;">COMING UP NEXT</span>
+            <span style="font-size:0.75rem; color:var(--text-muted); display:block;">NEXT</span>
             <strong>${slotInfo.next.time.split(' - ')[0]}:</strong> ${slotInfo.next.title}
           </div>
           <span class="clock-next-slot-tag">${slotInfo.next.dur || 'Next Block'}</span>
@@ -2686,18 +2685,18 @@ function renderClock(){
   h += `<div class="section">
     <div class="tool-tabs">
       <button class="tool-tab-btn ${clockActiveTab==='timer'?'active':''}" onclick="setClockTab('timer')">
-        <span>⏳</span> <span>JEE Focus Timer</span>
+        <span>⏳</span> <span>Study Timer</span>
       </button>
       <button class="tool-tab-btn ${clockActiveTab==='stopwatch'?'active':''}" onclick="setClockTab('stopwatch')">
-        <span>⚡</span> <span>Question Speed Stopwatch</span>
+        <span>⏱️</span> <span>Question Stopwatch</span>
       </button>
       <button class="tool-tab-btn ${clockActiveTab==='log'?'active':''}" onclick="setClockTab('log')">
-        <span>📊</span> <span>Today's Study Log</span>
+        <span>📊</span> <span>Study Log</span>
       </button>
     </div>`;
 
   if (clockActiveTab === 'timer') {
-    // Focus Timer Tool View
+    // Study Timer View
     const m = Math.floor(clockTimer.remainSec / 60);
     const s = clockTimer.remainSec % 60;
     const timeStr = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
@@ -2722,7 +2721,7 @@ function renderClock(){
           </svg>
           <div class="timer-center-info">
             <div id="timer-digits" class="timer-digits">${timeStr}</div>
-            <div id="timer-status-label" class="timer-sub-label">${clockTimer.running ? 'Focusing...' : 'Ready to Start'}</div>
+            <div id="timer-status-label" class="timer-sub-label">${clockTimer.running ? 'Running' : 'Ready'}</div>
           </div>
         </div>
       </div>
@@ -2730,7 +2729,7 @@ function renderClock(){
       <div class="timer-controls">
         <button id="btn-timer-toggle" class="btn-timer-primary ${clockTimer.running ? 'running' : ''}" onclick="toggleTimerStartPause()">
           <span>${clockTimer.running ? '⏸' : '▶'}</span>
-          <span>${clockTimer.running ? 'Pause Focus' : 'Start Focus Session'}</span>
+          <span>${clockTimer.running ? 'Pause Timer' : 'Start Timer'}</span>
         </button>
         <button class="btn-timer-sub" onclick="resetFocusTimer()" title="Reset Timer">
           <span>🔄 Reset</span>
@@ -2744,11 +2743,11 @@ function renderClock(){
       </div>
 
       <div style="text-align:center; margin-top:20px; font-size:0.8rem; color:var(--text-muted);">
-        💡 Complete sessions are automatically credited to your <strong>Today's Focus Log</strong>.
+        Completed sessions are automatically saved to your <strong>Study Log</strong>.
       </div>
     </div>`;
   } else if (clockActiveTab === 'stopwatch') {
-    // Problem Speed Stopwatch View
+    // Question Stopwatch View
     const totalMs = clockStopwatch.accumMs;
     const min = Math.floor(totalMs / 60000);
     const sec = Math.floor((totalMs % 60000) / 1000);
@@ -2781,7 +2780,7 @@ function renderClock(){
 
         <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:20px;">
           <button class="btn-timer-primary" onclick="lapStopwatchQuestion()" style="background:linear-gradient(135deg,#059669,#10b981); box-shadow:0 4px 18px rgba(16,185,129,0.35);">
-            <span>⏱️ Next Question (Lap)</span>
+            <span>Next Question (Lap)</span>
           </button>
           <button id="btn-sw-toggle" class="btn-timer-sub" onclick="toggleStopwatchStartPause()">
             <span>${clockStopwatch.running ? '⏸ Pause' : '▶ Start'}</span>
@@ -2790,8 +2789,8 @@ function renderClock(){
             <span>🔄 Reset</span>
           </button>
           ${clockStopwatch.accumMs > 60000 ? `
-            <button class="btn-timer-sub" onclick="saveStopwatchToFocusLog()" style="border-color:var(--accent); color:var(--accent-light);" title="Save to Study Hours">
-              <span>💾 Log to Focus</span>
+            <button class="btn-timer-sub" onclick="saveStopwatchToFocusLog()" style="border-color:var(--accent); color:var(--accent-light);" title="Save to Study Log">
+              <span>💾 Save to Log</span>
             </button>
           ` : ''}
         </div>
@@ -2812,7 +2811,7 @@ function renderClock(){
           </div>
           <div class="stopwatch-stat-cell">
             <div class="stopwatch-stat-val" style="color:#f59e0b;">≤ 2m 15s</div>
-            <div class="stopwatch-stat-lbl">JEE Main Benchmark</div>
+            <div class="stopwatch-stat-lbl">JEE Target Pace</div>
           </div>
         </div>
 
@@ -2829,13 +2828,13 @@ function renderClock(){
           </div>
         ` : `
           <div style="background:rgba(255,255,255,0.02); border:1px dashed var(--border); border-radius:var(--radius-sm); padding:20px; font-size:0.85rem; color:var(--text-secondary); text-align:center;">
-            📝 Hit <strong>"Next Question (Lap)"</strong> each time you solve a JEE question to benchmark your speed!
+            Click <strong>"Next Question (Lap)"</strong> each time you solve a question to record your time.
           </div>
         `}
       </div>
     </div>`;
   } else {
-    // Today's Study Log View
+    // Study Log View
     const log = getTodayFocusLog();
     const logHours = (log.totalMins / 60).toFixed(1);
     const targetHours = 8.0;
@@ -2844,25 +2843,25 @@ function renderClock(){
     h += `<div class="card" style="padding:24px;">
       <div class="focus-today-summary">
         <div class="focus-today-card">
-          <div style="font-size:0.75rem; font-weight:700; color:var(--accent-light); text-transform:uppercase;">Today's Deep Work</div>
+          <div style="font-size:0.75rem; font-weight:700; color:var(--accent-light); text-transform:uppercase;">Total Study Time</div>
           <div style="font-size:2rem; font-weight:900; color:#fff; margin:4px 0;">${logHours} hrs</div>
-          <div style="font-size:0.78rem; color:var(--text-secondary);">${log.totalMins} minutes focused study</div>
+          <div style="font-size:0.78rem; color:var(--text-secondary);">${log.totalMins} minutes logged today</div>
         </div>
         <div class="focus-today-card">
-          <div style="font-size:0.75rem; font-weight:700; color:var(--success); text-transform:uppercase;">Daily Goal (${targetHours}h)</div>
+          <div style="font-size:0.75rem; font-weight:700; color:var(--success); text-transform:uppercase;">Daily Target (${targetHours}h)</div>
           <div style="font-size:2rem; font-weight:900; color:var(--success); margin:4px 0;">${logPct}%</div>
           <div style="font-size:0.78rem; color:var(--text-secondary);">${Math.max(0, targetHours * 60 - log.totalMins)}m remaining to target</div>
         </div>
         <div class="focus-today-card">
-          <div style="font-size:0.75rem; font-weight:700; color:var(--organic); text-transform:uppercase;">Sessions Completed</div>
+          <div style="font-size:0.75rem; font-weight:700; color:var(--organic); text-transform:uppercase;">Completed Sessions</div>
           <div style="font-size:2rem; font-weight:900; color:#fff; margin:4px 0;">${log.sessions.length}</div>
-          <div style="font-size:0.78rem; color:var(--text-secondary);">Logged focus blocks</div>
+          <div style="font-size:0.78rem; color:var(--text-secondary);">Logged sessions</div>
         </div>
       </div>
 
       <div style="margin:20px 0 24px;">
         <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:8px;">
-          <span>Daily Goal Progress</span>
+          <span>Daily Target Progress</span>
           <span><strong>${logHours} / ${targetHours} Hours</strong></span>
         </div>
         <div class="slot-progress-track" style="height:12px;">
@@ -2891,7 +2890,7 @@ function renderClock(){
         </div>
       ` : `
         <div style="text-align:center; padding:28px 14px; background:rgba(255,255,255,0.02); border:1px dashed var(--border); border-radius:var(--radius-sm); color:var(--text-secondary); font-size:0.85rem;">
-          No sessions recorded yet today. Start a <strong>Focus Timer</strong> or <strong>Question Stopwatch</strong> to automatically log your study hours!
+          No study sessions recorded yet today. Use the <strong>Study Timer</strong> or <strong>Question Stopwatch</strong> to log your hours.
         </div>
       `}
     </div>`;
@@ -2901,17 +2900,17 @@ function renderClock(){
 
   // Milestone Countdowns
   h += `<div class="section">
-    <div class="section-label">🚀 Countdown Milestones</div>
+    <div class="section-label">Key Milestones</div>
     <div class="milestone-grid">
       <div class="milestone-card">
-        <div class="milestone-lbl">🏁 50-Day Syllabus Completion</div>
+        <div class="milestone-lbl">Syllabus Target (Day 50)</div>
         <div id="milestone-syl-val" class="milestone-val">--d --h --m</div>
-        <div class="milestone-meta">Thursday, 19 Nov 2026 • Target: All 146 Lectures Finished</div>
+        <div class="milestone-meta">Thursday, 19 Nov 2026 • 146 Lectures</div>
       </div>
       <div class="milestone-card">
-        <div class="milestone-lbl">🎯 JEE Main 2027 Session 1</div>
+        <div class="milestone-lbl">JEE Main 2027 (Session 1)</div>
         <div id="milestone-jee-val" class="milestone-val">--d --h</div>
-        <div class="milestone-meta">Target Exam Date: ~22 January 2027 • Final Revision Phase</div>
+        <div class="milestone-meta">Target Date: ~22 January 2027</div>
       </div>
     </div>
   </div>`;
@@ -2969,7 +2968,7 @@ function toggleTimerSound() {
     btn.innerHTML = `<span>${clockTimer.sound ? '🔔' : '🔕'}</span> <span>Sound: ${clockTimer.sound ? 'ON' : 'OFF'}</span>`;
     btn.classList.toggle('active', clockTimer.sound);
   }
-  showToast(clockTimer.sound ? 'Audio chimes enabled 🔔' : 'Audio chimes muted 🔕', 'info');
+  showToast(clockTimer.sound ? 'Audio chimes enabled' : 'Audio chimes muted', 'info');
 }
 
 function toggleStopwatchStartPause() {
@@ -3028,15 +3027,15 @@ function lapStopwatchQuestion() {
   const pS = pSec % 60;
   const timeFormatted = `${pM}m ${pS.toString().padStart(2, '0')}s`;
 
-  let tag = 'Fast', badgeClass = 'lap-badge-fast';
+  let tag = '< 2m 15s (On Target)', badgeClass = 'lap-badge-fast';
   if (pSec <= 135) {
-    tag = '⚡ Fast (< 2m 15s)';
+    tag = '< 2m 15s (On Target)';
     badgeClass = 'lap-badge-fast';
   } else if (pSec <= 210) {
-    tag = '✅ Good Pace';
+    tag = '2m - 3.5m (Standard)';
     badgeClass = 'lap-badge-good';
   } else {
-    tag = '⚠️ Tough Problem';
+    tag = '> 3.5m (Long)';
     badgeClass = 'lap-badge-tough';
   }
 
@@ -3063,10 +3062,9 @@ function saveStopwatchToFocusLog() {
     return;
   }
   const qCount = clockStopwatch.problems.length;
-  const title = `Question Practice (${qCount} Qs solved)`;
+  const title = `Question Practice (${qCount} Qs)`;
   logCompletedFocusSession(title, mins);
-  showToast(`🎉 Logged ${mins}m problem solving to today's study hours!`, 'success');
-  confetti();
+  showToast(`Logged ${mins}m problem practice to study log.`, 'success');
 }
 
 async function openZenMode() {
@@ -3127,7 +3125,7 @@ function updateMasterClockUI() {
     digiDate.textContent = `${days[now.getDay()]}, ${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
   }
 
-  // Zen Mode Clock
+  // Fullscreen Mode Clock
   const zenTime = document.getElementById('zen-digital-time');
   if (zenTime) zenTime.textContent = `${hPad}:${mPad}:${sPad} ${ampm}`;
   const zenDate = document.getElementById('zen-date-str');
@@ -3167,8 +3165,7 @@ function tickFocusTimer() {
     playTimerChime();
     const minsDone = Math.round(clockTimer.totalSec / 60);
     logCompletedFocusSession(clockTimer.name, minsDone);
-    showToast(`🎉 Focus Session Finished: ${clockTimer.name}! Logged ${minsDone}m to study hours!`, 'success');
-    confetti();
+    showToast(`Timer completed: ${clockTimer.name} (${minsDone}m logged).`, 'success');
   }
   updateTimerUI();
 }
@@ -3190,16 +3187,16 @@ function updateTimerUI() {
 
   const btn = document.getElementById('btn-timer-toggle');
   if (btn) {
-    btn.innerHTML = `<span>${clockTimer.running ? '⏸' : '▶'}</span> <span>${clockTimer.running ? 'Pause Focus' : 'Start Focus Session'}</span>`;
+    btn.innerHTML = `<span>${clockTimer.running ? '⏸' : '▶'}</span> <span>${clockTimer.running ? 'Pause Timer' : 'Start Timer'}</span>`;
     btn.classList.toggle('running', clockTimer.running);
   }
 
   const lbl = document.getElementById('timer-status-label');
   if (lbl) {
-    lbl.textContent = clockTimer.running ? 'Focusing...' : (clockTimer.remainSec === 0 ? 'Session Complete!' : 'Ready to Start');
+    lbl.textContent = clockTimer.running ? 'Running' : (clockTimer.remainSec === 0 ? 'Completed' : 'Ready');
   }
 
-  // Update Zen Mode Timer Widget
+  // Update Fullscreen Mode Timer Widget
   const zenTimerWrap = document.getElementById('zen-timer-wrap');
   const zenTimerDigits = document.getElementById('zen-timer-digits');
   const zenTimerLabel = document.getElementById('zen-timer-label');
@@ -3249,7 +3246,7 @@ function updateMilestoneCountdowns() {
       const m = Math.floor((diffSyl % 36e5) / 6e4);
       sylVal.textContent = `${d}d ${h}h ${m}m`;
     } else {
-      sylVal.textContent = '🏆 50-Day Goal Achieved!';
+      sylVal.textContent = 'Target Date Reached';
       sylVal.style.color = 'var(--success)';
     }
   }
@@ -3264,7 +3261,7 @@ function updateMilestoneCountdowns() {
       const h = Math.floor((diffJee % 864e5) / 36e5);
       jeeVal.textContent = `${d}d ${h}h remaining`;
     } else {
-      jeeVal.textContent = '🚀 Exam Season!';
+      jeeVal.textContent = 'Exam Period';
     }
   }
 }
