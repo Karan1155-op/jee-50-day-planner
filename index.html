@@ -1234,12 +1234,60 @@ body::before {
   align-items: center;
   justify-content: center;
 }
+.timer-digits-interactive {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 6px 14px 4px;
+  border-radius: 14px;
+  border: 1px dashed transparent;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.timer-digits-interactive:hover {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.35);
+  transform: scale(1.02);
+}
+.timer-digits-interactive:active {
+  transform: scale(0.98);
+}
 .timer-digits {
   font-size: 2.7rem;
   font-weight: 900;
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
   line-height: 1;
+  color: #fff;
+  transition: color 0.2s ease;
+}
+.timer-digits.has-hours {
+  font-size: 2.15rem;
+}
+.timer-digits-interactive:hover .timer-digits {
+  color: #c7d2fe;
+}
+.timer-edit-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(99, 102, 241, 0.14);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  padding: 2px 8px;
+  border-radius: 100px;
+  margin-top: 5px;
+  transition: all 0.2s ease;
+  opacity: 0.85;
+}
+.timer-digits-interactive:hover .timer-edit-badge {
+  opacity: 1;
+  background: rgba(99, 102, 241, 0.28);
+  border-color: rgba(99, 102, 241, 0.65);
   color: #fff;
 }
 .timer-sub-label {
@@ -1623,6 +1671,259 @@ body::before {
   border-color: var(--border-hover); color: var(--text-primary);
 }
 
+/* ========== CUSTOM TIMER MODAL ========== */
+.custom-timer-card {
+  max-width: 480px;
+  width: 100%;
+  padding: 24px 22px;
+  text-align: left;
+}
+.custom-timer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.custom-modal-close {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+}
+.custom-modal-close:hover {
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.06);
+}
+.custom-modal-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  background: rgba(255,255,255,0.03);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+.custom-tab-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: center;
+}
+.custom-tab-btn.active {
+  background: linear-gradient(135deg, rgba(99,102,241,0.25), rgba(168,85,247,0.2));
+  color: #fff;
+  border: 1px solid var(--accent);
+  box-shadow: 0 2px 8px rgba(99,102,241,0.25);
+}
+.custom-duration-grid, .range-inputs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+@media (max-width: 440px) {
+  .custom-duration-grid, .range-inputs-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+.duration-input-group {
+  display: flex;
+  flex-direction: column;
+}
+.custom-field-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+.stepper-box {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.stepper-box:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(99,102,241,0.25);
+}
+.stepper-btn {
+  background: rgba(255,255,255,0.04);
+  border: none;
+  color: var(--text-primary);
+  width: 42px;
+  height: 42px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stepper-btn:hover {
+  background: rgba(255,255,255,0.1);
+}
+.stepper-box input[type="number"] {
+  flex: 1;
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 8px 0;
+  outline: none;
+  -moz-appearance: textfield;
+}
+.stepper-box input[type="number"]::-webkit-outer-spin-button,
+.stepper-box input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.time-picker-input {
+  width: 100%;
+  height: 42px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0 12px;
+  outline: none;
+  color-scheme: dark;
+  transition: border-color var(--transition);
+}
+.time-picker-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(99,102,241,0.25);
+}
+.btn-time-now {
+  background: rgba(99,102,241,0.12);
+  border: 1px solid rgba(99,102,241,0.3);
+  color: #a5b4fc;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.btn-time-now:hover {
+  background: rgba(99,102,241,0.25);
+  color: #fff;
+}
+.quick-add-hours {
+  display: flex;
+  gap: 4px;
+}
+.quick-chips-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 10px 0 6px;
+  font-weight: 600;
+}
+.quick-chips-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.quick-chip {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.quick-chip:hover {
+  background: rgba(99,102,241,0.15);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+.custom-preview-card {
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(56,189,248,0.05));
+  border: 1px solid rgba(99,102,241,0.25);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.preview-badge {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #a5b4fc;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.preview-time-text {
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+.preview-sub-text {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+.custom-name-wrap {
+  margin-bottom: 16px;
+}
+.custom-text-input {
+  width: 100%;
+  height: 40px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: #fff;
+  font-size: 0.88rem;
+  padding: 0 12px;
+  outline: none;
+  transition: border-color var(--transition);
+}
+.custom-text-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(99,102,241,0.25);
+}
+.custom-modal-footer {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
 /* ========== SECTION SPACING ========== */
 .section { margin-bottom: 28px; }
 .section-label {
@@ -1673,6 +1974,118 @@ body::before {
     <div style="display: flex; gap: 10px; justify-content: flex-end;">
       <button class="modal-btn modal-btn-outline btn-close-modal" onclick="closeInstallModal()">Close</button>
       <button id="modal-install-btn" class="modal-btn modal-btn-primary" onclick="triggerPwaInstall()">Install Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOM TIMER MODAL -->
+<div id="custom-timer-modal" class="modal-backdrop" style="display:none;" onclick="closeCustomTimerModal(event)">
+  <div class="modal-card custom-timer-card" onclick="event.stopPropagation()">
+    <div class="custom-timer-header">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.3rem;">⏳</span>
+        <div>
+          <h3 style="font-size:1.15rem;font-weight:700;margin:0;">Set Custom Timer</h3>
+          <p style="font-size:0.78rem;color:var(--text-secondary);margin:2px 0 0;">Choose duration or select start and finish time</p>
+        </div>
+      </div>
+      <button class="custom-modal-close" onclick="closeCustomTimerModal()" title="Close">&times;</button>
+    </div>
+
+    <!-- Mode Tabs -->
+    <div class="custom-modal-tabs">
+      <button id="custom-tab-btn-duration" type="button" class="custom-tab-btn active" onclick="switchCustomTimerTab('duration')">
+        <span>⏱️ Duration</span>
+      </button>
+      <button id="custom-tab-btn-range" type="button" class="custom-tab-btn" onclick="switchCustomTimerTab('range')">
+        <span>🕒 Time Range (e.g. 12 to 3)</span>
+      </button>
+    </div>
+
+    <!-- Tab 1: Duration -->
+    <div id="custom-tab-content-duration" class="custom-tab-panel">
+      <div class="custom-duration-grid">
+        <div class="duration-input-group">
+          <label for="custom-hours-input" class="custom-field-label">Hours</label>
+          <div class="stepper-box">
+            <button type="button" class="stepper-btn" onclick="stepDurationHour(-1)">−</button>
+            <input type="number" id="custom-hours-input" min="0" max="12" value="1" oninput="onCustomDurationChange()" />
+            <button type="button" class="stepper-btn" onclick="stepDurationHour(1)">+</button>
+          </div>
+        </div>
+        <div class="duration-input-group">
+          <label for="custom-mins-input" class="custom-field-label">Minutes</label>
+          <div class="stepper-box">
+            <button type="button" class="stepper-btn" onclick="stepDurationMin(-5)">−</button>
+            <input type="number" id="custom-mins-input" min="0" max="59" step="1" value="30" oninput="onCustomDurationChange()" />
+            <button type="button" class="stepper-btn" onclick="stepDurationMin(5)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-chips-label">Quick Durations</div>
+      <div class="quick-chips-wrap">
+        <button type="button" class="quick-chip" onclick="setQuickDuration(0, 15)">15m</button>
+        <button type="button" class="quick-chip" onclick="setQuickDuration(0, 25)">25m</button>
+        <button type="button" class="quick-chip" onclick="setQuickDuration(0, 45)">45m</button>
+        <button type="button" class="quick-chip" onclick="setQuickDuration(1, 0)">1 hour</button>
+        <button type="button" class="quick-chip" onclick="setQuickDuration(1, 30)">1.5 hours</button>
+        <button type="button" class="quick-chip" onclick="setQuickDuration(2, 0)">2 hours</button>
+        <button type="button" class="quick-chip" onclick="setQuickDuration(3, 0)">3 hours</button>
+      </div>
+    </div>
+
+    <!-- Tab 2: Time Range (From - To) -->
+    <div id="custom-tab-content-range" class="custom-tab-panel" style="display:none;">
+      <div class="range-inputs-grid">
+        <div class="duration-input-group">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <label for="custom-range-start" class="custom-field-label">From (Start)</label>
+            <button type="button" class="btn-time-now" onclick="setRangeStartToNow()">Set to Now</button>
+          </div>
+          <input type="time" id="custom-range-start" class="time-picker-input" value="12:00" onchange="onCustomRangeChange()" />
+        </div>
+        <div class="duration-input-group">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <label for="custom-range-end" class="custom-field-label">To (Finish)</label>
+            <div class="quick-add-hours">
+              <button type="button" class="btn-time-now" onclick="addRangeEndHours(1)">+1h</button>
+              <button type="button" class="btn-time-now" onclick="addRangeEndHours(2)">+2h</button>
+              <button type="button" class="btn-time-now" onclick="addRangeEndHours(3)">+3h</button>
+            </div>
+          </div>
+          <input type="time" id="custom-range-end" class="time-picker-input" value="15:00" onchange="onCustomRangeChange()" />
+        </div>
+      </div>
+
+      <div class="quick-chips-label">Common Time Slots</div>
+      <div class="quick-chips-wrap">
+        <button type="button" class="quick-chip" onclick="setRangeSlot('12:00', '15:00')">12:00 PM – 3:00 PM (3h)</button>
+        <button type="button" class="quick-chip" onclick="setRangeSlot('15:00', '18:00')">3:00 PM – 6:00 PM (3h)</button>
+        <button type="button" class="quick-chip" onclick="setRangeSlot('06:30', '08:00')">6:30 AM – 8:00 AM (1.5h)</button>
+        <button type="button" class="quick-chip" onclick="setRangeSlot('20:30', '23:30')">8:30 PM – 11:30 PM (3h)</button>
+      </div>
+    </div>
+
+    <!-- Calculated Preview Box -->
+    <div id="custom-calc-preview" class="custom-preview-card">
+      <div class="preview-badge">Calculated Duration</div>
+      <div id="custom-preview-duration" class="preview-time-text">1 hr 30 mins</div>
+      <div id="custom-preview-details" class="preview-sub-text">90 minutes total</div>
+    </div>
+
+    <!-- Optional Session Name -->
+    <div class="custom-name-wrap">
+      <label for="custom-timer-name-input" class="custom-field-label">Session Label (Optional)</label>
+      <input type="text" id="custom-timer-name-input" class="custom-text-input" placeholder="e.g. Physics Revision, 12 to 3 Study" maxlength="40" />
+    </div>
+
+    <!-- Actions -->
+    <div class="custom-modal-footer">
+      <button type="button" class="modal-btn modal-btn-outline" onclick="closeCustomTimerModal()">Cancel</button>
+      <button type="button" class="modal-btn modal-btn-primary" onclick="applyCustomTimer()">
+        <span>✓ Apply Timer</span>
+      </button>
     </div>
   </div>
 </div>
@@ -2697,9 +3110,8 @@ function renderClock(){
 
   if (clockActiveTab === 'timer') {
     // Study Timer View
-    const m = Math.floor(clockTimer.remainSec / 60);
-    const s = clockTimer.remainSec % 60;
-    const timeStr = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    const timeStr = formatTimerDigits(clockTimer.remainSec);
+    const hasHours = clockTimer.remainSec >= 3600 || clockTimer.totalSec >= 3600;
     const circ = 2 * Math.PI * 85;
     const off = circ * (1 - clockTimer.remainSec / clockTimer.totalSec);
 
@@ -2710,6 +3122,9 @@ function renderClock(){
             ${p.label}
           </button>
         `).join('')}
+        <button class="timer-preset-chip ${clockTimer.mode==='custom'?'active':''}" onclick="openCustomTimerModal()" title="Set custom duration or time range (e.g. 12 to 3)">
+          ⚙️ ${clockTimer.mode === 'custom' ? clockTimer.name : 'Custom...'}
+        </button>
       </div>
 
       <div class="timer-ring-box">
@@ -2720,8 +3135,11 @@ function renderClock(){
               stroke-dasharray="${circ}" stroke-dashoffset="${off}"/>
           </svg>
           <div class="timer-center-info">
-            <div id="timer-digits" class="timer-digits">${timeStr}</div>
-            <div id="timer-status-label" class="timer-sub-label">${clockTimer.running ? 'Running' : 'Ready'}</div>
+            <div id="timer-digits-trigger" class="timer-digits-interactive" onclick="openCustomTimerModal()" title="Click to customize duration or select time range">
+              <div id="timer-digits" class="timer-digits ${hasHours ? 'has-hours' : ''}">${timeStr}</div>
+              <div class="timer-edit-badge"><span>✏️ Set Custom Time</span></div>
+            </div>
+            <div id="timer-status-label" class="timer-sub-label">${clockTimer.running ? 'Running' : (clockTimer.remainSec === 0 ? 'Completed' : 'Ready')}</div>
           </div>
         </div>
       </div>
@@ -3170,13 +3588,51 @@ function tickFocusTimer() {
   updateTimerUI();
 }
 
+function formatTimerDigits(totalSec) {
+  if (isNaN(totalSec) || totalSec < 0) totalSec = 0;
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  if (h > 0) {
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  }
+  return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+}
+
+function formatTime12(timeStr) {
+  if (!timeStr) return '';
+  const parts = timeStr.split(':');
+  if (parts.length < 2) return timeStr;
+  let h = parseInt(parts[0], 10);
+  const m = parseInt(parts[1], 10);
+  if (isNaN(h) || isNaN(m)) return timeStr;
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12;
+  if (h === 0) h = 12;
+  return `${h}:${m.toString().padStart(2, '0')} ${ampm}`;
+}
+
+function formatDurationSummary(totalMinutes) {
+  const h = Math.floor(totalMinutes / 60);
+  const m = totalMinutes % 60;
+  if (h > 0 && m > 0) {
+    return `${h} ${h === 1 ? 'hr' : 'hrs'} ${m} ${m === 1 ? 'min' : 'mins'}`;
+  } else if (h > 0) {
+    return `${h} ${h === 1 ? 'hr' : 'hrs'}`;
+  } else {
+    return `${m} ${m === 1 ? 'min' : 'mins'}`;
+  }
+}
+
 function updateTimerUI() {
-  const m = Math.floor(clockTimer.remainSec / 60);
-  const s = clockTimer.remainSec % 60;
-  const timeStr = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  const timeStr = formatTimerDigits(clockTimer.remainSec);
+  const hasHours = clockTimer.remainSec >= 3600 || clockTimer.totalSec >= 3600;
 
   const digits = document.getElementById('timer-digits');
-  if (digits) digits.textContent = timeStr;
+  if (digits) {
+    digits.textContent = timeStr;
+    digits.classList.toggle('has-hours', hasHours);
+  }
 
   const ring = document.getElementById('timer-progress-ring');
   if (ring) {
@@ -3209,6 +3665,259 @@ function updateTimerUI() {
       zenTimerWrap.style.display = 'none';
     }
   }
+}
+
+// ==================== CUSTOM TIMER MODAL LOGIC ====================
+let customTimerTab = 'duration'; // 'duration' or 'range'
+
+function openCustomTimerModal() {
+  const modal = document.getElementById('custom-timer-modal');
+  if (!modal) return;
+
+  // Prefill Duration tab
+  const curHours = Math.floor(clockTimer.totalSec / 3600);
+  const curMins = Math.floor((clockTimer.totalSec % 3600) / 60);
+  const hInput = document.getElementById('custom-hours-input');
+  const mInput = document.getElementById('custom-mins-input');
+  if (hInput && mInput) {
+    if (clockTimer.totalSec > 0) {
+      hInput.value = curHours;
+      mInput.value = curMins;
+    } else {
+      hInput.value = 1;
+      mInput.value = 30;
+    }
+  }
+
+  // Prefill Range tab: Start time = now (rounded to next 5m), End time = +3 hours (or 12:00 to 15:00)
+  const startInput = document.getElementById('custom-range-start');
+  const endInput = document.getElementById('custom-range-end');
+  if (startInput && endInput) {
+    const d = new Date();
+    const curH = d.getHours().toString().padStart(2, '0');
+    const curM = (Math.floor(d.getMinutes() / 5) * 5).toString().padStart(2, '0');
+    startInput.value = `${curH}:${curM}`;
+    
+    // Default finish time: 3 hours later
+    const endH = ((d.getHours() + 3) % 24).toString().padStart(2, '0');
+    endInput.value = `${endH}:${curM}`;
+  }
+
+  const nameInput = document.getElementById('custom-timer-name-input');
+  if (nameInput) {
+    nameInput.value = clockTimer.mode === 'custom' && !clockTimer.name.startsWith('Custom (') ? clockTimer.name : '';
+  }
+
+  switchCustomTimerTab(customTimerTab);
+  updateCustomModalPreview();
+  modal.style.display = 'flex';
+}
+
+function closeCustomTimerModal(event) {
+  if (event && event.target !== event.currentTarget) return;
+  const modal = document.getElementById('custom-timer-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function switchCustomTimerTab(tab) {
+  customTimerTab = tab;
+  const btnDur = document.getElementById('custom-tab-btn-duration');
+  const btnRng = document.getElementById('custom-tab-btn-range');
+  const pnlDur = document.getElementById('custom-tab-content-duration');
+  const pnlRng = document.getElementById('custom-tab-content-range');
+
+  if (btnDur) btnDur.classList.toggle('active', tab === 'duration');
+  if (btnRng) btnRng.classList.toggle('active', tab === 'range');
+  if (pnlDur) pnlDur.style.display = tab === 'duration' ? 'block' : 'none';
+  if (pnlRng) pnlRng.style.display = tab === 'range' ? 'block' : 'none';
+
+  updateCustomModalPreview();
+}
+
+function stepDurationHour(delta) {
+  const hInput = document.getElementById('custom-hours-input');
+  if (!hInput) return;
+  let val = (parseInt(hInput.value, 10) || 0) + delta;
+  if (val < 0) val = 0;
+  if (val > 12) val = 12;
+  hInput.value = val;
+  onCustomDurationChange();
+}
+
+function stepDurationMin(delta) {
+  const mInput = document.getElementById('custom-mins-input');
+  if (!mInput) return;
+  let val = (parseInt(mInput.value, 10) || 0) + delta;
+  if (val < 0) val = 0;
+  if (val > 59) val = 59;
+  mInput.value = val;
+  onCustomDurationChange();
+}
+
+function setQuickDuration(hours, mins) {
+  const hInput = document.getElementById('custom-hours-input');
+  const mInput = document.getElementById('custom-mins-input');
+  if (hInput) hInput.value = hours;
+  if (mInput) mInput.value = mins;
+  onCustomDurationChange();
+}
+
+function onCustomDurationChange() {
+  const hInput = document.getElementById('custom-hours-input');
+  const mInput = document.getElementById('custom-mins-input');
+  if (hInput) {
+    let h = parseInt(hInput.value, 10);
+    if (isNaN(h) || h < 0) h = 0;
+    if (h > 12) h = 12;
+    hInput.value = h;
+  }
+  if (mInput) {
+    let m = parseInt(mInput.value, 10);
+    if (isNaN(m) || m < 0) m = 0;
+    if (m > 59) m = 59;
+    mInput.value = m;
+  }
+  updateCustomModalPreview();
+}
+
+function setRangeStartToNow() {
+  const d = new Date();
+  const curH = d.getHours().toString().padStart(2, '0');
+  const curM = d.getMinutes().toString().padStart(2, '0');
+  const startInput = document.getElementById('custom-range-start');
+  if (startInput) {
+    startInput.value = `${curH}:${curM}`;
+    onCustomRangeChange();
+  }
+}
+
+function addRangeEndHours(hoursToAdd) {
+  const startInput = document.getElementById('custom-range-start');
+  const endInput = document.getElementById('custom-range-end');
+  if (!startInput || !endInput) return;
+  const startVal = startInput.value || '12:00';
+  const [sh, sm] = startVal.split(':').map(Number);
+  const endTotalMins = (sh * 60 + sm + hoursToAdd * 60) % 1440;
+  const eh = Math.floor(endTotalMins / 60).toString().padStart(2, '0');
+  const em = (endTotalMins % 60).toString().padStart(2, '0');
+  endInput.value = `${eh}:${em}`;
+  onCustomRangeChange();
+}
+
+function setRangeSlot(startStr, endStr) {
+  const startInput = document.getElementById('custom-range-start');
+  const endInput = document.getElementById('custom-range-end');
+  if (startInput) startInput.value = startStr;
+  if (endInput) endInput.value = endStr;
+  onCustomRangeChange();
+}
+
+function onCustomRangeChange() {
+  updateCustomModalPreview();
+}
+
+function updateCustomModalPreview() {
+  const prevDuration = document.getElementById('custom-preview-duration');
+  const prevDetails = document.getElementById('custom-preview-details');
+  if (!prevDuration || !prevDetails) return;
+
+  if (customTimerTab === 'duration') {
+    const h = parseInt(document.getElementById('custom-hours-input')?.value, 10) || 0;
+    const m = parseInt(document.getElementById('custom-mins-input')?.value, 10) || 0;
+    const totalMinutes = h * 60 + m;
+    if (totalMinutes <= 0) {
+      prevDuration.textContent = '0 min';
+      prevDetails.textContent = 'Please choose at least 1 minute';
+      prevDuration.style.color = '#f87171';
+    } else {
+      prevDuration.textContent = formatDurationSummary(totalMinutes);
+      prevDetails.textContent = `${totalMinutes} minutes study session`;
+      prevDuration.style.color = '#fff';
+    }
+  } else {
+    const startVal = document.getElementById('custom-range-start')?.value;
+    const endVal = document.getElementById('custom-range-end')?.value;
+    if (!startVal || !endVal) {
+      prevDuration.textContent = '--';
+      prevDetails.textContent = 'Select both start and finish time';
+      prevDuration.style.color = '#fff';
+      return;
+    }
+    const [sh, sm] = startVal.split(':').map(Number);
+    const [eh, em] = endVal.split(':').map(Number);
+    let diff = (eh * 60 + em) - (sh * 60 + sm);
+    let nextDay = false;
+    if (diff <= 0) {
+      diff += 1440;
+      nextDay = true;
+    }
+    if (diff === 0 || diff === 1440) {
+      prevDuration.textContent = '0 min';
+      prevDetails.textContent = 'Start and finish time cannot be identical';
+      prevDuration.style.color = '#f87171';
+    } else {
+      const start12 = formatTime12(startVal);
+      const end12 = formatTime12(endVal);
+      prevDuration.textContent = formatDurationSummary(diff);
+      prevDetails.textContent = `${start12} → ${end12}${nextDay ? ' (Next Day)' : ''} • ${diff} minutes`;
+      prevDuration.style.color = '#fff';
+    }
+  }
+}
+
+function applyCustomTimer() {
+  let totalMinutes = 0;
+  let defaultName = 'Custom Timer';
+
+  if (customTimerTab === 'duration') {
+    const h = parseInt(document.getElementById('custom-hours-input')?.value, 10) || 0;
+    const m = parseInt(document.getElementById('custom-mins-input')?.value, 10) || 0;
+    totalMinutes = h * 60 + m;
+    if (totalMinutes <= 0) {
+      showToast('Please set a duration of at least 1 minute.', 'warning');
+      return;
+    }
+    defaultName = `Custom (${formatDurationSummary(totalMinutes)})`;
+  } else {
+    const startVal = document.getElementById('custom-range-start')?.value;
+    const endVal = document.getElementById('custom-range-end')?.value;
+    if (!startVal || !endVal) {
+      showToast('Please select both start and finish times.', 'warning');
+      return;
+    }
+    const [sh, sm] = startVal.split(':').map(Number);
+    const [eh, em] = endVal.split(':').map(Number);
+    let diff = (eh * 60 + em) - (sh * 60 + sm);
+    if (diff <= 0) diff += 1440;
+    if (diff === 0 || diff === 1440) {
+      showToast('Start and finish times cannot be identical.', 'warning');
+      return;
+    }
+    totalMinutes = diff;
+    const start12 = formatTime12(startVal);
+    const end12 = formatTime12(endVal);
+    defaultName = `${start12} – ${end12}`;
+  }
+
+  const nameInput = document.getElementById('custom-timer-name-input');
+  const sessionName = (nameInput && nameInput.value.trim()) ? nameInput.value.trim() : defaultName;
+
+  clockTimer.mode = 'custom';
+  clockTimer.totalSec = totalMinutes * 60;
+  clockTimer.remainSec = clockTimer.totalSec;
+  clockTimer.running = false;
+  clockTimer.name = sessionName;
+
+  closeCustomTimerModal();
+
+  if (activePage === 'clock') {
+    const m = document.getElementById('main');
+    if (m) m.innerHTML = renderClock();
+  } else {
+    updateTimerUI();
+  }
+
+  showToast(`Timer set: ${sessionName} (${formatDurationSummary(totalMinutes)})`, 'success');
 }
 
 function updateStopwatchUI() {
@@ -3277,6 +3986,11 @@ function initClockTicker() {
 
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+      const modal = document.getElementById('custom-timer-modal');
+      if (modal && modal.style.display !== 'none') {
+        closeCustomTimerModal();
+        return;
+      }
       closeZenMode();
     }
   });
