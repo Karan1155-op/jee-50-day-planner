@@ -1559,18 +1559,54 @@ body::before {
 .zen-overlay {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999999;
   background: #04050b;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 30px;
+  box-sizing: border-box;
   animation: page-in 0.3s ease;
+}
+.zen-overlay:fullscreen,
+.zen-overlay:-webkit-full-screen {
+  width: 100vw;
+  height: 100vh;
+  background: #04050b;
+  padding: 30px;
+  box-sizing: border-box;
+}
+:fullscreen::backdrop {
+  background: #04050b;
+}
+:-webkit-full-screen::backdrop {
+  background: #04050b;
 }
 .zen-overlay-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  opacity: 0.65;
+  transition: opacity 0.25s ease;
+}
+.zen-overlay-top:hover {
+  opacity: 1;
+}
+.zen-overlay-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  flex-wrap: wrap;
+  gap: 8px;
+  opacity: 0.65;
+  transition: opacity 0.25s ease;
+}
+.zen-overlay-bottom:hover {
+  opacity: 1;
 }
 .zen-center-wrap {
   display: flex;
@@ -2208,7 +2244,7 @@ body::before {
       <span id="zen-timer-digits">74:35</span>
     </div>
   </div>
-  <div style="display:flex;justify-content:space-between;align-items:center;color:var(--text-muted);font-size:0.8rem;flex-wrap:wrap;gap:8px;">
+  <div class="zen-overlay-bottom">
     <div>Day <span id="zen-day-num">4</span> of 50 • Syllabus Target</div>
     <div>Press Esc to return • Keep phone on desk</div>
   </div>
@@ -2685,6 +2721,29 @@ function renderDashboard(){
     <div class="card stat-card-compact"><div class="stat-icon" style="background:var(--inorganic-bg)">📅</div><div class="stat-value">${dl}</div><div class="stat-label">Days Left</div></div>
     <div class="card stat-card-compact"><div class="stat-icon" style="background:var(--maths-bg)">⏱️</div><div class="stat-value">${hrs}h</div><div class="stat-label">Hours Studied</div></div>
     <div class="card stat-card-compact"><div class="stat-icon" style="background:var(--organic-bg)">🔥</div><div class="stat-value">${dn<1?'—':Math.min(dn,50)}</div><div class="stat-label">${dn<1?'Not Started':dn>50?'Completed':'Current Day'}</div></div>
+  </div></div>`;
+
+  // Countdown Milestones (Syllabus Target & JEE Main Exam)
+  const now = new Date();
+  const sylEnd = new Date(2026, 10, 19, 23, 59, 59);
+  const diffSyl = sylEnd - now;
+  const sylDays = Math.max(0, Math.floor(diffSyl / 864e5));
+
+  const jeeDate = new Date(2027, 0, 22, 9, 0, 0);
+  const diffJee = jeeDate - now;
+  const jeeDays = Math.max(0, Math.floor(diffJee / 864e5));
+
+  h+=`<div class="section"><div class="section-label">🎯 Countdown Milestones</div><div class="milestone-grid">
+    <div class="milestone-card" onclick="go('clock')" style="cursor:pointer;" title="View in Clock & Focus Studio">
+      <div class="milestone-lbl">🏁 50-Day Syllabus Target</div>
+      <div class="milestone-val">${sylDays} Days Left</div>
+      <div class="milestone-meta">Thursday, 19 Nov 2026 • 146 Lectures Total</div>
+    </div>
+    <div class="milestone-card" onclick="go('clock')" style="cursor:pointer;" title="View in Clock & Focus Studio">
+      <div class="milestone-lbl">⚡ JEE Main 2027 (Session 1)</div>
+      <div class="milestone-val">${jeeDays} Days Left</div>
+      <div class="milestone-meta">Target Exam Date: ~22 January 2027</div>
+    </div>
   </div></div>`;
 
   // Subject progress
@@ -3715,6 +3774,22 @@ async function openZenMode() {
   if (daySpan) daySpan.textContent = dn >= 1 && dn <= 50 ? dn : 1;
   updateMasterClockUI();
 
+  // True native fullscreen like YouTube (hides browser top bar, URL bar, taskbar, PWA window chrome)
+  try {
+    const docEl = document.documentElement;
+    if (docEl.requestFullscreen) {
+      await docEl.requestFullscreen({ navigationUI: 'hide' });
+    } else if (overlay && overlay.requestFullscreen) {
+      await overlay.requestFullscreen({ navigationUI: 'hide' });
+    } else if (docEl.webkitRequestFullscreen) {
+      await docEl.webkitRequestFullscreen();
+    } else if (overlay && overlay.webkitRequestFullscreen) {
+      await overlay.webkitRequestFullscreen();
+    } else if (docEl.msRequestFullscreen) {
+      await docEl.msRequestFullscreen();
+    }
+  } catch(e) {}
+
   if ('wakeLock' in navigator) {
     try {
       zenWakeLock = await navigator.wakeLock.request('screen');
@@ -3724,12 +3799,23 @@ async function openZenMode() {
   }
 }
 
-function closeZenMode() {
+function closeZenMode(exitNative = true) {
   const overlay = document.getElementById('zen-clock-overlay');
   if (overlay) overlay.style.display = 'none';
   if (zenWakeLock) {
     try { zenWakeLock.release(); } catch(e) {}
     zenWakeLock = null;
+  }
+  if (exitNative && (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement)) {
+    try {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    } catch(e) {}
   }
 }
 
@@ -4253,6 +4339,17 @@ function initClockTicker() {
   });
   window.addEventListener('focus', handleAppResume);
   window.addEventListener('pageshow', handleAppResume);
+
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) {
+      closeZenMode(false);
+    }
+  });
+  document.addEventListener('webkitfullscreenchange', () => {
+    if (!document.webkitFullscreenElement) {
+      closeZenMode(false);
+    }
+  });
 
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {

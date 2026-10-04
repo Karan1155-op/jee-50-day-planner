@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jee-planner-v13';
+const CACHE_NAME = 'jee-planner-v14';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
