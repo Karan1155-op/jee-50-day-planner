@@ -969,8 +969,9 @@ body::before {
 }
 .digital-time-row {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
 }
 @media (max-width: 580px) {
   .digital-time-row { justify-content: center; }
@@ -991,14 +992,20 @@ body::before {
   .digital-digits { font-size: 2.2rem; }
 }
 .digital-ampm {
-  font-size: 0.95rem;
-  font-weight: 700;
+  font-size: 0.85rem;
+  font-weight: 800;
   color: var(--accent-light);
   background: var(--accent-bg);
   border: 1px solid var(--border-accent);
-  padding: 3px 8px;
-  border-radius: var(--radius-xs);
-  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.15);
 }
 .digital-date-str {
   color: var(--text-secondary);
@@ -1531,6 +1538,35 @@ body::before {
 @media (max-width: 600px) {
   .zen-clock-digits { font-size: 3.8rem; }
 }
+.zen-time-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: nowrap;
+}
+.zen-ampm-badge {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--accent-light);
+  background: rgba(99, 102, 241, 0.2);
+  border: 1.5px solid var(--border-accent);
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.08em;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+}
+@media (max-width: 600px) {
+  .zen-ampm-badge {
+    font-size: 1.1rem;
+    padding: 4px 10px;
+    border-radius: var(--radius-xs);
+  }
+}
 .zen-activity-pill {
   display: inline-flex;
   align-items: center;
@@ -1793,7 +1829,7 @@ body::before {
   text-align: center;
   padding: 8px 0;
   outline: none;
-  -moz-appearance: textfield;
+  appearance: textfield;
 }
 .stepper-box input[type="number"]::-webkit-outer-spin-button,
 .stepper-box input[type="number"]::-webkit-inner-spin-button {
@@ -2103,7 +2139,10 @@ body::before {
     </div>
   </div>
   <div class="zen-center-wrap">
-    <div id="zen-digital-time" class="zen-clock-digits">11:42:08</div>
+    <div class="zen-time-row">
+      <div id="zen-digital-time" class="zen-clock-digits">11:42:08</div>
+      <div id="zen-digital-ampm" class="zen-ampm-badge">PM</div>
+    </div>
     <div id="zen-date-str" style="font-size:1.1rem;color:var(--text-secondary);font-weight:500;">Sunday, Oct 4, 2026</div>
     <div id="zen-routine-banner" class="zen-activity-pill">
       <span class="live-pulse-dot"></span>
@@ -3491,6 +3530,7 @@ async function openZenMode() {
   const dn = dayNum();
   const daySpan = document.getElementById('zen-day-num');
   if (daySpan) daySpan.textContent = dn >= 1 && dn <= 50 ? dn : 1;
+  updateMasterClockUI();
 
   if ('wakeLock' in navigator) {
     try {
@@ -3545,7 +3585,9 @@ function updateMasterClockUI() {
 
   // Fullscreen Mode Clock
   const zenTime = document.getElementById('zen-digital-time');
-  if (zenTime) zenTime.textContent = `${hPad}:${mPad}:${sPad} ${ampm}`;
+  const zenAmpm = document.getElementById('zen-digital-ampm');
+  if (zenTime) zenTime.textContent = `${hPad}:${mPad}:${sPad}`;
+  if (zenAmpm) zenAmpm.textContent = ampm;
   const zenDate = document.getElementById('zen-date-str');
   if (zenDate) {
     const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
