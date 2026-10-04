@@ -2349,10 +2349,10 @@ const routineMaster = {
     { start: 510, end: 585, time: '08:30 - 09:45 AM', dur: '75m', tag: 'class', slot: 2, title: '📐 Class 2', desc: 'Second lecture of the day. Active note-taking and immediate example solving.' },
     { start: 585, end: 600, time: '09:45 - 10:00 AM', dur: '15m', tag: 'study', title: '📝 Quick Formula Consolidation', desc: 'Write down key formulas from Class 1 & 2 before breakfast.' },
     { start: 600, end: 660, time: '10:00 - 11:00 AM', dur: '60m', tag: 'break', title: '🍳 Breakfast & Refresh', desc: 'Wholesome breakfast at 10:00 AM. Rest your eyes from screens, take a light walk.' },
-    { start: 660, end: 735, time: '11:00 AM - 12:15 PM', dur: '75m', tag: 'class', slot: 3, title: '🧪 Class 3', desc: 'Third lecture. Complete inorganic/organic mechanisms and concepts.' },
+    { start: 660, end: 735, time: '11:00 AM - 12:15 PM', dur: '75m', tag: 'class', slot: 3, title: '📚 Class 3', desc: 'Third lecture of the day. Complete theory, key derivations and examples.' },
     { start: 735, end: 810, time: '12:15 - 01:30 PM', dur: '75m', tag: 'study', title: '🎯 Morning Problem Practice', desc: 'Direct DPP & PYQ practice (15-20 Qs) based on morning lectures.' },
     { start: 810, end: 900, time: '01:30 - 03:00 PM', dur: '90m', tag: 'break', title: '🍱 Lunch & Power Nap', desc: 'Wholesome lunch + 25-30m power nap to recharge cognitive stamina before Class 4.' },
-    { start: 900, end: 975, time: '03:00 - 04:15 PM', dur: '75m', tag: 'class', slot: 4, title: '🔬 Class 4 (Final Lecture)', desc: 'Fourth and final lecture at 3:00 PM! All syllabus video goals for today complete.' },
+    { start: 900, end: 975, time: '03:00 - 04:15 PM', dur: '75m', tag: 'class', slot: 4, title: '🎓 Class 4 (Final Lecture)', desc: 'Fourth and final lecture at 3:00 PM! All syllabus video goals for today complete.' },
     { start: 975, end: 1005, time: '04:15 - 04:45 PM', dur: '30m', tag: 'break', title: '☕ Tea & Fresh Air Break', desc: 'Short tea break, fresh air, stretch out before deep problem-solving.' },
     { start: 1005, end: 1155, time: '04:45 - 07:15 PM', dur: '2h 30m', tag: 'study', title: '📚 High-Volume PYQ Solving', desc: 'Timed 2.5-hour problem solving block. Solve 30-40 past JEE Main PYQs.' },
     { start: 1155, end: 1200, time: '07:15 - 08:00 PM', dur: '45m', tag: 'break', title: '🏃 Exercise & Decompress', desc: 'Step outdoors, jog, workout, or talk to family to de-stress completely.' },
@@ -2370,7 +2370,7 @@ const routineMaster = {
     { start: 600, end: 660, time: '10:00 - 11:00 AM', dur: '60m', tag: 'break', title: '🍳 Breakfast & Refresh', desc: 'Nutritious breakfast at 10:00 AM and relaxing breather.' },
     { start: 660, end: 795, time: '11:00 AM - 01:15 PM', dur: '2h 15m', tag: 'study', title: '🎯 Intensive Practice (Class 1 & 2)', desc: 'Solve 20-25 questions from the two morning classes immediately.' },
     { start: 795, end: 900, time: '01:15 - 03:00 PM', dur: '1h 45m', tag: 'break', title: '🍱 Lunch & Power Nap', desc: 'Good lunch + 25-30 minute power nap to reset brain before Class 3.' },
-    { start: 900, end: 975, time: '03:00 - 04:15 PM', dur: '75m', tag: 'class', slot: 3, title: '🧪 Class 3 (Final Lecture)', desc: 'Third and final class at 3:00 PM! Syllabus lecture goal for the day is complete.' },
+    { start: 900, end: 975, time: '03:00 - 04:15 PM', dur: '75m', tag: 'class', slot: 3, title: '🎓 Class 3 (Final Lecture)', desc: 'Third and final class at 3:00 PM! Syllabus lecture goal for the day is complete.' },
     { start: 975, end: 1005, time: '04:15 - 04:45 PM', dur: '30m', tag: 'break', title: '☕ Tea & Fresh Air Break', desc: 'Short tea break, fresh air, stretch out before deep problem-solving.' },
     { start: 1005, end: 1185, time: '04:45 - 07:45 PM', dur: '3h', tag: 'study', title: '📚 High-Volume PYQ Practice Block', desc: '3 full hours of focused question practice across completed chapters.' },
     { start: 1185, end: 1230, time: '07:45 - 08:30 PM', dur: '45m', tag: 'break', title: '🏃 Walk & Outdoor Exercise', desc: 'Clear mental fatigue with fresh air and physical movement.' },
@@ -2514,6 +2514,7 @@ function renderDashboard(){
   const isRestDay = td && td.rest;
   const nowMin = curTimeMin();
   const hasStarted = dn >= 1 && dn <= 50;
+  const curSlot = getCurrentRoutineSlotInfo();
 
   let routineBadgeHtml = '';
   if(!hasStarted){
@@ -2523,67 +2524,99 @@ function renderDashboard(){
         <span><strong>Starts Tomorrow (Oct 1):</strong> First class at 06:30 AM sharp. Get desk ready!</span>
       </div>`;
   } else {
-    let curBlock = 'First Class starts at 6:30 AM';
-    if(nowMin >= 390 && nowMin < 480) curBlock = 'Class 1 (06:30 - 08:00 AM)';
-    else if(nowMin >= 480 && nowMin < 510) curBlock = 'Morning Breather & Notes (08:00 - 08:30 AM)';
-    else if(nowMin >= 510 && nowMin < 585) curBlock = 'Class 2 (08:30 - 09:45 AM)';
-    else if(nowMin >= 585 && nowMin < 600) curBlock = 'Quick Key Formulas (09:45 - 10:00 AM)';
-    else if(nowMin >= 600 && nowMin < 660) curBlock = '🍳 Breakfast & Refresh (10:00 - 11:00 AM)';
-    else if(nowMin >= 660 && nowMin < 735) curBlock = is4Lec ? 'Class 3 (11:00 AM - 12:15 PM)' : 'Intensive Problem Practice';
-    else if(nowMin >= 735 && nowMin < 810) curBlock = 'Practice Session & DPPs (12:15 - 01:30 PM)';
-    else if(nowMin >= 810 && nowMin < 900) curBlock = '🍱 Lunch & Power Nap (01:30 - 03:00 PM)';
-    else if(nowMin >= 900 && nowMin < 975) curBlock = is4Lec ? 'Class 4 (03:00 - 04:15 PM)' : 'Class 3 (03:00 - 04:15 PM)';
-    else if(nowMin >= 975 && nowMin < 1005) curBlock = '☕ Tea & Breather (04:15 - 04:45 PM)';
-    else if(nowMin >= 1005 && nowMin < 1155) curBlock = 'Deep PYQ Practice Session (04:45 - 07:15 PM)';
-    else if(nowMin >= 1155 && nowMin < 1200) curBlock = 'Exercise / Walk / Decompress (07:15 - 08:00 PM)';
-    else if(nowMin >= 1200 && nowMin < 1245) curBlock = 'Dinner & Relaxation (08:00 - 08:45 PM)';
-    else if(nowMin >= 1245 && nowMin < 1335) curBlock = 'Active Recall & Formula Revision (08:45 - 10:15 PM)';
-    else if(nowMin >= 1335 && nowMin < 1365) curBlock = 'Night Wind-Down & Desk Prep (10:15 - 10:45 PM)';
-    else if(nowMin >= 1365 || nowMin < 360) curBlock = 'Night Sleep & Brain Recovery (10:45 PM - 06:00 AM)';
-
     routineBadgeHtml = `
       <div style="font-size:0.84rem; display:flex; align-items:center; gap:8px; color:var(--text-secondary); margin-bottom:12px;">
         <span class="live-pulse-dot" style="flex-shrink:0;"></span>
-        <span><strong>Now (${formatTime12(nowMin)}):</strong> ${curBlock}</span>
+        <span><strong>Happening Now:</strong> ${curSlot.title} (${curSlot.timeRange}) • ${curSlot.remainingMins}m remaining</span>
       </div>`;
   }
 
-  const slot1Active = hasStarted && nowMin>=390 && nowMin<480;
-  const slot2Active = hasStarted && nowMin>=510 && nowMin<585;
-  const slot3Active = hasStarted && (is4Lec ? nowMin>=660&&nowMin<735 : nowMin>=660&&nowMin<795);
-  const slot4Active = hasStarted && (is4Lec ? nowMin>=900&&nowMin<975 : nowMin>=900&&nowMin<975);
-
   const previewDay = (hasStarted ? schedule[dn - 1] : schedule[0]) || schedule[0];
   const pLecs = previewDay.lectures || [];
-  const l1Name = isRestDay ? '🌅 Morning Walk' : (pLecs[0] ? `${SM[pLecs[0][0]].icon} ${SM[pLecs[0][0]].label} (L${pLecs[0][2]})` : '⚡ Class 1');
-  const l2Name = isRestDay ? '🍳 Breakfast & Warmup' : (pLecs[1] ? `${SM[pLecs[1][0]].icon} ${SM[pLecs[1][0]].label} (L${pLecs[1][2]})` : '📐 Class 2');
-  const l3Name = isRestDay ? '📝 Mock Test' : (pLecs[2] ? `${SM[pLecs[2][0]].icon} ${SM[pLecs[2][0]].label} (L${pLecs[2][2]})` : (is4Lec ? '🧪 Class 3' : '🎯 Practice'));
-  const l4Name = is4Lec ? (pLecs[3] ? `${SM[pLecs[3][0]].icon} ${SM[pLecs[3][0]].label} (L${pLecs[3][2]})` : '🔬 Class 4') : (isRestDay ? '📖 Formulas' : '📚 3h PYQs');
+
+  let l1Time = '06:30 - 08:00 AM', l1Name = '⚡ Class 1', slot1Active = false;
+  let l2Time = '08:30 - 09:45 AM', l2Name = '📐 Class 2', slot2Active = false;
+  let l3Time = '11:00 AM - 01:15 PM', l3Name = '🎯 Practice & DPPs', slot3Active = false;
+  let l4Time = '03:00 - 04:15 PM', l4Name = '🎓 Class 3', slot4Active = false;
+
+  if (isRestDay) {
+    l1Time = '06:30 - 07:30 AM';
+    l1Name = '🌅 Morning Walk & Prep';
+    slot1Active = hasStarted && nowMin >= 390 && nowMin < 450;
+
+    l2Time = '08:30 - 10:00 AM';
+    l2Name = '📖 Formula Book Revision';
+    slot2Active = hasStarted && nowMin >= 510 && nowMin < 600;
+
+    l3Time = '11:00 AM - 02:00 PM';
+    l3Name = '📝 3-Hour Timed Mock Test';
+    slot3Active = hasStarted && nowMin >= 660 && nowMin < 840;
+
+    l4Time = '06:30 - 08:30 PM';
+    l4Name = '🎯 Re-solve Test Mistakes';
+    slot4Active = hasStarted && nowMin >= 1110 && nowMin < 1230;
+  } else if (is4Lec) {
+    const lec1 = pLecs[0], lec2 = pLecs[1], lec3 = pLecs[2], lec4 = pLecs[3];
+    l1Time = '06:30 - 08:00 AM';
+    l1Name = lec1 ? `${SM[lec1[0]].icon} ${chapters[lec1[1]]?.name || lec1[1]} (L${lec1[2]})` : '⚡ Class 1';
+    slot1Active = hasStarted && nowMin >= 390 && nowMin < 480;
+
+    l2Time = '08:30 - 09:45 AM';
+    l2Name = lec2 ? `${SM[lec2[0]].icon} ${chapters[lec2[1]]?.name || lec2[1]} (L${lec2[2]})` : '📐 Class 2';
+    slot2Active = hasStarted && nowMin >= 510 && nowMin < 585;
+
+    l3Time = '11:00 AM - 12:15 PM';
+    l3Name = lec3 ? `${SM[lec3[0]].icon} ${chapters[lec3[1]]?.name || lec3[1]} (L${lec3[2]})` : '📚 Class 3';
+    slot3Active = hasStarted && nowMin >= 660 && nowMin < 735;
+
+    l4Time = '03:00 - 04:15 PM';
+    l4Name = lec4 ? `${SM[lec4[0]].icon} ${chapters[lec4[1]]?.name || lec4[1]} (L${lec4[2]})` : '🎓 Class 4';
+    slot4Active = hasStarted && nowMin >= 900 && nowMin < 975;
+  } else {
+    // 3-lecture day:
+    // Slot 1: Class 1 (06:30 - 08:00 AM)
+    // Slot 2: Class 2 (08:30 - 09:45 AM)
+    // Slot 3: Practice & DPPs (11:00 AM - 01:15 PM)
+    // Slot 4: Class 3 (03:00 - 04:15 PM) -> 3rd scheduled lecture
+    const lec1 = pLecs[0], lec2 = pLecs[1], lec3 = pLecs[2];
+    l1Time = '06:30 - 08:00 AM';
+    l1Name = lec1 ? `${SM[lec1[0]].icon} ${chapters[lec1[1]]?.name || lec1[1]} (L${lec1[2]})` : '⚡ Class 1';
+    slot1Active = hasStarted && nowMin >= 390 && nowMin < 480;
+
+    l2Time = '08:30 - 09:45 AM';
+    l2Name = lec2 ? `${SM[lec2[0]].icon} ${chapters[lec2[1]]?.name || lec2[1]} (L${lec2[2]})` : '📐 Class 2';
+    slot2Active = hasStarted && nowMin >= 510 && nowMin < 585;
+
+    l3Time = '11:00 AM - 01:15 PM';
+    l3Name = '🎯 Practice & DPPs';
+    slot3Active = hasStarted && nowMin >= 660 && nowMin < 795;
+
+    l4Time = '03:00 - 04:15 PM';
+    l4Name = lec3 ? `${SM[lec3[0]].icon} ${chapters[lec3[1]]?.name || lec3[1]} (L${lec3[2]})` : '🎓 Class 3';
+    slot4Active = hasStarted && nowMin >= 900 && nowMin < 975;
+  }
 
   h+=`<div class="card routine-widget">
     <div class="routine-widget-top">
       <div class="routine-widget-title"><span>⏰</span> Daily Routine • ${hasStarted ? 'Today (Day ' + dn + ')' : 'Day 1 Preview (Starts Oct 1)'}</div>
-      <div style="display:flex; gap:12px; align-items:center;">
-        <button class="routine-widget-link" onclick="go('clock')">Clock ⏱️</button>
-        <button class="routine-widget-link" onclick="go('routine')">Timeline →</button>
-      </div>
+      <button class="routine-widget-link" onclick="go('routine')">Timeline →</button>
     </div>
     ${routineBadgeHtml}
     <div class="routine-slots-summary">
       <div class="routine-slot-mini ${slot1Active?'active-slot':''}">
-        <div class="routine-slot-mini-time">06:30 - 08:00 AM</div>
+        <div class="routine-slot-mini-time">${l1Time}</div>
         <div class="routine-slot-mini-name">${l1Name}</div>
       </div>
       <div class="routine-slot-mini ${slot2Active?'active-slot':''}">
-        <div class="routine-slot-mini-time">08:30 - 09:45 AM</div>
+        <div class="routine-slot-mini-time">${l2Time}</div>
         <div class="routine-slot-mini-name">${l2Name}</div>
       </div>
       <div class="routine-slot-mini ${slot3Active?'active-slot':''}">
-        <div class="routine-slot-mini-time">${is4Lec?'11:00 AM - 12:15 PM':'11:00 AM - 01:15 PM'}</div>
+        <div class="routine-slot-mini-time">${l3Time}</div>
         <div class="routine-slot-mini-name">${l3Name}</div>
       </div>
       <div class="routine-slot-mini ${slot4Active?'active-slot':''}">
-        <div class="routine-slot-mini-time">03:00 - 04:15 PM</div>
+        <div class="routine-slot-mini-time">${l4Time}</div>
         <div class="routine-slot-mini-name">${l4Name}</div>
       </div>
     </div>
@@ -2595,29 +2628,6 @@ function renderDashboard(){
     <div class="card stat-card-compact"><div class="stat-icon" style="background:var(--inorganic-bg)">📅</div><div class="stat-value">${dl}</div><div class="stat-label">Days Left</div></div>
     <div class="card stat-card-compact"><div class="stat-icon" style="background:var(--maths-bg)">⏱️</div><div class="stat-value">${hrs}h</div><div class="stat-label">Hours Studied</div></div>
     <div class="card stat-card-compact"><div class="stat-icon" style="background:var(--organic-bg)">🔥</div><div class="stat-value">${dn<1?'—':Math.min(dn,50)}</div><div class="stat-label">${dn<1?'Not Started':dn>50?'Completed':'Current Day'}</div></div>
-  </div></div>`;
-
-  // Countdown Milestones (Syllabus Target & JEE Main Exam)
-  const now = new Date();
-  const sylEnd = new Date(2026, 10, 19, 23, 59, 59);
-  const diffSyl = sylEnd - now;
-  const sylDays = Math.max(0, Math.floor(diffSyl / 864e5));
-
-  const jeeDate = new Date(2027, 0, 22, 9, 0, 0);
-  const diffJee = jeeDate - now;
-  const jeeDays = Math.max(0, Math.floor(diffJee / 864e5));
-
-  h+=`<div class="section"><div class="section-label">🎯 Countdown Milestones</div><div class="milestone-grid">
-    <div class="milestone-card" onclick="go('clock')" style="cursor:pointer;" title="View in Clock & Focus Studio">
-      <div class="milestone-lbl">🏁 50-Day Syllabus Target</div>
-      <div class="milestone-val">${sylDays} Days Left</div>
-      <div class="milestone-meta">Thursday, 19 Nov 2026 • 146 Lectures Total</div>
-    </div>
-    <div class="milestone-card" onclick="go('clock')" style="cursor:pointer;" title="View in Clock & Focus Studio">
-      <div class="milestone-lbl">⚡ JEE Main 2027 (Session 1)</div>
-      <div class="milestone-val">${jeeDays} Days Left</div>
-      <div class="milestone-meta">Target Exam Date: ~22 January 2027</div>
-    </div>
   </div></div>`;
 
   // Subject progress
@@ -2708,16 +2718,32 @@ function renderRoutine(){
 
   // Status / Live Card
   if (isViewingToday) {
+    let liveTitle = activeSlot ? activeSlot.title : 'Night Rest / Deep Sleep';
+    if (activeSlot && activeSlot.tag === 'class' && activeSlot.slot && validDay.lectures && validDay.lectures[activeSlot.slot - 1]) {
+      const lec = validDay.lectures[activeSlot.slot - 1];
+      const s = lec[0], k = lec[1], n = lec[2];
+      const ch = chapters[k], m = SM[s];
+      liveTitle = `${m.icon} ${m.label}: ${ch ? ch.name : k} (L${n})`;
+    }
+
+    let nextTitle = nextSlot ? nextSlot.title : '';
+    if (nextSlot && nextSlot.tag === 'class' && nextSlot.slot && validDay.lectures && validDay.lectures[nextSlot.slot - 1]) {
+      const lec = validDay.lectures[nextSlot.slot - 1];
+      const s = lec[0], k = lec[1], n = lec[2];
+      const ch = chapters[k], m = SM[s];
+      nextTitle = `${m.icon} ${m.label}: ${ch ? ch.name : k} (L${n})`;
+    }
+
     h += `<div class="routine-live-card">
       <div class="routine-live-left">
         <div class="live-pulse-dot"></div>
         <div>
           <div class="routine-live-title">Happening Now (${formatTime12(nowMin)})</div>
-          <div class="routine-live-desc">${activeSlot ? activeSlot.title : 'Night Rest / Deep Sleep'}</div>
+          <div class="routine-live-desc">${liveTitle}</div>
         </div>
       </div>
       <div style="display:flex; align-items:center; gap:10px;">
-        ${nextSlot ? `<div style="font-size:0.78rem; color:var(--text-secondary); text-align:right;"><strong>Next:</strong> ${nextSlot.time.split(' - ')[0]} • ${nextSlot.title}</div>` : ''}
+        ${nextSlot ? `<div style="font-size:0.78rem; color:var(--text-secondary); text-align:right;"><strong>Next:</strong> ${nextSlot.time.split(' - ')[0]} • ${nextTitle}</div>` : ''}
         <button class="routine-day-nav-btn" style="padding:4px 10px; font-size:0.75rem;" onclick="go('clock')">Clock ⏱️</button>
       </div>
     </div>`;
@@ -2789,6 +2815,14 @@ function renderRoutine(){
     const isPast = isViewingToday && routineTab === 'today' && nowMin >= slot.end;
     const tagClass = 'timeline-tag-' + (slot.tag || 'study');
     
+    let itemTitle = slot.title;
+    if (routineTab === 'today' && slot.slot && validDay.lectures && validDay.lectures[slot.slot - 1]) {
+      const lec = validDay.lectures[slot.slot - 1];
+      const s = lec[0], k = lec[1], n = lec[2];
+      const ch = chapters[k], m = SM[s];
+      itemTitle = `${m.icon} Class ${slot.slot}: ${ch ? ch.name : k} (L${n})`;
+    }
+
     h += `<div class="timeline-item ${isNow ? 'now' : ''} ${isPast ? 'past' : ''}">
       <div class="timeline-time-col">
         <div class="timeline-time">${slot.time.split(' - ')[0]}</div>
@@ -2796,7 +2830,7 @@ function renderRoutine(){
       </div>
       <div class="timeline-body">
         <div class="timeline-header">
-          <span class="timeline-title">${slot.title}</span>
+          <span class="timeline-title">${itemTitle}</span>
           <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
             <span class="timeline-tag ${tagClass}">${slot.tag}</span>
             ${isNow ? `<span class="timeline-now-badge">🔴 NOW</span>` : ''}
@@ -3039,12 +3073,25 @@ function getCurrentRoutineSlotInfo() {
   const remainingMins = Math.max(0, activeSlot.end - nowMin);
   const progressPct = Math.min(100, Math.round((elapsedMins / totalMins) * 100));
 
+  let slotTitle = activeSlot.title;
+  let slotDesc = activeSlot.desc;
+  const targetDay = hasStarted ? dn : 1;
+  const validDay = schedule[targetDay - 1] || schedule[0];
+
+  if (activeSlot.tag === 'class' && activeSlot.slot && validDay.lectures && validDay.lectures[activeSlot.slot - 1]) {
+    const lec = validDay.lectures[activeSlot.slot - 1];
+    const s = lec[0], k = lec[1], n = lec[2];
+    const ch = chapters[k], m = SM[s];
+    slotTitle = `${m.icon} ${m.label}: ${ch ? ch.name : k} (L${n})`;
+    slotDesc = `Class ${activeSlot.slot} • Lecture ${n} of ${ch ? ch.total : '?'} (${s === 'physics' ? '1h 30m' : '1h 15m'})`;
+  }
+
   return {
     hasStarted,
     active: activeSlot,
     next: nextSlot,
-    title: activeSlot.title,
-    desc: activeSlot.desc,
+    title: slotTitle,
+    desc: slotDesc,
     timeRange: activeSlot.time,
     totalMins,
     elapsedMins,
