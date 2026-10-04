@@ -2282,12 +2282,30 @@ function curTimeMin(){
   const d=new Date();
   return d.getHours()*60 + d.getMinutes();
 }
-function formatTime12(min){
-  const h=Math.floor(min/60)%24;
-  const m=min%60;
-  const ampm=h>=12?'PM':'AM';
-  const h12=h%12||12;
-  const mStr=m<10?'0'+m:m;
+function formatTime12(input){
+  if (input === null || input === undefined) return '';
+  let h, m;
+  if (typeof input === 'number') {
+    h = Math.floor(input / 60) % 24;
+    m = Math.floor(input % 60);
+  } else if (typeof input === 'string') {
+    if (input.includes(':')) {
+      const parts = input.split(':');
+      h = parseInt(parts[0], 10);
+      m = parseInt(parts[1], 10);
+    } else {
+      const num = parseInt(input, 10);
+      if (isNaN(num)) return input;
+      h = Math.floor(num / 60) % 24;
+      m = Math.floor(num % 60);
+    }
+  } else {
+    return '';
+  }
+  if (isNaN(h) || isNaN(m)) return String(input);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12 = h % 12 || 12;
+  const mStr = m.toString().padStart(2, '0');
   return `${h12}:${mStr} ${ampm}`;
 }
 
@@ -2577,6 +2595,29 @@ function renderDashboard(){
     <div class="card stat-card-compact"><div class="stat-icon" style="background:var(--inorganic-bg)">📅</div><div class="stat-value">${dl}</div><div class="stat-label">Days Left</div></div>
     <div class="card stat-card-compact"><div class="stat-icon" style="background:var(--maths-bg)">⏱️</div><div class="stat-value">${hrs}h</div><div class="stat-label">Hours Studied</div></div>
     <div class="card stat-card-compact"><div class="stat-icon" style="background:var(--organic-bg)">🔥</div><div class="stat-value">${dn<1?'—':Math.min(dn,50)}</div><div class="stat-label">${dn<1?'Not Started':dn>50?'Completed':'Current Day'}</div></div>
+  </div></div>`;
+
+  // Countdown Milestones (Syllabus Target & JEE Main Exam)
+  const now = new Date();
+  const sylEnd = new Date(2026, 10, 19, 23, 59, 59);
+  const diffSyl = sylEnd - now;
+  const sylDays = Math.max(0, Math.floor(diffSyl / 864e5));
+
+  const jeeDate = new Date(2027, 0, 22, 9, 0, 0);
+  const diffJee = jeeDate - now;
+  const jeeDays = Math.max(0, Math.floor(diffJee / 864e5));
+
+  h+=`<div class="section"><div class="section-label">🎯 Countdown Milestones</div><div class="milestone-grid">
+    <div class="milestone-card" onclick="go('clock')" style="cursor:pointer;" title="View in Clock & Focus Studio">
+      <div class="milestone-lbl">🏁 50-Day Syllabus Target</div>
+      <div class="milestone-val">${sylDays} Days Left</div>
+      <div class="milestone-meta">Thursday, 19 Nov 2026 • 146 Lectures Total</div>
+    </div>
+    <div class="milestone-card" onclick="go('clock')" style="cursor:pointer;" title="View in Clock & Focus Studio">
+      <div class="milestone-lbl">⚡ JEE Main 2027 (Session 1)</div>
+      <div class="milestone-val">${jeeDays} Days Left</div>
+      <div class="milestone-meta">Target Exam Date: ~22 January 2027</div>
+    </div>
   </div></div>`;
 
   // Subject progress
@@ -3356,17 +3397,36 @@ function renderClock(){
   h += `</div>`; // end section
 
   // Milestone Countdowns
+  const sylEnd = new Date(2026, 10, 19, 23, 59, 59);
+  const diffSyl = sylEnd - now;
+  let sylStr = 'Target Date Reached';
+  if (diffSyl > 0) {
+    const d = Math.floor(diffSyl / 864e5);
+    const h = Math.floor((diffSyl % 864e5) / 36e5);
+    const m = Math.floor((diffSyl % 36e5) / 6e4);
+    sylStr = `${d}d ${h}h ${m}m remaining`;
+  }
+
+  const jeeDate = new Date(2027, 0, 22, 9, 0, 0);
+  const diffJee = jeeDate - now;
+  let jeeStr = 'Exam Period';
+  if (diffJee > 0) {
+    const d = Math.floor(diffJee / 864e5);
+    const h = Math.floor((diffJee % 864e5) / 36e5);
+    jeeStr = `${d}d ${h}h remaining`;
+  }
+
   h += `<div class="section">
     <div class="section-label">Key Milestones</div>
     <div class="milestone-grid">
       <div class="milestone-card">
         <div class="milestone-lbl">Syllabus Target (Day 50)</div>
-        <div id="milestone-syl-val" class="milestone-val">--d --h --m</div>
+        <div id="milestone-syl-val" class="milestone-val">${sylStr}</div>
         <div class="milestone-meta">Thursday, 19 Nov 2026 • 146 Lectures</div>
       </div>
       <div class="milestone-card">
         <div class="milestone-lbl">JEE Main 2027 (Session 1)</div>
-        <div id="milestone-jee-val" class="milestone-val">--d --h</div>
+        <div id="milestone-jee-val" class="milestone-val">${jeeStr}</div>
         <div class="milestone-meta">Target Date: ~22 January 2027</div>
       </div>
     </div>
@@ -3639,19 +3699,6 @@ function formatTimerDigits(totalSec) {
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   }
   return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-}
-
-function formatTime12(timeStr) {
-  if (!timeStr) return '';
-  const parts = timeStr.split(':');
-  if (parts.length < 2) return timeStr;
-  let h = parseInt(parts[0], 10);
-  const m = parseInt(parts[1], 10);
-  if (isNaN(h) || isNaN(m)) return timeStr;
-  const ampm = h >= 12 ? 'PM' : 'AM';
-  h = h % 12;
-  if (h === 0) h = 12;
-  return `${h}:${m.toString().padStart(2, '0')} ${ampm}`;
 }
 
 function formatDurationSummary(totalMinutes) {
