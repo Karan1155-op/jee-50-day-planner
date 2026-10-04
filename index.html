@@ -1240,6 +1240,8 @@ body::before {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .timer-digits-interactive {
   display: flex;
@@ -1250,7 +1252,7 @@ body::before {
   padding: 6px 14px 4px;
   border-radius: 14px;
   border: 1px dashed transparent;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
 }
 .timer-digits-interactive:hover {
@@ -1262,13 +1264,14 @@ body::before {
   transform: scale(0.98);
 }
 .timer-digits {
-  font-size: 2.7rem;
+  font-size: 2.75rem;
   font-weight: 900;
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
   line-height: 1;
   color: #fff;
-  transition: color 0.2s ease;
+  transition: color 0.25s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 0.4s ease;
+  will-change: transform;
 }
 .timer-digits.has-hours {
   font-size: 2.15rem;
@@ -1287,9 +1290,18 @@ body::before {
   border: 1px solid rgba(99, 102, 241, 0.3);
   padding: 2px 8px;
   border-radius: 100px;
-  margin-top: 5px;
-  transition: all 0.2s ease;
-  opacity: 0.85;
+  margin-top: 6px;
+  max-height: 28px;
+  opacity: 0.9;
+  transform: translateY(0) scale(1);
+  transform-origin: center top;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              margin 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              padding 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  box-sizing: border-box;
 }
 .timer-digits-interactive:hover .timer-edit-badge {
   opacity: 1;
@@ -1304,6 +1316,49 @@ body::before {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-top: 6px;
+  max-height: 24px;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transform-origin: center top;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              margin 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+/* Running State - Center digits and hide helper text with subtle animation */
+.timer-center-info.is-running .timer-edit-badge {
+  opacity: 0;
+  transform: translateY(6px) scale(0.8);
+  max-height: 0;
+  margin-top: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-width: 0;
+  pointer-events: none;
+}
+.timer-center-info.is-running .timer-sub-label {
+  opacity: 0;
+  transform: translateY(6px) scale(0.8);
+  max-height: 0;
+  margin-top: 0;
+  pointer-events: none;
+}
+.timer-center-info.is-running .timer-digits-interactive {
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+  transform: none;
+}
+.timer-center-info.is-running .timer-digits-interactive:hover {
+  background: transparent;
+  border-color: transparent;
+  transform: none;
+}
+.timer-center-info.is-running .timer-digits {
+  transform: scale(1.06);
+  text-shadow: 0 0 28px rgba(99, 102, 241, 0.45);
 }
 
 /* Timer Control Buttons */
@@ -2451,6 +2506,8 @@ function renderNav(){
 function go(page){
   activePage=page;
   window.location.hash=page;
+  lastRenderedMinute = curTimeMin();
+  lastRenderedDay = dayNum();
   renderNav();
   renderPage();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -2895,6 +2952,7 @@ let clockTimer = {
   mode: 'class75',
   totalSec: 75 * 60,
   remainSec: 75 * 60,
+  endTimestamp: null,
   running: false,
   sound: true,
   name: 'Class (75m)'
@@ -2912,11 +2970,14 @@ const TIMER_PRESETS = {
 let clockStopwatch = {
   running: false,
   startTime: 0,
+  startTimestamp: null,
   accumMs: 0,
   intervalId: null,
   problems: []
 };
 
+let lastRenderedMinute = curTimeMin();
+let lastRenderedDay = dayNum();
 let zenWakeLock = null;
 let masterClockTicker = null;
 
@@ -3261,12 +3322,12 @@ function renderClock(){
             <circle id="timer-progress-ring" class="timer-ring-progress" cx="100" cy="100" r="85"
               stroke-dasharray="${circ}" stroke-dashoffset="${off}"/>
           </svg>
-          <div class="timer-center-info">
+          <div class="timer-center-info ${clockTimer.running ? 'is-running' : ''}" id="timer-center-info">
             <div id="timer-digits-trigger" class="timer-digits-interactive" onclick="openCustomTimerModal()" title="Click to customize duration or select time range">
               <div id="timer-digits" class="timer-digits ${hasHours ? 'has-hours' : ''}">${timeStr}</div>
-              <div class="timer-edit-badge"><span>✏️ Set Custom Time</span></div>
+              <div class="timer-edit-badge" id="timer-edit-badge"><span>✏️ Set Custom Time</span></div>
             </div>
-            <div id="timer-status-label" class="timer-sub-label">${clockTimer.running ? 'Running' : (clockTimer.remainSec === 0 ? 'Completed' : 'Ready')}</div>
+            <div id="timer-status-label" class="timer-sub-label">${clockTimer.running ? '' : (clockTimer.remainSec === 0 ? 'Completed' : 'Ready')}</div>
           </div>
         </div>
       </div>
@@ -3497,23 +3558,29 @@ function setTimerPreset(key) {
   clockTimer.totalSec = p.sec;
   clockTimer.remainSec = p.sec;
   clockTimer.name = p.name;
-  if (clockTimer.running) {
-    clockTimer.running = false;
-  }
+  clockTimer.running = false;
+  clockTimer.endTimestamp = null;
   const m = document.getElementById('main');
   if (m && activePage === 'clock') m.innerHTML = renderClock();
 }
 
 function toggleTimerStartPause() {
-  clockTimer.running = !clockTimer.running;
-  if (clockTimer.running && clockTimer.remainSec <= 0) {
-    clockTimer.remainSec = clockTimer.totalSec;
+  if (clockTimer.running) {
+    clockTimer.running = false;
+    clockTimer.endTimestamp = null;
+  } else {
+    if (clockTimer.remainSec <= 0) {
+      clockTimer.remainSec = clockTimer.totalSec;
+    }
+    clockTimer.running = true;
+    clockTimer.endTimestamp = Date.now() + clockTimer.remainSec * 1000;
   }
   updateTimerUI();
 }
 
 function resetFocusTimer() {
   clockTimer.running = false;
+  clockTimer.endTimestamp = null;
   clockTimer.remainSec = clockTimer.totalSec;
   updateTimerUI();
 }
@@ -3522,6 +3589,9 @@ function addTimerMinutes(mins) {
   const addSec = mins * 60;
   clockTimer.totalSec += addSec;
   clockTimer.remainSec += addSec;
+  if (clockTimer.running) {
+    clockTimer.endTimestamp = Date.now() + clockTimer.remainSec * 1000;
+  }
   updateTimerUI();
 }
 
@@ -3546,9 +3616,10 @@ function toggleStopwatchStartPause() {
 function startStopwatch() {
   if (clockStopwatch.running) return;
   clockStopwatch.running = true;
+  clockStopwatch.startTimestamp = Date.now() - clockStopwatch.accumMs;
   clockStopwatch.startTime = performance.now() - clockStopwatch.accumMs;
   clockStopwatch.intervalId = setInterval(() => {
-    clockStopwatch.accumMs = performance.now() - clockStopwatch.startTime;
+    clockStopwatch.accumMs = Date.now() - clockStopwatch.startTimestamp;
     updateStopwatchUI();
   }, 50);
   const btn = document.getElementById('btn-sw-toggle');
@@ -3557,6 +3628,10 @@ function startStopwatch() {
 
 function pauseStopwatch() {
   clockStopwatch.running = false;
+  if (clockStopwatch.startTimestamp) {
+    clockStopwatch.accumMs = Date.now() - clockStopwatch.startTimestamp;
+  }
+  clockStopwatch.startTimestamp = null;
   if (clockStopwatch.intervalId) {
     clearInterval(clockStopwatch.intervalId);
     clockStopwatch.intervalId = null;
@@ -3568,6 +3643,7 @@ function pauseStopwatch() {
 function resetStopwatch() {
   pauseStopwatch();
   clockStopwatch.accumMs = 0;
+  clockStopwatch.startTimestamp = null;
   clockStopwatch.problems = [];
   const m = document.getElementById('main');
   if (m && activePage === 'clock' && clockActiveTab === 'stopwatch') {
@@ -3725,10 +3801,17 @@ function updateRoutineSyncUI() {
 
 function tickFocusTimer() {
   if (!clockTimer.running) return;
-  clockTimer.remainSec--;
+  if (clockTimer.endTimestamp) {
+    const diffSec = Math.ceil((clockTimer.endTimestamp - Date.now()) / 1000);
+    clockTimer.remainSec = Math.max(0, diffSec);
+  } else {
+    clockTimer.remainSec--;
+  }
+
   if (clockTimer.remainSec <= 0) {
     clockTimer.remainSec = 0;
     clockTimer.running = false;
+    clockTimer.endTimestamp = null;
     playTimerChime();
     const minsDone = Math.round(clockTimer.totalSec / 60);
     logCompletedFocusSession(clockTimer.name, minsDone);
@@ -3764,6 +3847,11 @@ function updateTimerUI() {
   const timeStr = formatTimerDigits(clockTimer.remainSec);
   const hasHours = clockTimer.remainSec >= 3600 || clockTimer.totalSec >= 3600;
 
+  const centerInfo = document.getElementById('timer-center-info');
+  if (centerInfo) {
+    centerInfo.classList.toggle('is-running', clockTimer.running);
+  }
+
   const digits = document.getElementById('timer-digits');
   if (digits) {
     digits.textContent = timeStr;
@@ -3785,7 +3873,7 @@ function updateTimerUI() {
 
   const lbl = document.getElementById('timer-status-label');
   if (lbl) {
-    lbl.textContent = clockTimer.running ? 'Running' : (clockTimer.remainSec === 0 ? 'Completed' : 'Ready');
+    lbl.textContent = clockTimer.running ? '' : (clockTimer.remainSec === 0 ? 'Completed' : 'Ready');
   }
 
   // Update Fullscreen Mode Timer Widget
@@ -4111,6 +4199,42 @@ function updateMilestoneCountdowns() {
   }
 }
 
+function refreshLivePagesIfNeeded() {
+  const curM = curTimeMin();
+  const curD = dayNum();
+  if (curM !== lastRenderedMinute || curD !== lastRenderedDay) {
+    lastRenderedMinute = curM;
+    lastRenderedDay = curD;
+    renderNav();
+    if (activePage === 'dashboard' || activePage === 'routine' || activePage === 'schedule') {
+      const scrollY = window.scrollY;
+      renderPage();
+      if (scrollY > 0) {
+        window.scrollTo({ top: scrollY, behavior: 'instant' });
+      }
+    }
+  }
+}
+
+function handleAppResume() {
+  // 1. Sync clock page elements (clock hands, digital time, IST date, current routine slot)
+  updateMasterClockUI();
+
+  // 2. Sync running timer from wall-clock target
+  if (clockTimer.running) {
+    tickFocusTimer();
+  }
+
+  // 3. Sync running stopwatch from wall-clock start
+  if (clockStopwatch.running && clockStopwatch.startTimestamp) {
+    clockStopwatch.accumMs = Date.now() - clockStopwatch.startTimestamp;
+    updateStopwatchUI();
+  }
+
+  // 4. Force check for minute / day advancement and refresh view
+  refreshLivePagesIfNeeded();
+}
+
 function initClockTicker() {
   if (masterClockTicker) return;
   masterClockTicker = setInterval(() => {
@@ -4118,7 +4242,17 @@ function initClockTicker() {
     if (clockTimer.running) {
       tickFocusTimer();
     }
+    refreshLivePagesIfNeeded();
   }, 1000);
+
+  // Resume handlers for returning after backgrounding, sleeping, switching apps
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      handleAppResume();
+    }
+  });
+  window.addEventListener('focus', handleAppResume);
+  window.addEventListener('pageshow', handleAppResume);
 
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
