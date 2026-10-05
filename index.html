@@ -1702,34 +1702,39 @@ body::before {
   border-color: var(--accent);
   color: #fff;
 }
-.log-date-picker-label {
-  position: relative;
+.log-calendar-input-wrap {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border);
   border-radius: 100px;
   padding: 3px 10px;
-  font-size: 0.74rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  cursor: pointer;
   transition: all var(--transition);
+  cursor: pointer;
 }
-.log-date-picker-label:hover {
-  background: rgba(99,102,241,0.15);
-  color: #fff;
+.log-calendar-input-wrap:hover, .log-calendar-input-wrap:focus-within {
+  background: rgba(99, 102, 241, 0.18);
   border-color: var(--accent);
 }
-.log-native-date-input {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  width: 100%;
-  height: 100%;
+.log-cal-icon {
+  font-size: 0.82rem;
+  line-height: 1;
+}
+.log-date-input-field {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  outline: none;
   cursor: pointer;
   color-scheme: dark;
+}
+.log-date-input-field::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.8) sepia(100%) saturate(300%) hue-rotate(200deg);
 }
 .log-nav-btn {
   padding: 8px 14px;
@@ -3555,7 +3560,11 @@ function shiftLogDate(deltaDays) {
     cur.setDate(cur.getDate() + deltaDays);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    if (cur > today) {
+    const startDate = new Date('2026-10-01T00:00:00');
+
+    if (cur < startDate) {
+      logSelectedDate = '2026-10-01';
+    } else if (cur > today) {
       logSelectedDate = getLocalDateKey(today);
     } else {
       logSelectedDate = getLocalDateKey(cur);
@@ -3579,11 +3588,28 @@ function nextLogDate() {
 
 function setLogSelectedDate(dateKey) {
   if (!dateKey) return;
+  const todayKey = getLocalDateKey();
+  if (dateKey < '2026-10-01') dateKey = '2026-10-01';
+  if (dateKey > todayKey) dateKey = todayKey;
   logSelectedDate = dateKey;
   logViewMode = 'day';
   const m = document.getElementById('main');
   if (m && activePage === 'clock' && clockActiveTab === 'log') {
     m.innerHTML = renderClock();
+  }
+}
+
+function openLogCalendarPicker() {
+  const picker = document.getElementById('log-date-native-picker');
+  if (picker) {
+    if (typeof picker.showPicker === 'function') {
+      try {
+        picker.showPicker();
+        return;
+      } catch (e) {}
+    }
+    picker.focus();
+    picker.click();
   }
 }
 
@@ -4112,6 +4138,8 @@ function renderClock(){
 
     const isToday = logSelectedDate === todayKey;
     const isYesterday = logSelectedDate === yesterdayKey;
+    const isAtStart = logSelectedDate <= '2026-10-01';
+    const isAtEnd = logSelectedDate >= todayKey;
     const selDateObj = new Date(logSelectedDate + 'T00:00:00');
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const dowStr = dayNames[selDateObj.getDay()];
@@ -4149,7 +4177,7 @@ function renderClock(){
     h += `<div class="card" style="padding:22px 20px;">
       <!-- Date Navigation Bar -->
       <div class="log-nav-bar">
-        <button class="btn-timer-sub log-nav-btn" onclick="prevLogDate()" title="View previous day">
+        <button class="btn-timer-sub log-nav-btn" onclick="prevLogDate()" title="View previous day" ${isAtStart ? 'disabled style="opacity:0.35; cursor:not-allowed;"' : ''}>
           ◀ Previous Day
         </button>
 
@@ -4163,14 +4191,21 @@ function renderClock(){
           <div class="log-date-quick-actions">
             <button class="log-date-chip ${isToday ? 'active' : ''}" onclick="setLogSelectedDate('${todayKey}')">Today</button>
             <button class="log-date-chip ${isYesterday ? 'active' : ''}" onclick="setLogSelectedDate('${yesterdayKey}')">Yesterday</button>
-            <label class="log-date-picker-label" title="Pick specific date from calendar">
-              <span>📅 Calendar</span>
-              <input type="date" class="log-native-date-input" value="${logSelectedDate}" onchange="setLogSelectedDate(this.value)" max="${todayKey}">
-            </label>
+            <button class="log-date-chip ${logSelectedDate === '2026-10-01' ? 'active' : ''}" onclick="setLogSelectedDate('2026-10-01')" title="Jump to start of plan (1 Oct 2026)">Day 1 (Oct 1)</button>
+            <div class="log-calendar-input-wrap" onclick="openLogCalendarPicker()" title="Click to open calendar (Limited from 1 Oct to Today)">
+              <span class="log-cal-icon">📅</span>
+              <input type="date"
+                id="log-date-native-picker"
+                class="log-date-input-field"
+                value="${logSelectedDate}"
+                min="2026-10-01"
+                max="${todayKey}"
+                onchange="setLogSelectedDate(this.value)">
+            </div>
           </div>
         </div>
 
-        <button class="btn-timer-sub log-nav-btn" onclick="nextLogDate()" title="View next day" ${isToday ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''}>
+        <button class="btn-timer-sub log-nav-btn" onclick="nextLogDate()" title="View next day" ${isAtEnd ? 'disabled style="opacity:0.35; cursor:not-allowed;"' : ''}>
           Next Day ▶
         </button>
       </div>
