@@ -1460,9 +1460,62 @@ body::before {
 }
 
 /* ========== STOPWATCH ========== */
+.sw-categories-wrap {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.sw-cat-chip {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.sw-cat-chip:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+.sw-cat-chip.active {
+  background: linear-gradient(135deg, rgba(99,102,241,0.28), rgba(168,85,247,0.22));
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(99,102,241,0.3);
+}
+.sw-custom-topic-wrap {
+  max-width: 440px;
+  margin: 0 auto 16px;
+}
+.sw-custom-input {
+  width: 100%;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: #fff;
+  font-size: 0.84rem;
+  padding: 0 14px;
+  outline: none;
+  text-align: center;
+  transition: border-color var(--transition);
+}
+.sw-custom-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(99,102,241,0.25);
+}
 .stopwatch-box {
   text-align: center;
-  padding: 14px 0 16px;
+  padding: 10px 0 16px;
 }
 .stopwatch-digits-large {
   font-size: 3.4rem;
@@ -1472,7 +1525,7 @@ body::before {
   line-height: 1;
   color: #fff;
   text-shadow: 0 0 24px rgba(56,189,248,0.25);
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 @media (max-width: 480px) {
   .stopwatch-digits-large { font-size: 2.6rem; }
@@ -1481,6 +1534,33 @@ body::before {
   font-size: 1.8rem;
   color: #38bdf8;
   font-weight: 700;
+}
+.sw-status-tag {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.sw-status-tag.running {
+  color: var(--accent-light);
+}
+.btn-sw-stop-log {
+  background: linear-gradient(135deg, #059669, #10b981) !important;
+  border: 1px solid #10b981 !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 18px rgba(16, 185, 129, 0.35) !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-sw-stop-log:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(16, 185, 129, 0.45) !important;
 }
 .stopwatch-stats-grid {
   display: grid;
@@ -1540,7 +1620,147 @@ body::before {
 .lap-badge-good { background: rgba(99,102,241,0.15); color: var(--accent-light); }
 .lap-badge-tough { background: rgba(245,158,11,0.15); color: #fbbf24; }
 
-/* Focus History Log */
+/* ========== STUDY LOG DATE VIEW ========== */
+.log-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.log-date-display-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  min-width: 220px;
+}
+.log-date-main-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.log-badge-today {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 100px;
+  background: rgba(99, 102, 241, 0.2);
+  color: var(--accent-light);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+}
+.log-badge-sub {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.log-badge-schedule {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 100px;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+.log-date-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.log-date-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 3px 10px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.log-date-chip:hover, .log-date-chip.active {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: var(--accent);
+  color: #fff;
+}
+.log-date-picker-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 3px 10px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.log-date-picker-label:hover {
+  background: rgba(99,102,241,0.15);
+  color: #fff;
+  border-color: var(--accent);
+}
+.log-native-date-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  color-scheme: dark;
+}
+.log-nav-btn {
+  padding: 8px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Day Breakdown Pills */
+.focus-breakdown-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 14px 0 18px;
+}
+.focus-cat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+.focus-cat-chip strong {
+  color: #fff;
+}
+
+/* Focus History Log Rows */
 .focus-today-summary {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1557,76 +1777,44 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 14px;
+  padding: 12px 14px;
   background: rgba(255,255,255,0.02);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   margin-bottom: 8px;
   font-size: 0.85rem;
+  transition: border-color var(--transition);
+}
+.focus-session-row:hover {
+  border-color: var(--border-hover);
 }
 .focus-session-time {
   font-size: 0.75rem;
   color: var(--text-muted);
+  margin-top: 2px;
 }
-
-/* Multi-Day Log Grouping */
-.log-day-group {
-  margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.018);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-}
-.log-day-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.035);
-  border-bottom: 1px solid var(--border);
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.log-day-title {
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.log-day-badge-today {
-  font-size: 0.68rem;
-  font-weight: 800;
-  padding: 2px 8px;
-  border-radius: 100px;
-  background: rgba(99, 102, 241, 0.18);
-  color: var(--accent-light);
-  border: 1px solid rgba(99, 102, 241, 0.35);
-}
-.log-day-meta {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.log-day-body {
-  padding: 12px 14px 4px;
-}
-.btn-log-day-del {
+.btn-log-session-del {
   background: transparent;
   border: none;
   color: var(--text-muted);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
+  line-height: 1;
   cursor: pointer;
-  padding: 3px 6px;
+  padding: 5px 8px;
   border-radius: 4px;
   transition: all var(--transition);
 }
-.btn-log-day-del:hover {
+.btn-log-session-del:hover {
   color: var(--danger);
-  background: rgba(239, 68, 68, 0.12);
+  background: rgba(239, 68, 68, 0.15);
+}
+.log-empty-box {
+  text-align: center;
+  padding: 36px 20px;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  margin-top: 14px;
 }
 
 /* Milestone Cards */
@@ -3130,7 +3318,8 @@ const TIMER_PRESETS = {
 };
 
 let clockStopwatch = {
-  mode: 'general', // 'general' (evergreen) or 'questions'
+  sessionType: 'lecture', // 'lecture', 'revision', 'practice', 'test'
+  customLabel: '',
   running: false,
   startTime: 0,
   startTimestamp: null,
@@ -3210,7 +3399,8 @@ function loadTimerState() {
 function saveStopwatchState() {
   try {
     const data = {
-      mode: clockStopwatch.mode,
+      sessionType: clockStopwatch.sessionType,
+      customLabel: clockStopwatch.customLabel,
       running: clockStopwatch.running,
       startTimestamp: clockStopwatch.startTimestamp,
       accumMs: clockStopwatch.accumMs,
@@ -3227,7 +3417,8 @@ function loadStopwatchState() {
     if (!raw) return;
     const saved = JSON.parse(raw);
     if (!saved) return;
-    clockStopwatch.mode = saved.mode || 'general';
+    clockStopwatch.sessionType = saved.sessionType || (saved.mode === 'questions' ? 'practice' : 'lecture');
+    clockStopwatch.customLabel = saved.customLabel || '';
     clockStopwatch.problems = Array.isArray(saved.problems) ? saved.problems : [];
     clockStopwatch.laps = Array.isArray(saved.laps) ? saved.laps : [];
     if (saved.running && saved.startTimestamp) {
@@ -3302,6 +3493,9 @@ function getLocalDateKey(d = new Date()) {
   return `${year}-${month}-${day}`;
 }
 
+let logSelectedDate = getLocalDateKey();
+let logViewMode = 'day'; // 'day' (Single Date View) or 'all' (All Days Overview)
+
 function getAllFocusLogs() {
   try {
     const raw = localStorage.getItem('jee50d-focus-v2');
@@ -3317,7 +3511,7 @@ function getTodayFocusLog() {
   return all[todayKey] || { totalMins: 0, sessions: [] };
 }
 
-function logCompletedFocusSession(title, mins) {
+function logCompletedFocusSession(title, mins, category = 'study') {
   if (mins <= 0) return;
   const todayKey = getLocalDateKey();
   try {
@@ -3327,11 +3521,78 @@ function logCompletedFocusSession(title, mins) {
     all[todayKey].sessions.unshift({
       title,
       mins,
+      category,
       time: formatTime12(curTimeMin())
     });
     localStorage.setItem('jee50d-focus-v2', JSON.stringify(all));
   } catch(e) {}
   updateFocusLogUI();
+}
+
+function deleteFocusLogSession(dateKey, sessionIndex) {
+  try {
+    const all = getAllFocusLogs();
+    if (all[dateKey] && all[dateKey].sessions && all[dateKey].sessions[sessionIndex] !== undefined) {
+      const removed = all[dateKey].sessions.splice(sessionIndex, 1)[0];
+      all[dateKey].totalMins = Math.max(0, (all[dateKey].totalMins || 0) - (removed.mins || 0));
+      if (all[dateKey].sessions.length === 0) {
+        delete all[dateKey];
+      }
+      localStorage.setItem('jee50d-focus-v2', JSON.stringify(all));
+      showToast('Session removed from log', 'info');
+    }
+  } catch(e) {}
+  if (activePage === 'clock' && clockActiveTab === 'log') {
+    const m = document.getElementById('main');
+    if (m) m.innerHTML = renderClock();
+  }
+}
+
+function shiftLogDate(deltaDays) {
+  try {
+    if (!logSelectedDate) logSelectedDate = getLocalDateKey();
+    const cur = new Date(logSelectedDate + 'T00:00:00');
+    cur.setDate(cur.getDate() + deltaDays);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (cur > today) {
+      logSelectedDate = getLocalDateKey(today);
+    } else {
+      logSelectedDate = getLocalDateKey(cur);
+    }
+  } catch(e) {
+    logSelectedDate = getLocalDateKey();
+  }
+  const m = document.getElementById('main');
+  if (m && activePage === 'clock' && clockActiveTab === 'log') {
+    m.innerHTML = renderClock();
+  }
+}
+
+function prevLogDate() {
+  shiftLogDate(-1);
+}
+
+function nextLogDate() {
+  shiftLogDate(1);
+}
+
+function setLogSelectedDate(dateKey) {
+  if (!dateKey) return;
+  logSelectedDate = dateKey;
+  logViewMode = 'day';
+  const m = document.getElementById('main');
+  if (m && activePage === 'clock' && clockActiveTab === 'log') {
+    m.innerHTML = renderClock();
+  }
+}
+
+function setLogViewMode(mode) {
+  logViewMode = mode;
+  const m = document.getElementById('main');
+  if (m && activePage === 'clock' && clockActiveTab === 'log') {
+    m.innerHTML = renderClock();
+  }
 }
 
 function clearTodayFocusLog() {
@@ -3663,7 +3924,7 @@ function renderClock(){
       </div>
     </div>`;
   } else if (clockActiveTab === 'stopwatch') {
-    // Stopwatch View (Evergreen Standard & Question Speed Drill)
+    // Dedicated Study Session Stopwatch (Lecture, Revision, Question Practice, Mock Test)
     const totalMs = clockStopwatch.accumMs;
     const hr = Math.floor(totalMs / 3600000);
     const min = Math.floor((totalMs % 3600000) / 60000);
@@ -3676,106 +3937,93 @@ function renderClock(){
       mainStr = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
     }
     const msStr = `.${ms.toString().padStart(2, '0')}`;
-    const swMode = clockStopwatch.mode || 'general';
 
-    h += `<div class="card" style="padding:24px 20px;">
-      <!-- Mode Switcher -->
-      <div style="display:flex; justify-content:center; margin-bottom:18px;">
-        <div class="sw-mode-switcher">
-          <button class="sw-mode-btn ${swMode==='general'?'active':''}" onclick="switchStopwatchMode('general')">
-            ⏱️ Standard Stopwatch
+    const curType = clockStopwatch.sessionType || 'lecture';
+    const typeNames = {
+      lecture: 'Lecture',
+      revision: 'Revision',
+      practice: 'Question Practice',
+      test: 'Mock Test'
+    };
+    const curTypeLabel = typeNames[curType] || 'Study Session';
+
+    h += `<div class="card" style="padding:26px 20px;">
+      <!-- Activity Category Selector -->
+      <div style="text-align:center; margin-bottom:16px;">
+        <div style="font-size:0.76rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;">
+          Choose Study Activity
+        </div>
+        <div class="sw-categories-wrap">
+          <button class="sw-cat-chip ${curType==='lecture'?'active':''}" onclick="setStopwatchSessionType('lecture')">
+            <span>⚡</span> <span>Lecture</span>
           </button>
-          <button class="sw-mode-btn ${swMode==='questions'?'active':''}" onclick="switchStopwatchMode('questions')">
-            🎯 Question Speed Drill
+          <button class="sw-cat-chip ${curType==='revision'?'active':''}" onclick="setStopwatchSessionType('revision')">
+            <span>📖</span> <span>Revision</span>
           </button>
+          <button class="sw-cat-chip ${curType==='practice'?'active':''}" onclick="setStopwatchSessionType('practice')">
+            <span>🎯</span> <span>Question Practice</span>
+          </button>
+          <button class="sw-cat-chip ${curType==='test'?'active':''}" onclick="setStopwatchSessionType('test')">
+            <span>📝</span> <span>Mock Test / DPP</span>
+          </button>
+        </div>
+
+        <!-- Optional Topic Note Input -->
+        <div class="sw-custom-topic-wrap">
+          <input type="text" id="sw-custom-label" class="sw-custom-input"
+            placeholder="Optional topic note (e.g. Physics EMI L5, Ray Optics PYQs)..."
+            value="${clockStopwatch.customLabel || ''}"
+            oninput="setStopwatchCustomLabel(this.value)">
         </div>
       </div>
 
+      <!-- Large Stopwatch Display -->
       <div class="stopwatch-box">
         <div class="stopwatch-digits-large">
           <span id="stopwatch-main-time">${mainStr}</span><span id="stopwatch-ms-time" class="stopwatch-digits-ms">${msStr}</span>
         </div>
 
-        <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:20px;">
-          ${swMode === 'general' ? `
-            <button class="btn-timer-primary" onclick="lapGeneralStopwatch()" style="background:linear-gradient(135deg,var(--accent),#7c3aed); box-shadow:0 4px 18px rgba(99,102,241,0.35);">
-              <span>⏱️ Split / Lap</span>
-            </button>
+        <div id="sw-status-tag" class="sw-status-tag ${clockStopwatch.running ? 'running' : ''}">
+          ${clockStopwatch.running ? `
+            <span class="live-pulse-dot" style="width:6px;height:6px;"></span>
+            <span>Tracking ${curTypeLabel}...</span>
+          ` : (clockStopwatch.accumMs > 0 ? `
+            <span>⏸ Session Paused • ${Math.max(1, Math.round(clockStopwatch.accumMs/60000))}m recorded (Click "Stop & Log Session" when done)</span>
           ` : `
-            <button class="btn-timer-primary" onclick="lapStopwatchQuestion()" style="background:linear-gradient(135deg,#059669,#10b981); box-shadow:0 4px 18px rgba(16,185,129,0.35);">
-              <span>Next Question (Lap)</span>
-            </button>
-          `}
-          <button id="btn-sw-toggle" class="btn-timer-sub" onclick="toggleStopwatchStartPause()">
-            <span>${clockStopwatch.running ? '⏸ Pause' : '▶ Start'}</span>
-          </button>
-          <button class="btn-timer-sub" onclick="resetStopwatch()">
-            <span>🔄 Reset</span>
-          </button>
-          ${clockStopwatch.accumMs > 60000 ? `
-            <button class="btn-timer-sub" onclick="saveStopwatchToFocusLog()" style="border-color:var(--accent); color:var(--accent-light);" title="Save to Study Log">
-              <span>💾 Save to Log</span>
-            </button>
-          ` : ''}
-        </div>`;
-
-    if (swMode === 'general') {
-      const laps = clockStopwatch.laps || [];
-      const numLaps = laps.length;
-      let avgLapStr = '--', fastestLapStr = '--';
-      if (numLaps > 0) {
-        const sumMs = laps.reduce((a, b) => a + b.durationMs, 0);
-        const avgSec = Math.round((sumMs / numLaps) / 1000);
-        const aM = Math.floor(avgSec / 60);
-        const aS = avgSec % 60;
-        avgLapStr = `${aM}m ${aS.toString().padStart(2, '0')}s`;
-
-        const minLapMs = Math.min(...laps.map(l => l.durationMs));
-        const fSec = Math.round(minLapMs / 1000);
-        const fM = Math.floor(fSec / 60);
-        const fS = fSec % 60;
-        fastestLapStr = `${fM}m ${fS.toString().padStart(2, '0')}s`;
-      }
-
-      h += `
-        <div class="stopwatch-stats-grid">
-          <div class="stopwatch-stat-cell">
-            <div class="stopwatch-stat-val">${numLaps}</div>
-            <div class="stopwatch-stat-lbl">Laps Recorded</div>
-          </div>
-          <div class="stopwatch-stat-cell">
-            <div class="stopwatch-stat-val" style="color:var(--success);">${fastestLapStr}</div>
-            <div class="stopwatch-stat-lbl">Fastest Lap</div>
-          </div>
-          <div class="stopwatch-stat-cell">
-            <div class="stopwatch-stat-val" style="color:#38bdf8;">${avgLapStr}</div>
-            <div class="stopwatch-stat-lbl">Average Lap</div>
-          </div>
-          <div class="stopwatch-stat-cell">
-            <div class="stopwatch-stat-val" style="color:var(--accent-light);">${mainStr}</div>
-            <div class="stopwatch-stat-lbl">Total Elapsed</div>
-          </div>
+            <span>Ready to start ${curTypeLabel}</span>
+          `)}
         </div>
 
-        ${numLaps > 0 ? `
-          <div class="laps-container" id="sw-laps-list">
-            ${laps.map(l => `
-              <div class="lap-item">
-                <span class="lap-item-num">Lap ${l.lapNum}</span>
-                <span class="lap-item-time" style="color:var(--accent-light);">+${l.lapFormatted}</span>
-                <span style="font-size:0.78rem; color:var(--text-secondary); font-family:monospace;">${l.totalFormatted}</span>
-              </div>
-            `).join('')}
-          </div>
-        ` : `
-          <div style="background:rgba(255,255,255,0.02); border:1px dashed var(--border); border-radius:var(--radius-sm); padding:20px; font-size:0.85rem; color:var(--text-secondary); text-align:center;">
-            Click <strong>"Split / Lap"</strong> while running to log lap intervals.
-          </div>
-        `}
-      </div>
-    </div>`;
-    } else {
-      // Question Mode
+        <!-- Controls: Start/Pause, Stop & Log, Lap, Reset -->
+        <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:20px;">
+          <button id="btn-sw-toggle" class="btn-timer-primary" onclick="toggleStopwatchStartPause()" style="min-width:140px;">
+            <span>${clockStopwatch.running ? '⏸ Pause' : '▶ Start ' + curTypeLabel}</span>
+          </button>
+
+          <button class="btn-timer-sub btn-sw-stop-log" onclick="stopAndLogStopwatch()" title="Stop session and record directly to Study Log">
+            <span>⏹ Stop & Log Session</span>
+          </button>
+
+          ${curType === 'practice' ? `
+            <button class="btn-timer-sub" onclick="lapStopwatchQuestion()" style="border-color:var(--accent); color:var(--accent-light);" title="Lap question time">
+              <span>🎯 Next Question (Lap)</span>
+            </button>
+          ` : `
+            <button class="btn-timer-sub" onclick="lapGeneralStopwatch()" title="Split lap interval">
+              <span>⏱️ Split Lap</span>
+            </button>
+          `}
+
+          <button class="btn-timer-sub" onclick="resetStopwatch()" title="Reset without saving">
+            <span>🔄 Reset</span>
+          </button>
+        </div>
+
+        <div style="text-align:center; font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">
+          Press <strong>Start</strong> before your ${curTypeLabel.toLowerCase()}, and <strong>Stop & Log Session</strong> when you are done to automatically add it to your Study Log.
+        </div>`;
+
+    if (curType === 'practice') {
       const numSolved = (clockStopwatch.problems || []).length;
       let avgFormatted = '--', fastestFormatted = '--';
       if (numSolved > 0) {
@@ -3823,18 +4071,36 @@ function renderClock(){
             `).join('')}
           </div>
         ` : `
-          <div style="background:rgba(255,255,255,0.02); border:1px dashed var(--border); border-radius:var(--radius-sm); padding:20px; font-size:0.85rem; color:var(--text-secondary); text-align:center;">
-            Click <strong>"Next Question (Lap)"</strong> each time you solve a question to record your time.
+          <div style="background:rgba(255,255,255,0.02); border:1px dashed var(--border); border-radius:var(--radius-sm); padding:16px; font-size:0.83rem; color:var(--text-secondary); text-align:center;">
+            Optional: Click <strong>"Next Question (Lap)"</strong> each time you finish solving a problem to track speed per question.
           </div>
         `}
-      </div>
-    </div>`;
+      `;
+    } else {
+      const laps = clockStopwatch.laps || [];
+      const numLaps = laps.length;
+      if (numLaps > 0) {
+        h += `
+          <div class="laps-container" id="sw-laps-list">
+            ${laps.map(l => `
+              <div class="lap-item">
+                <span class="lap-item-num">Split ${l.lapNum}</span>
+                <span class="lap-item-time" style="color:var(--accent-light);">+${l.lapFormatted}</span>
+                <span style="font-size:0.78rem; color:var(--text-secondary); font-family:monospace;">${l.totalFormatted}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
     }
+
+    h += `</div></div>`;
   } else {
-    // Multi-Day Study Log View
+    // Dedicated Date View for Study Log
     const allLogs = getAllFocusLogs();
     const todayKey = getLocalDateKey();
     const yesterdayKey = getLocalDateKey(new Date(Date.now() - 864e5));
+    if (!logSelectedDate) logSelectedDate = todayKey;
     const dates = Object.keys(allLogs).sort().reverse();
 
     let allTimeMins = 0;
@@ -3844,97 +4110,237 @@ function renderClock(){
       allTimeSessions += (allLogs[d].sessions || []).length;
     });
 
-    const todayLog = allLogs[todayKey] || { totalMins: 0, sessions: [] };
-    const todayHours = (todayLog.totalMins / 60).toFixed(1);
-    const allTimeHours = (allTimeMins / 60).toFixed(1);
+    const isToday = logSelectedDate === todayKey;
+    const isYesterday = logSelectedDate === yesterdayKey;
+    const selDateObj = new Date(logSelectedDate + 'T00:00:00');
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const dowStr = dayNames[selDateObj.getDay()];
+    const fmtSelDate = fmtDate(logSelectedDate);
+    const fullDateTitle = `${dowStr}, ${fmtSelDate}, ${selDateObj.getFullYear()}`;
+
+    const startDate = new Date(START.getFullYear(), START.getMonth(), START.getDate());
+    const selDayNum = Math.floor((new Date(selDateObj.getFullYear(), selDateObj.getMonth(), selDateObj.getDate()) - startDate) / 864e5) + 1;
+    const dayScheduleTag = (selDayNum >= 1 && selDayNum <= 50) ? `Day ${selDayNum} of 50` : '';
+
+    const dayData = allLogs[logSelectedDate] || { totalMins: 0, sessions: [] };
+    const dayMins = dayData.totalMins || 0;
+    const dayHours = (dayMins / 60).toFixed(1);
     const targetHours = 8.0;
-    const logPct = Math.min(100, Math.round((todayLog.totalMins / (targetHours * 60)) * 100));
+    const dayPct = Math.min(100, Math.round((dayMins / (targetHours * 60)) * 100));
 
-    h += `<div class="card" style="padding:24px;">
-      <div class="focus-today-summary">
-        <div class="focus-today-card">
-          <div style="font-size:0.75rem; font-weight:700; color:var(--accent-light); text-transform:uppercase;">Today's Study Time</div>
-          <div style="font-size:2rem; font-weight:900; color:#fff; margin:4px 0;">${todayHours} hrs</div>
-          <div style="font-size:0.78rem; color:var(--text-secondary);">${todayLog.totalMins}m logged today</div>
+    // Category breakdown for selected date
+    let lecMins = 0, revMins = 0, pracMins = 0, testMins = 0, otherMins = 0;
+    (dayData.sessions || []).forEach(s => {
+      const t = (s.title || '').toLowerCase();
+      const cat = s.category || '';
+      if (cat === 'lecture' || t.includes('lecture') || t.includes('class') || t.includes('⚡')) {
+        lecMins += s.mins || 0;
+      } else if (cat === 'revision' || t.includes('revision') || t.includes('formula') || t.includes('📖')) {
+        revMins += s.mins || 0;
+      } else if (cat === 'practice' || t.includes('practice') || t.includes('question') || t.includes('pyq') || t.includes('🎯')) {
+        pracMins += s.mins || 0;
+      } else if (cat === 'test' || t.includes('test') || t.includes('mock') || t.includes('📝')) {
+        testMins += s.mins || 0;
+      } else {
+        otherMins += s.mins || 0;
+      }
+    });
+
+    h += `<div class="card" style="padding:22px 20px;">
+      <!-- Date Navigation Bar -->
+      <div class="log-nav-bar">
+        <button class="btn-timer-sub log-nav-btn" onclick="prevLogDate()" title="View previous day">
+          ◀ Previous Day
+        </button>
+
+        <div class="log-date-display-box">
+          <div class="log-date-main-title">
+            <span>📅 ${fullDateTitle}</span>
+            ${isToday ? '<span class="log-badge-today">TODAY</span>' : ''}
+            ${isYesterday ? '<span class="log-badge-sub">YESTERDAY</span>' : ''}
+            ${dayScheduleTag ? `<span class="log-badge-schedule">${dayScheduleTag}</span>` : ''}
+          </div>
+          <div class="log-date-quick-actions">
+            <button class="log-date-chip ${isToday ? 'active' : ''}" onclick="setLogSelectedDate('${todayKey}')">Today</button>
+            <button class="log-date-chip ${isYesterday ? 'active' : ''}" onclick="setLogSelectedDate('${yesterdayKey}')">Yesterday</button>
+            <label class="log-date-picker-label" title="Pick specific date from calendar">
+              <span>📅 Calendar</span>
+              <input type="date" class="log-native-date-input" value="${logSelectedDate}" onchange="setLogSelectedDate(this.value)" max="${todayKey}">
+            </label>
+          </div>
         </div>
-        <div class="focus-today-card">
-          <div style="font-size:0.75rem; font-weight:700; color:var(--success); text-transform:uppercase;">Daily Goal (${targetHours}h)</div>
-          <div style="font-size:2rem; font-weight:900; color:var(--success); margin:4px 0;">${logPct}%</div>
-          <div style="font-size:0.78rem; color:var(--text-secondary);">${Math.max(0, targetHours * 60 - todayLog.totalMins)}m remaining to target</div>
-        </div>
-        <div class="focus-today-card">
-          <div style="font-size:0.75rem; font-weight:700; color:var(--organic); text-transform:uppercase;">All-Time Logged</div>
-          <div style="font-size:2rem; font-weight:900; color:#fff; margin:4px 0;">${allTimeHours} hrs</div>
-          <div style="font-size:0.78rem; color:var(--text-secondary);">${allTimeSessions} sessions across ${dates.length} day${dates.length === 1 ? '' : 's'}</div>
-        </div>
+
+        <button class="btn-timer-sub log-nav-btn" onclick="nextLogDate()" title="View next day" ${isToday ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''}>
+          Next Day ▶
+        </button>
       </div>
 
-      <div style="margin:20px 0 24px;">
-        <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:8px;">
-          <span>Today's Target Progress</span>
-          <span><strong>${todayHours} / ${targetHours} Hours</strong></span>
+      <!-- Segmented View Toggle: Date View vs All Days Overview -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:8px;">
+        <div style="display:flex; gap:6px;">
+          <button class="sw-mode-btn ${logViewMode === 'day' ? 'active' : ''}" onclick="setLogViewMode('day')">
+            📅 Date View (Single Day)
+          </button>
+          <button class="sw-mode-btn ${logViewMode === 'all' ? 'active' : ''}" onclick="setLogViewMode('all')">
+            📊 All Days Overview (${dates.length} Days)
+          </button>
         </div>
-        <div class="slot-progress-track" style="height:12px;">
-          <div class="slot-progress-fill" style="width:${logPct}%; background:linear-gradient(90deg,var(--accent),#22c55e);"></div>
+        <div style="font-size:0.8rem; color:var(--text-secondary);">
+          ${dates.length} study day${dates.length===1?'':'s'} on record • ${(allTimeMins/60).toFixed(1)}h all-time
         </div>
-      </div>
+      </div>`;
 
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
-        <div style="font-weight:700; font-size:0.95rem;">📚 Multi-Day Study Records (${dates.length} Days Recorded)</div>
-        <div style="display:flex; gap:8px; align-items:center;">
-          ${todayLog.sessions.length > 0 ? `
-            <button class="clock-action-btn" onclick="clearTodayFocusLog()" style="font-size:0.75rem; padding:4px 10px; color:var(--danger); border-color:rgba(239,68,68,0.25);">Reset Today</button>
+    if (logViewMode === 'day') {
+      // SINGLE DATE VIEW (No vertical piling)
+      h += `
+        <!-- Day Stats Cards -->
+        <div class="focus-today-summary">
+          <div class="focus-today-card">
+            <div style="font-size:0.74rem; font-weight:700; color:var(--accent-light); text-transform:uppercase;">Study Time on ${fmtSelDate}</div>
+            <div style="font-size:1.85rem; font-weight:900; color:#fff; margin:4px 0;">${dayHours} hrs</div>
+            <div style="font-size:0.78rem; color:var(--text-secondary);">${dayMins}m logged on this day</div>
+          </div>
+          <div class="focus-today-card">
+            <div style="font-size:0.74rem; font-weight:700; color:var(--success); text-transform:uppercase;">Daily Goal (${targetHours}h)</div>
+            <div style="font-size:1.85rem; font-weight:900; color:var(--success); margin:4px 0;">${dayPct}%</div>
+            <div style="font-size:0.78rem; color:var(--text-secondary);">${Math.max(0, targetHours * 60 - dayMins)}m remaining to target</div>
+          </div>
+          <div class="focus-today-card">
+            <div style="font-size:0.74rem; font-weight:700; color:var(--organic); text-transform:uppercase;">Sessions Recorded</div>
+            <div style="font-size:1.85rem; font-weight:900; color:#fff; margin:4px 0;">${(dayData.sessions || []).length}</div>
+            <div style="font-size:0.78rem; color:var(--text-secondary);">${isToday ? 'Active day in progress' : 'Logged history'}</div>
+          </div>
+        </div>
+
+        <!-- Target Progress Bar -->
+        <div style="margin:16px 0 20px;">
+          <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:8px;">
+            <span>Target Progress for ${fmtSelDate}</span>
+            <span><strong>${dayHours} / ${targetHours} Hours</strong></span>
+          </div>
+          <div class="slot-progress-track" style="height:10px;">
+            <div class="slot-progress-fill" style="width:${dayPct}%; background:linear-gradient(90deg,var(--accent),#22c55e);"></div>
+          </div>
+        </div>
+
+        <!-- Category Breakdown Chips -->
+        ${dayMins > 0 ? `
+          <div class="focus-breakdown-bar">
+            ${lecMins > 0 ? `<div class="focus-cat-chip"><span>⚡</span> <span>Lectures: <strong>${(lecMins/60).toFixed(1)}h</strong></span></div>` : ''}
+            ${revMins > 0 ? `<div class="focus-cat-chip"><span>📖</span> <span>Revision: <strong>${(revMins/60).toFixed(1)}h</strong></span></div>` : ''}
+            ${pracMins > 0 ? `<div class="focus-cat-chip"><span>🎯</span> <span>Practice: <strong>${(pracMins/60).toFixed(1)}h</strong></span></div>` : ''}
+            ${testMins > 0 ? `<div class="focus-cat-chip"><span>📝</span> <span>Tests: <strong>${(testMins/60).toFixed(1)}h</strong></span></div>` : ''}
+            ${otherMins > 0 ? `<div class="focus-cat-chip"><span>⏳</span> <span>Timer: <strong>${(otherMins/60).toFixed(1)}h</strong></span></div>` : ''}
+          </div>
+        ` : ''}
+
+        <!-- Sessions List for Selected Date -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div style="font-weight:700; font-size:0.92rem;">
+            📝 Logged Sessions for ${fmtSelDate} (${(dayData.sessions || []).length})
+          </div>
+          ${dayData.sessions && dayData.sessions.length > 0 ? `
+            <button class="btn-timer-sub" onclick="deleteFocusLogDay('${logSelectedDate}')" style="font-size:0.75rem; padding:4px 10px; color:var(--danger); border-color:rgba(239,68,68,0.25);" title="Delete all records for this day">
+              🗑 Clear This Day
+            </button>
           ` : ''}
-          ${dates.length > 1 ? `
+        </div>
+
+        ${dayData.sessions && dayData.sessions.length > 0 ? `
+          <div>
+            ${dayData.sessions.map((s, idx) => {
+              let sIcon = '⏱️';
+              const t = (s.title || '').toLowerCase();
+              const cat = s.category || '';
+              if (cat === 'lecture' || t.includes('lecture') || t.includes('class') || t.includes('⚡')) sIcon = '⚡';
+              else if (cat === 'revision' || t.includes('revision') || t.includes('formula') || t.includes('📖')) sIcon = '📖';
+              else if (cat === 'practice' || t.includes('practice') || t.includes('question') || t.includes('pyq') || t.includes('🎯')) sIcon = '🎯';
+              else if (cat === 'test' || t.includes('test') || t.includes('mock') || t.includes('📝')) sIcon = '📝';
+              else if (t.includes('physics')) sIcon = '⚛️';
+              else if (t.includes('math')) sIcon = '📐';
+              else if (t.includes('chem')) sIcon = '🧪';
+
+              return `
+                <div class="focus-session-row">
+                  <div style="display:flex; align-items:center; gap:12px;">
+                    <span style="font-size:1.3rem;">${sIcon}</span>
+                    <div>
+                      <strong style="color:var(--text-primary); font-size:0.9rem;">${s.title}</strong>
+                      <div class="focus-session-time">Logged at ${s.time} • ${formatDurationSummary(s.mins)}</div>
+                    </div>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:10px;">
+                    <span style="font-weight:700; color:var(--accent-light); font-size:0.9rem;">+${s.mins} min</span>
+                    <button class="btn-log-session-del" onclick="deleteFocusLogSession('${logSelectedDate}', ${idx})" title="Delete this session entry">✕</button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        ` : `
+          <div class="log-empty-box">
+            <div style="font-size:2rem; margin-bottom:8px;">📅</div>
+            <div style="font-weight:700; font-size:1rem; margin-bottom:4px; color:#fff;">No study sessions logged on ${fmtSelDate}</div>
+            <div style="color:var(--text-secondary); font-size:0.84rem; max-width:400px; margin:0 auto 16px;">
+              Start a Lecture, Revision, or Question Practice session with the Stopwatch or Timer to record your study hours.
+            </div>
+            <button class="btn-timer-primary" onclick="setClockTab('stopwatch')" style="display:inline-flex; align-items:center; gap:8px;">
+              <span>⏱️ Start Stopwatch Now</span>
+            </button>
+          </div>
+        `}
+      `;
+    } else {
+      // ALL DAYS OVERVIEW TABLE
+      h += `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+          <div style="font-weight:700; font-size:0.95rem;">📊 Multi-Day Summary Table (${dates.length} Days Recorded)</div>
+          ${dates.length > 0 ? `
             <button class="clock-action-btn" onclick="clearAllFocusLogs()" style="font-size:0.75rem; padding:4px 10px; color:var(--text-muted); border-color:var(--border);">Clear All History</button>
           ` : ''}
         </div>
-      </div>
 
-      ${dates.length > 0 ? `
-        <div>
-          ${dates.map(dateKey => {
-            const dayData = allLogs[dateKey];
-            const isToday = dateKey === todayKey;
-            const isYest = dateKey === yesterdayKey;
-            const dateObj = new Date(dateKey + 'T00:00:00');
-            const dow = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][dateObj.getDay()];
-            const dayTitle = isToday ? `Today (${dow}, ${fmtDate(dateKey)})` : isYest ? `Yesterday (${dow}, ${fmtDate(dateKey)})` : `${dow}, ${fmtDate(dateKey)}`;
-            const dHours = (dayData.totalMins / 60).toFixed(1);
+        ${dates.length > 0 ? `
+          <div>
+            ${dates.map(dateKey => {
+              const dData = allLogs[dateKey];
+              const dIsToday = dateKey === todayKey;
+              const dIsYest = dateKey === yesterdayKey;
+              const dObj = new Date(dateKey + 'T00:00:00');
+              const dDow = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][dObj.getDay()];
+              const dTitle = dIsToday ? `Today (${dDow}, ${fmtDate(dateKey)})` : dIsYest ? `Yesterday (${dDow}, ${fmtDate(dateKey)})` : `${dDow}, ${fmtDate(dateKey)}`;
+              const dH = (dData.totalMins / 60).toFixed(1);
 
-            return `
-              <div class="log-day-group">
-                <div class="log-day-head">
-                  <div class="log-day-title">
-                    <span>📅 ${dayTitle}</span>
-                    ${isToday ? '<span class="log-day-badge-today">TODAY</span>' : ''}
-                  </div>
-                  <div class="log-day-meta">
-                    <span><strong>${dHours}h</strong> (${dayData.totalMins}m) • ${dayData.sessions.length} session${dayData.sessions.length===1?'':'s'}</span>
-                    <button class="btn-log-day-del" onclick="deleteFocusLogDay('${dateKey}')" title="Delete records for this day">🗑</button>
-                  </div>
-                </div>
-                <div class="log-day-body">
-                  ${dayData.sessions.map(s => `
-                    <div class="focus-session-row">
-                      <div>
-                        <strong style="color:var(--text-primary);">${s.title}</strong>
-                        <div class="focus-session-time">Logged at ${s.time}</div>
-                      </div>
-                      <span style="font-weight:700; color:var(--accent-light); font-size:0.9rem;">+${s.mins} min</span>
+              return `
+                <div class="focus-session-row" style="cursor:pointer;" onclick="setLogSelectedDate('${dateKey}')">
+                  <div style="display:flex; align-items:center; gap:12px;">
+                    <span style="font-size:1.2rem;">📅</span>
+                    <div>
+                      <strong style="color:var(--text-primary); font-size:0.92rem;">${dTitle}</strong>
+                      <div class="focus-session-time">${dData.sessions.length} sessions • ${dData.totalMins} minutes</div>
                     </div>
-                  `).join('')}
+                  </div>
+                  <div style="display:flex; align-items:center; gap:12px;">
+                    <span style="font-weight:800; color:var(--accent-light); font-size:1rem;">${dH} hrs</span>
+                    <button class="btn-timer-sub" style="font-size:0.76rem; padding:4px 10px;" onclick="event.stopPropagation(); setLogSelectedDate('${dateKey}')">
+                      View Day →
+                    </button>
+                  </div>
                 </div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      ` : `
-        <div style="text-align:center; padding:28px 14px; background:rgba(255,255,255,0.02); border:1px dashed var(--border); border-radius:var(--radius-sm); color:var(--text-secondary); font-size:0.85rem;">
-          No study sessions recorded yet. Use the <strong>Study Timer</strong> or <strong>Stopwatch</strong> to log your hours.
-        </div>
-      `}
-    </div>`;
+              `;
+            }).join('')}
+          </div>
+        ` : `
+          <div class="log-empty-box">
+            <div style="font-size:2rem; margin-bottom:8px;">📚</div>
+            <div style="font-weight:700; font-size:1rem; margin-bottom:4px; color:#fff;">No study history recorded yet</div>
+            <div style="color:var(--text-secondary); font-size:0.84rem;">Use the Stopwatch or Timer to track and log your first study session.</div>
+          </div>
+        `}
+      `;
+    }
+
+    h += `</div>`; // end card
   }
 
   h += `</div>`; // end section
@@ -4071,13 +4477,22 @@ function toggleTimerSound() {
   showToast(clockTimer.sound ? 'Audio chimes enabled' : 'Audio chimes muted', 'info');
 }
 
-function switchStopwatchMode(mode) {
-  clockStopwatch.mode = mode;
+function setStopwatchSessionType(type) {
+  clockStopwatch.sessionType = type;
   saveStopwatchState();
   const m = document.getElementById('main');
   if (m && activePage === 'clock' && clockActiveTab === 'stopwatch') {
     m.innerHTML = renderClock();
   }
+}
+
+function setStopwatchCustomLabel(val) {
+  clockStopwatch.customLabel = val || '';
+  saveStopwatchState();
+}
+
+function switchStopwatchMode(mode) {
+  setStopwatchSessionType(mode === 'questions' ? 'practice' : 'lecture');
 }
 
 function toggleStopwatchStartPause() {
@@ -4100,6 +4515,7 @@ function startStopwatch() {
   saveStopwatchState();
   const btn = document.getElementById('btn-sw-toggle');
   if (btn) btn.innerHTML = '<span>⏸ Pause</span>';
+  updateStopwatchUI();
 }
 
 function pauseStopwatch() {
@@ -4114,7 +4530,10 @@ function pauseStopwatch() {
   }
   saveStopwatchState();
   const btn = document.getElementById('btn-sw-toggle');
-  if (btn) btn.innerHTML = '<span>▶ Start</span>';
+  const typeNames = { lecture: 'Lecture', revision: 'Revision', practice: 'Question Practice', test: 'Mock Test' };
+  const typeLabel = typeNames[clockStopwatch.sessionType] || 'Session';
+  if (btn) btn.innerHTML = `<span>▶ Start ${typeLabel}</span>`;
+  updateStopwatchUI();
 }
 
 function resetStopwatch() {
@@ -4128,6 +4547,70 @@ function resetStopwatch() {
   if (m && activePage === 'clock' && clockActiveTab === 'stopwatch') {
     m.innerHTML = renderClock();
   }
+}
+
+function stopAndLogStopwatch() {
+  const totalMs = clockStopwatch.accumMs;
+  let mins = Math.round(totalMs / 60000);
+  if (mins < 1 && totalMs >= 15000) {
+    mins = 1;
+  }
+  if (mins < 1) {
+    showToast('Session too short to log (< 15 seconds). Stopwatch reset.', 'info');
+    resetStopwatch();
+    return;
+  }
+
+  const typeIcons = {
+    lecture: '⚡',
+    revision: '📖',
+    practice: '🎯',
+    test: '📝'
+  };
+  const typeNames = {
+    lecture: 'Lecture',
+    revision: 'Revision',
+    practice: 'Question Practice',
+    test: 'Mock Test'
+  };
+
+  const icon = typeIcons[clockStopwatch.sessionType] || '⏱️';
+  const typeName = typeNames[clockStopwatch.sessionType] || 'Study Session';
+  const label = clockStopwatch.customLabel ? clockStopwatch.customLabel.trim() : '';
+
+  let title = '';
+  if (clockStopwatch.sessionType === 'practice' && clockStopwatch.problems && clockStopwatch.problems.length > 0) {
+    const qCount = clockStopwatch.problems.length;
+    title = `${icon} ${typeName}: ${qCount} Questions${label ? ' (' + label + ')' : ''}`;
+  } else if (label) {
+    title = `${icon} ${typeName}: ${label}`;
+  } else {
+    title = `${icon} ${typeName} (${mins}m)`;
+  }
+
+  logCompletedFocusSession(title, mins, clockStopwatch.sessionType);
+  playTimerChime();
+
+  pauseStopwatch();
+  clockStopwatch.accumMs = 0;
+  clockStopwatch.startTimestamp = null;
+  clockStopwatch.problems = [];
+  clockStopwatch.laps = [];
+  clockStopwatch.customLabel = '';
+  saveStopwatchState();
+
+  showToast(`✓ Logged ${mins}m ${typeName} to today's Study Log!`, 'success');
+
+  const m = document.getElementById('main');
+  if (m && activePage === 'clock') {
+    m.innerHTML = renderClock();
+  } else {
+    updateStopwatchUI();
+  }
+}
+
+function saveStopwatchToFocusLog() {
+  stopAndLogStopwatch();
 }
 
 function lapGeneralStopwatch() {
@@ -4212,24 +4695,6 @@ function lapStopwatchQuestion() {
   if (m && activePage === 'clock' && clockActiveTab === 'stopwatch') {
     m.innerHTML = renderClock();
   }
-}
-
-function saveStopwatchToFocusLog() {
-  const mins = Math.round(clockStopwatch.accumMs / 60000);
-  if (mins < 1) {
-    showToast('Practice session too short to log (< 1 min)', 'info');
-    return;
-  }
-  let title = 'Stopwatch Study Session';
-  if (clockStopwatch.mode === 'questions') {
-    const qCount = (clockStopwatch.problems || []).length;
-    title = `Question Practice (${qCount} Qs)`;
-  } else {
-    const lapCount = (clockStopwatch.laps || []).length;
-    title = lapCount > 0 ? `Stopwatch Focus (${lapCount} Laps)` : `Stopwatch Focus (${mins}m)`;
-  }
-  logCompletedFocusSession(title, mins);
-  showToast(`Logged ${mins}m to your study log.`, 'success');
 }
 
 async function openZenMode() {
@@ -4716,6 +5181,23 @@ function updateStopwatchUI() {
   const elMs = document.getElementById('stopwatch-ms-time');
   if (elMain) elMain.textContent = mainStr;
   if (elMs) elMs.textContent = msStr;
+
+  const tag = document.getElementById('sw-status-tag');
+  if (tag) {
+    const typeNames = { lecture: 'Lecture', revision: 'Revision', practice: 'Question Practice', test: 'Mock Test' };
+    const typeLabel = typeNames[clockStopwatch.sessionType] || 'Study Session';
+    if (clockStopwatch.running) {
+      tag.innerHTML = `<span class="live-pulse-dot" style="width:6px;height:6px;"></span> <span>Tracking ${typeLabel}...</span>`;
+      tag.classList.add('running');
+    } else if (clockStopwatch.accumMs > 0) {
+      const mins = Math.max(1, Math.round(clockStopwatch.accumMs / 60000));
+      tag.innerHTML = `<span>⏸ Session Paused • ${mins}m recorded (Click "Stop & Log Session" when done)</span>`;
+      tag.classList.remove('running');
+    } else {
+      tag.innerHTML = `<span>Ready to start ${typeLabel}</span>`;
+      tag.classList.remove('running');
+    }
+  }
 }
 
 function updateFocusLogUI() {
